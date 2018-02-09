@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:background="@color/grey_300"
+        android:gravity="center_vertical">
+
+    <LinearLayout
+        android:id="@+id/dados_usuario"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <EditText
+            android:id="@+id/field_nome"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_nome"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/field_nick"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_nick"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/field_email"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_email"
+            android:inputType="textEmailAddress" />
+
+        <Spinner
+            android:id="@+id/universidade_spinner"
+            android:layout_width="fill_parent"
+            android:prompt="@string/hint_universidade"
+            android:layout_height="40dp"
+            android:spinnerMode="dialog"
+            android:hint="@string/hint_universidade"/>
+
+        <Spinner
+            android:id="@+id/curso_spinner"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:spinnerMode="dialog"
+            android:prompt="@string/hint_curso"
+            android:hint="@string/hint_curso" />
+
+        <EditText
+            android:id="@+id/field_password"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_password"
+            android:inputType="textPassword" />
+
+        <EditText
+            android:id="@+id/field_nascimento"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_nascimento"
+            android:inputType="date" />
+
+        <Button
+            android:id="@+id/criar_conta"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="@string/create_account"
+            android:theme="@style/ThemeOverlay.MyDarkButton" />
+    </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>
