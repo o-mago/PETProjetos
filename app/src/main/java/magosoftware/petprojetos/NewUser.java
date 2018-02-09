@@ -89,6 +89,8 @@ public class NewUser extends BaseActivity implements
         findViewById(R.id.criar_conta).setOnClickListener(this);
         final Spinner spinner_universidade = (Spinner) findViewById(R.id.universidade_spinner);
         final Spinner spinner_curso = (Spinner) findViewById(R.id.curso_spinner);
+        this.spinner_universidade = spinner_universidade;
+        this.spinner_curso = spinner_curso;
 
         spinner_universidade.setSelection(0);
         spinner_curso.setSelection(0);
