@@ -23,6 +23,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,7 +43,7 @@ import java.util.Map;
 public class NewUser extends BaseActivity implements
         View.OnClickListener {
 
-    private DatabaseReference mDatabase;
+//    private DatabaseReference mDatabase;
     private DatabaseReference dbUsuario;
     FirebaseListAdapter<String> myAdapter;
     FirebaseListOptions<String> options;
@@ -77,7 +78,7 @@ public class NewUser extends BaseActivity implements
 
         //mRef = new Firebase("https://petprojetos-c63be.firebaseio.com/Base Universidades");
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+//        mDatabase = FirebaseDatabase.getInstance().getReference();
         dbUsuario = mDatabase.child("Usuarios");
 //        queryUni = mDatabase.child("Base Universidades");
 //        options = new FirebaseListOptions.Builder<String>()
@@ -126,8 +127,10 @@ public class NewUser extends BaseActivity implements
                                 updateUI(user);
 
                                 // Generate a reference to a new location and add some data using push()
-                                DatabaseReference pushedPostRef = dbUsuario.push();
-                                String postId = pushedPostRef.getKey();
+                                //DatabaseReference pushedPostRef = dbUsuario.push();
+                                //String postId = pushedPostRef.getKey();
+                                String postId = user.getUid();
+//                                DatabaseReference newChild = dbUsuario.
                                 Map<String, Usuario> users = new HashMap<>();
                                 users.put(postId, new Usuario(nome.getText().toString(),
                                         nick.getText().toString(),
@@ -137,6 +140,7 @@ public class NewUser extends BaseActivity implements
                                         nascimento.getText().toString()
                                 ));
                                 dbUsuario.setValue(users);
+                                dbUsuario.child(user.getUid()).orderByPriority();
 
                             } else {
                                 // If sign in fails, display a message to the user.
@@ -184,13 +188,30 @@ public class NewUser extends BaseActivity implements
 
     }
 
-    private void updateUI(FirebaseUser user) {
+    private void updateUI(final FirebaseUser user) {
         hideProgressDialog();
-        Intent i = new Intent(this, MainActivity.class);
-        //i.putExtra("auth",mAuth.getCurrentUser());
-        startActivity(i);
-        finish();
+        if (user != null) {
+            user.sendEmailVerification();
+//                    .addOnCompleteListener(this, new OnCompleteListener() {
+//                        @Override
+//                        public void onComplete(@NonNull Task task) {
+//                            if (task.isSuccessful()) {
+//                                Toast.makeText(NewUser.this,
+//                                        "Verification email sent to " + user.getEmail(),
+//                                        Toast.LENGTH_SHORT).show();
+//                            } else {
+//                                Log.e("FOI", "sendEmailVerification", task.getException());
+//                                Toast.makeText(NewUser.this,
+//                                        "Failed to send verification email.",
+//                                        Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                    });
+            Toast.makeText(this, "Um email de verificação foi enviado para "+user.getEmail(), Toast.LENGTH_LONG).show();
+            Intent i = new Intent(this, EmailPasswordActivity.class);
+            //i.putExtra("auth",mAuth.getCurrentUser());
+            startActivity(i);
+            finish();
+        }
     }
-
-
 }

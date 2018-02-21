@@ -118,9 +118,11 @@ public class EmailPasswordActivity extends BaseActivity implements
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
                 // Google Sign In was successful, authenticate with Firebase
+                Log.d("FBS", "WOW");
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
             } else {
+                Log.d("FBS", result.getStatus().toString());
                 // Google Sign In failed, update UI appropriately
                 // [START_EXCLUDE]
                 updateUI(null);
@@ -273,7 +275,7 @@ public class EmailPasswordActivity extends BaseActivity implements
 
         String email = mEmailField.getText().toString();
         if (TextUtils.isEmpty(email)) {
-            mEmailField.setError("Required.");
+            mEmailField.setError("Preencha");
             valid = false;
         } else {
             mEmailField.setError(null);
@@ -281,7 +283,7 @@ public class EmailPasswordActivity extends BaseActivity implements
 
         String password = mPasswordField.getText().toString();
         if (TextUtils.isEmpty(password)) {
-            mPasswordField.setError("Required.");
+            mPasswordField.setError("Preencha");
             valid = false;
         } else {
             mPasswordField.setError(null);
@@ -312,11 +314,12 @@ public class EmailPasswordActivity extends BaseActivity implements
             findViewById(R.id.google_button).setVisibility(View.VISIBLE);
             findViewById(R.id.signed_in_buttons).setVisibility(View.GONE);
         }*/
-
-        Intent i = new Intent(this,MainActivity.class);
-        //i.putExtra("auth",mAuth.getCurrentUser());
-        startActivity(i);
-        finish();
+        if(user != null) {
+            Intent i = new Intent(this, MainActivity.class);
+            //i.putExtra("auth",mAuth.getCurrentUser());
+            startActivity(i);
+            finish();
+        }
     }
 
     @Override

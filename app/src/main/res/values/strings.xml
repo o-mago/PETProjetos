@@ -24,6 +24,13 @@
     <string name="label_firebase_ui">FirebaseUI Auth</string>
     <string name="desc_firebase_ui">Use the FirebaseUI-Android library to authenticate with Firebase.</string>
 
+    <string name="nome_perfil">Mago do PET</string>
+    <string name="universidade_perfil">Universidade Federal de Juiz de Fora</string>
+    <string name="curso_perfil">Engenharia Elétrica</string>
+    <string name="nascimento_perfil">13/05/1997</string>
+    <string name="pet_perfil">PET Elétrica UFJF</string>
+    <string name="email_perfil">alexandre.cabral@engenharia.ufjf.br</string>
+
     <string name="hint_user_id">User ID</string>
     <string name="get_custom_token">Get Token</string>
     <string name="sign_in">Entrar</string>

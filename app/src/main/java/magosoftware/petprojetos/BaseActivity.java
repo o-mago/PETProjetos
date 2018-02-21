@@ -8,10 +8,15 @@ import android.app.ProgressDialog;
 import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class BaseActivity extends AppCompatActivity {
 
     @VisibleForTesting
     public ProgressDialog mProgressDialog;
+
+    public DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
     public void showProgressDialog() {
         if (mProgressDialog == null) {

@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -55,6 +56,9 @@ public class MainActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
 
         //Navigation
         mDrawerList = (ListView)findViewById(R.id.navList);
@@ -137,6 +141,10 @@ public class MainActivity extends AppCompatActivity implements
         int i = v.getId();
         if (i == R.id.sair_button) {
             revokeAccess();
+        }
+        if (i == R.id.perfil_button) {
+            Intent intent = new Intent(this, Perfil.class);
+            startActivity(intent);
         }
     }
 

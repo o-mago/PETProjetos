@@ -7,6 +7,7 @@ package magosoftware.petprojetos;
 public class Usuario {
 
     public String nome;
+    public String pet;
     public String nick;
     public String email;
     public String universidade;
@@ -26,6 +27,8 @@ public class Usuario {
         return nome;
     }
 
+    public String getNick() { return nick; }
+
     public String getEmail() {
         return email;
     }
@@ -42,7 +45,5 @@ public class Usuario {
         return nascimento;
     }
 
-    public String getnick() {
-        return nick;
-    }
+    public String getPet() { return pet; }
 }
