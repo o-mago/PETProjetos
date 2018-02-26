@@ -88,8 +88,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/DadosPerfil.TextView"
-                        android:text="@string/nome_perfil"/>
+                        style="@style/DadosPerfil.TextView" />
                     <TextView
                         android:id="@+id/universidadeCabecalho"
                         android:layout_width="wrap_content"
@@ -105,7 +104,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         style="@style/DadosPerfil.TextView"
-                        android:text="@string/universidade_perfil"/>
+                        />
                     <TextView
                         android:id="@+id/cursoCabecalho"
                         android:layout_width="wrap_content"
@@ -120,8 +119,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/DadosPerfil.TextView"
-                        android:text="@string/curso_perfil"/>
+                        style="@style/DadosPerfil.TextView" />
                     <TextView
                         android:id="@+id/emailCabecalho"
                         android:layout_width="wrap_content"
@@ -136,8 +134,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/DadosPerfil.TextView"
-                        android:text="@string/email_perfil"/>
+                        style="@style/DadosPerfil.TextView" />
                     <TextView
                         android:id="@+id/nascimentoCabecalho"
                         android:layout_width="wrap_content"
@@ -153,8 +150,7 @@
                         android:layout_marginBottom="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/DadosPerfil.TextView"
-                        android:text="@string/nascimento_perfil"/>
+                        style="@style/DadosPerfil.TextView" />
                 </LinearLayout>
             </RelativeLayout>
         </LinearLayout>

@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -30,8 +32,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity implements
-        GoogleApiClient.OnConnectionFailedListener,
-        View.OnClickListener {
+        GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mAuth;
@@ -41,16 +42,13 @@ public class MainActivity extends AppCompatActivity implements
     //Navigation
     private ListView mDrawerList;
     private ArrayAdapter<String> mAdapter;
-    private ImageButton mUser;
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private String mActivityTitle;
+    FragmentTransaction ft;
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference userFirebase = database.getReference("User");
-
-    public MainActivity() {
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,21 +65,9 @@ public class MainActivity extends AppCompatActivity implements
         addDrawerItems();
         setupDrawer();
 
-        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(MainActivity.this, "Time for an upgrade!", Toast.LENGTH_SHORT).show();
-            }
-        });
-
         assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-
-        findViewById(R.id.sair_button).setOnClickListener(this);
-        findViewById(R.id.pessoal_button).setOnClickListener(this);
-        findViewById(R.id.grupo_button).setOnClickListener(this);
-        findViewById(R.id.perfil_button).setOnClickListener(this);
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -96,6 +82,27 @@ public class MainActivity extends AppCompatActivity implements
                 .build();
 
         mAuth = FirebaseAuth.getInstance();
+
+        ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragment_container, PetFragment.newInstance());
+        ft.commit();
+
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(position == 0) {
+                    ft = getSupportFragmentManager().beginTransaction();
+                    ft.replace(R.id.fragment_container, PetFragment.newInstance());
+                    ft.commit();
+                }
+                if(position == 1) {
+                    ft = getSupportFragmentManager().beginTransaction();
+                    ft.replace(R.id.fragment_container, Perfil.newInstance());
+                    ft.commit();
+                }
+                mDrawerLayout.closeDrawers();
+            }
+        });
     }
 
     // [START on_start_check_user]
@@ -136,31 +143,12 @@ public class MainActivity extends AppCompatActivity implements
         finish();
     }
 
-    @Override
-    public void onClick(View v) {
-        int i = v.getId();
-        if (i == R.id.sair_button) {
-            revokeAccess();
-        }
-        if (i == R.id.perfil_button) {
-            Intent intent = new Intent(this, Perfil.class);
-            startActivity(intent);
-        }
-    }
-
     //Navigation
     private void addDrawerItems() {
-        String[] osArray = { "Pessoal", "Grupo", "Sair"};
+        String[] osArray = { "PET", "Perfil", "Grupo"};
         //mUser = new ImageButton(this, R.id.)
         mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
         mDrawerList.setAdapter(mAdapter);
-
-        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(MainActivity.this, "Time for an upgrade!", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private void setupDrawer() {
@@ -215,6 +203,7 @@ public class MainActivity extends AppCompatActivity implements
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            revokeAccess();
             return true;
         }
 
@@ -226,5 +215,3 @@ public class MainActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 }
-
-

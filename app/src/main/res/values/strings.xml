@@ -24,17 +24,22 @@
     <string name="label_firebase_ui">FirebaseUI Auth</string>
     <string name="desc_firebase_ui">Use the FirebaseUI-Android library to authenticate with Firebase.</string>
 
-    <string name="nome_perfil">Mago do PET</string>
-    <string name="universidade_perfil">Universidade Federal de Juiz de Fora</string>
-    <string name="curso_perfil">Engenharia Elétrica</string>
-    <string name="nascimento_perfil">13/05/1997</string>
-    <string name="pet_perfil">PET Elétrica UFJF</string>
-    <string name="email_perfil">alexandre.cabral@engenharia.ufjf.br</string>
+    <string name="nome_perfil"></string>
+    <string name="nick_perfil"></string>
+    <string name="universidade_perfil"></string>
+    <string name="curso_perfil"></string>
+    <string name="nascimento_perfil"></string>
+    <string name="pet_perfil"></string>
+    <string name="email_perfil"></string>
 
-    <string name="hint_user_id">User ID</string>
+    <string name="crop">Salvar</string>
+    <string name="voltar">Voltar</string>
+
     <string name="get_custom_token">Get Token</string>
     <string name="sign_in">Entrar</string>
     <string name="create_account">Inscrever-se</string>
+    <string name="adiciona_universidade">Adicionar Universidade</string>
+    <string name="adiciona_curso">Adicionar Curso</string>
     <string name="sign_out">Sign Out</string>
     <string name="verify_email">Verify Email</string>
     <string name="disconnect">Disconnect</string>
@@ -43,6 +48,8 @@
     <string name="signed_in">Signed In</string>
     <string name="signed_out">Signed Out</string>
     <string name="token_null">Token: null</string>
+
+    <string name="hint_user_id">User ID</string>
     <string name="hint_email">Email</string>
     <string name="hint_password">Senha</string>
     <string name="hint_nome">Nome</string>
@@ -50,6 +57,8 @@
     <string name="hint_curso">Curso</string>
     <string name="hint_nick">Apelido</string>
     <string name="hint_nascimento">Nascimento</string>
+    <string name="hint_sigla">Sigla</string>
+
     <string name="desc_firebase_lockup">Firebase logo and name</string>
     <string name="auth_failed">Authentication failed</string>
     <string name="start_phone_auth">Start</string>
@@ -93,7 +102,7 @@
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
-    <string name="action_settings">Perfil</string>
+    <string name="action_settings">Sair</string>
 
     <string-array name="universidades_array">
         <item>UFJF</item>
@@ -107,4 +116,10 @@
         <item>Engenharia Mecânica</item>
         <item>Engenharia Computacional</item>
     </string-array>
+
+    <string name="base_universidades">Base Universidades</string>
+    <string name="base_cursos">BaseCursos</string>
+    <string name="base_usuarios">Usuarios</string>
+
+    <string name="uri_perfil">uri_perfil</string>
 </resources>

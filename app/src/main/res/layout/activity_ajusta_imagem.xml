@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:style="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="100dp">
+        <!--<ImageView-->
+            <!--android:id="@+id/imagem_perfil"-->
+            <!--android:layout_width="300dp"-->
+            <!--android:layout_height="300dp" />-->
+        <!--<View-->
+            <!--android:id="@+id/area_util"-->
+            <!--android:layout_width="300dp"-->
+            <!--android:layout_height="300dp"-->
+            <!--android:background="@drawable/circle"/>-->
+        <magosoftware.petprojetos.FocusView
+            android:id="@+id/foto_perfil"
+            android:layout_width="270dp"
+            android:layout_height="270dp" />
+        <FrameLayout
+            android:layout_width="25dp"
+            android:layout_height="250dp"
+            android:layout_toRightOf="@id/foto_perfil"
+            android:layout_toEndOf="@id/foto_perfil">
+            <SeekBar
+                android:id="@+id/zoom_imagem"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:rotation="270" />
+        </FrameLayout>
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center_horizontal">
+        <Button
+            android:id="@+id/botao_crop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/crop"
+            android:theme="@style/ThemeOverlay.MyDarkButton"/>
+        <Button
+            android:id="@+id/botao_voltar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/voltar"
+            android:theme="@style/ThemeOverlay.MyDarkButton"/>
+    </LinearLayout>
+
+</LinearLayout>
