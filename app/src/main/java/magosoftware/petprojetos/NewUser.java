@@ -47,9 +47,6 @@ public class NewUser extends BaseActivity implements
 
 //    private DatabaseReference mDatabase;
     private DatabaseReference dbUsuario;
-    FirebaseListAdapter<String> myAdapter;
-    FirebaseListOptions<String> options;
-    Query queryUni;
     FirebaseAuth mAuth;
     EditText nome;
     EditText nick;
@@ -105,20 +102,7 @@ public class NewUser extends BaseActivity implements
 
         mAuth = FirebaseAuth.getInstance();
 
-//        layoutInflater = this.getLayoutInflater();
-//
-//        layoutInflater.inflate(R.layout.nada_selecionado, null);
-
-        //mRef = new Firebase("https://petprojetos-c63be.firebaseio.com/Base Universidades");
-
-//        mDatabase = FirebaseDatabase.getInstance().getReference();
         dbUsuario = mDatabase.child("Usuarios");
-//        queryUni = mDatabase.child("Base Universidades");
-//        options = new FirebaseListOptions.Builder<String>()
-//                .setQuery(queryUni, String.class)
-//                .setLayout(android.R.layout.simple_spinner_dropdown_item)
-//                .build();
-//        //mDatabase.child("Base Universidades").child().setValue();
 
         findViewById(R.id.criar_conta).setOnClickListener(this);
         final Spinner spinner_universidade = (Spinner) findViewById(R.id.universidade_spinner);
@@ -301,21 +285,6 @@ public class NewUser extends BaseActivity implements
         hideProgressDialog();
         if (user != null) {
             user.sendEmailVerification();
-//                    .addOnCompleteListener(this, new OnCompleteListener() {
-//                        @Override
-//                        public void onComplete(@NonNull Task task) {
-//                            if (task.isSuccessful()) {
-//                                Toast.makeText(NewUser.this,
-//                                        "Verification email sent to " + user.getEmail(),
-//                                        Toast.LENGTH_SHORT).show();
-//                            } else {
-//                                Log.e("FOI", "sendEmailVerification", task.getException());
-//                                Toast.makeText(NewUser.this,
-//                                        "Failed to send verification email.",
-//                                        Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//                    });
             Toast.makeText(this, "Um email de verificação foi enviado para "+user.getEmail(), Toast.LENGTH_LONG).show();
             Intent i = new Intent(this, EmailPasswordActivity.class);
             //i.putExtra("auth",mAuth.getCurrentUser());

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">PET Projetos</string>
     <string name="label_google_sign_in">Firebase + Google Sign In</string>
@@ -32,13 +33,46 @@
     <string name="pet_perfil"></string>
     <string name="email_perfil"></string>
 
+    <string-array name="estados">
+        <string name="estado">Estado</string>
+        <string name="acre">Acre</string>
+        <string name="alagoas">Alagoas</string>
+        <string name="amapa">Amapá</string>
+        <string name="amazonas">Amazonas</string>
+        <string name="bahia">Bahia</string>
+        <string name="ceara">Ceará</string>
+        <string name="distrito_federal">Distrito Federal</string>
+        <string name="espirito_santo">Espirito Santo</string>
+        <string name="goias">Goiás</string>
+        <string name="maranhao">Maranhão</string>
+        <string name="mato_grosso">Mato Grosso</string>
+        <string name="mato_grosso_do_sul">Mato Grosso do Sul</string>
+        <string name="minas_gerais">Minas Gerais</string>
+        <string name="para">Para</string>
+        <string name="paraiba">Paraíba</string>
+        <string name="paraná">Paraná</string>
+        <string name="pernambuco">Pernambuco</string>
+        <string name="piaui">Piauí</string>
+        <string name="rio_de_janeiro">Rio de Janeiro</string>
+        <string name="rio_grande_do_norte">Rio Grande do Norte</string>
+        <string name="rio_grande do_sul">Rio Grande do Sul</string>
+        <string name="rondonia">Rondônia</string>
+        <string name="roraima">Roraima</string>
+        <string name="santa_catarina">Santa Catarina</string>
+        <string name="sao_paulo">São Paulo</string>
+        <string name="sergipe">Sergipe</string>
+        <string name="tocantins">Tocantins</string>
+    </string-array>
+
     <string name="crop">Salvar</string>
     <string name="voltar">Voltar</string>
 
     <string name="get_custom_token">Get Token</string>
     <string name="sign_in">Entrar</string>
     <string name="create_account">Inscrever-se</string>
+    <string name="adicionar_pet">Adicionar PET</string>
     <string name="adiciona_universidade">Adicionar Universidade</string>
+    <string name="adiciona_imagem">Adicionar Imagem</string>
     <string name="adiciona_curso">Adicionar Curso</string>
     <string name="sign_out">Sign Out</string>
     <string name="verify_email">Verify Email</string>
@@ -54,10 +88,15 @@
     <string name="hint_password">Senha</string>
     <string name="hint_nome">Nome</string>
     <string name="hint_universidade">Universidade</string>
+    <string name="hint_estado">Estado</string>
     <string name="hint_curso">Curso</string>
     <string name="hint_nick">Apelido</string>
     <string name="hint_nascimento">Nascimento</string>
     <string name="hint_sigla">Sigla</string>
+    <string name="hint_ano">Ano de surgimento</string>
+    <string name="hint_integrantes">Número de petianos</string>
+    <string name="hint_cidade">Cidade</string>
+    <string name="hint_site">Site</string>
 
     <string name="desc_firebase_lockup">Firebase logo and name</string>
     <string name="auth_failed">Authentication failed</string>

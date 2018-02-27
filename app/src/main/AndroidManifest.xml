@@ -26,6 +26,8 @@
         <activity android:name=".NovaUniversidade"></activity>
         <activity android:name=".NovoCurso"></activity>
         <activity android:name=".AjustaImagem"></activity>
+        <activity android:name=".AdicioneSeuPetActivity"></activity>
+        <activity android:name=".AdicioneSeuPet2Activity"></activity>
     </application>
 
 </manifest>
