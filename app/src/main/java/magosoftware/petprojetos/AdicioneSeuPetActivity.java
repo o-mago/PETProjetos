@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -21,8 +22,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.pchmn.materialchips.ChipsInput;
+import com.pchmn.materialchips.model.Chip;
 //import com.pchmn.materialchips.ChipsInput;
 
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,17 +41,19 @@ public class AdicioneSeuPetActivity extends BaseActivity implements View.OnClick
     private DatabaseReference dbPets;
     FirebaseAuth mAuth;
     private EditText nome;
-    private EditText nick;
+    private EditText cidade;
+    private EditText nPetianos;
     private EditText email;
-    private EditText senha;
+    private EditText site;
     private EditText ano_surgimento;
-    ChipsInput chips_cursos;
+    ChipsInput chipsCursos;
     private Spinner spinner_universidade;
-    private Spinner spinner_curso;
+    private Spinner spinner_estado;
 
     @Override
     public void onCreate(Bundle savedInstaceState) {
         super.onCreate(savedInstaceState);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         setContentView(R.layout.activity_adicione_seu_pet);
 
@@ -57,25 +62,26 @@ public class AdicioneSeuPetActivity extends BaseActivity implements View.OnClick
 
         nome = findViewById(R.id.field_nome);
         email = findViewById(R.id.field_email);
-        senha = findViewById(R.id.field_password);
-        nick = findViewById(R.id.field_nick);
+        cidade = findViewById(R.id.field_cidade);
+        nPetianos = findViewById(R.id.numero_petianos);
         ano_surgimento = findViewById(R.id.field_ano);
-
-        ChipsInput chipsInput = (ChipsInput) findViewById(R.id.chips_input);
+        site = findViewById(R.id.field_site);
 
         mAuth = FirebaseAuth.getInstance();
 
         dbPets = mDatabase.child("PETs");
 
-        findViewById(R.id.criar_conta).setOnClickListener(this);
+        findViewById(R.id.adicionar_pet).setOnClickListener(this);
         final Spinner spinner_universidade = (Spinner) findViewById(R.id.universidade_spinner);
-        final Spinner spinner_curso = (Spinner) findViewById(R.id.curso_spinner);
         Spinner spinner_estado = findViewById(R.id.estado_spinner);
         this.spinner_universidade = spinner_universidade;
-        this.spinner_curso = spinner_curso;
+        this.spinner_estado = spinner_estado;
 
-        ArrayAdapter<CharSequence> adapter_estado = new ArrayAdapter<CharSequence>(this,
-        R.array.cursos_array, android.R.layout.simple_spinner_item) {
+        final ChipsInput chipsCursos = (ChipsInput) findViewById(R.id.chips_cursos);
+        this.chipsCursos = chipsCursos;
+        getCursos(chipsCursos);
+        String[] lista = getResources().getStringArray(R.array.estados);
+        ArrayAdapter<String> adapter_estado = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, lista) {
             @Override
             public View getDropDownView(int position, View convertView,
                     ViewGroup parent) {
@@ -97,32 +103,15 @@ public class AdicioneSeuPetActivity extends BaseActivity implements View.OnClick
         spinner_estado.setAdapter(adapter_estado);
 
         spinner_universidade.setSelection(0);
-        spinner_curso.setSelection(0);
+        spinner_estado.setSelection(0);
 
         feedSpinner("Base Universidades", spinner_universidade);
-        feedSpinner("BaseCursos", spinner_curso);
 
         spinner_universidade.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 if(position == 1) {
                     Intent intent = new Intent(AdicioneSeuPetActivity.this, NovaUniversidade.class);
-                    startActivity(intent);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                // your code here
-            }
-
-        });
-
-        spinner_curso.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                if(position == 1) {
-                    Intent intent = new Intent(AdicioneSeuPetActivity.this, NovoCurso.class);
                     startActivity(intent);
                 }
             }
@@ -141,17 +130,72 @@ public class AdicioneSeuPetActivity extends BaseActivity implements View.OnClick
         int i = view.getId();
         if(i == R.id.adicionar_pet) {
             String postId = nome.getText().toString();
-            Map<String, Usuario> pets = new HashMap<>();
-            pets.put(postId, new Usuario(nome.getText().toString(),
-                    nick.getText().toString(),
-                    email.getText().toString(),
-                    spinner_universidade.getSelectedItem().toString(),
-                    spinner_curso.getSelectedItem().toString(),
-                    ano_surgimento.getText().toString()
-            ));
-            dbPets.setValue(pets);
-            dbPets.child(pets.getUid()).orderByPriority();
+            Map<String, String> pets = new HashMap<>();
+            pets.put("nome", nome.getText().toString());
+            pets.put("nPetianos", nPetianos.getText().toString());
+            pets.put("email", email.getText().toString());
+            pets.put("universidade", spinner_universidade.getSelectedItem().toString());
+            pets.put("ano", ano_surgimento.getText().toString());
+            pets.put("site", site.getText().toString());
+            pets.put("cidade", arrumaTexto(cidade.getText().toString()));
+            pets.put("estado", spinner_estado.getSelectedItem().toString());
+            dbPets.child(postId).setValue(pets);
+            dbPets.child(postId).orderByPriority();
+
+            List<Chip> contactsSelected = (List<Chip>) chipsCursos.getSelectedChipList();
+            for(Chip c : contactsSelected) {
+                dbPets.child(postId).child("cursos").child(c.getLabel()).setValue(c.getLabel());
+                dbPets.child(postId).child("cursos").orderByPriority();
+            }
+            Intent intent = new Intent(this, AdicioneSeuPet2Activity.class);
+            intent.putExtra("nome", nome.getText().toString());
+            startActivity(intent);
+            finish();
         }
+//        if(i == R.id.chips_cursos) {
+//            String listString = "";
+//            for(Chip chip: (List<Chip>)  chipsCursos.getSelectedChipList()) {
+//                listString += chip.getLabel() + " (" + (chip.getInfo() != null ? chip.getInfo(): "") + ")" + ", ";
+//            }
+//
+//            mChipListText.setText(listString);
+//        }
+    }
+
+    private String arrumaTexto(String texto) {
+        texto = texto.toLowerCase();
+        String[] arrayUniversidade = texto.split(" ");
+        texto = "";
+        for(int j = 0; j < arrayUniversidade.length; j++) {
+            arrayUniversidade[j] = Character.toString(arrayUniversidade[j].charAt(0)).toUpperCase()+arrayUniversidade[j].substring(1);
+            if(j < arrayUniversidade.length-1) {
+                texto = texto+arrayUniversidade[j]+" ";
+            }
+            else {
+                texto = texto+arrayUniversidade[j];
+            }
+        }
+        return texto;
+    }
+
+    private void getCursos(final ChipsInput chipsCursos) {
+        mDatabase.child("BaseCursos").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final List<Chip> mCursoList = new ArrayList<>();
+                for (DataSnapshot listSnapshots : dataSnapshot.getChildren()) {
+                    String nome = listSnapshots.getValue(String.class);
+                    Log.d("OI", nome);
+                    mCursoList.add(new Chip(nome, ""));
+                }
+                chipsCursos.setFilterableList(mCursoList);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("UNI", "Deu merda");
+            }
+        });
     }
 
     protected void feedSpinner(String db, final Spinner spinner) {

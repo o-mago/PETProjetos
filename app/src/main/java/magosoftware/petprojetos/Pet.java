@@ -1,50 +1,67 @@
 package magosoftware.petprojetos;
 
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+
 /**
  * Created by root on 27/02/18.
  */
 
 public class Pet {
 
-    public String nome;
-    public String site;
-    public String email;
-    public String cidade;
-    public String estado;
-    public String universidade;
-    public String curso;
-    public String nascimento;
+    private String nome;
+    private String site;
+    private String email;
+    private String cidade;
+    private String estado;
+    private String universidade;
+    private String curso;
+    private String ano;
+    private String nPetianos;
+    private Drawable logo;
 
-    public Usuario(String nome, String apelido, String email, String universidade, String curso, String nascimento) {
+    public Pet(String nome, String nPetianos, String email, String universidade,
+               String ano, String site, String cidade, String estado) {
         this.nome = nome;
-        this.nick = apelido;
+        this.nPetianos = nPetianos;
         this.email = email;
         this.universidade = universidade;
-        this.curso = curso;
-        this.nascimento = nascimento;
+        this.ano = ano;
+        this.site = site;
+        this.cidade = cidade;
+        this.estado = estado;
+    }
+
+    public Pet(String nome, Drawable logo) {
+        this.nome = nome;
+        this.logo = logo;
     }
 
     public String getNome() {
         return nome;
     }
 
-    public String getNick() { return nick; }
+    public String getNPetianos() { return nPetianos; }
 
     public String getEmail() {
         return email;
     }
 
-    public String getUniversidade() {
-        return universidade;
-    }
+    public String getUniversidade() { return universidade; }
 
     public String getCurso() {
         return curso;
     }
 
-    public String getNascimento() {
-        return nascimento;
+    public String getAno() {
+        return ano;
     }
 
-    public String getPet() { return pet; }
+    public String getSite() { return site; }
+
+    public String getCidade() { return cidade; }
+
+    public String getEstado() { return estado; }
+
+    public Drawable getLogo() { return logo; }
 }

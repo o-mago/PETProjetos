@@ -1,5 +1,7 @@
 package magosoftware.petprojetos;
 
+import android.graphics.drawable.Drawable;
+
 /**
  * Created by root on 09/02/18.
  */
@@ -13,6 +15,8 @@ public class Usuario {
     public String universidade;
     public String curso;
     public String nascimento;
+    public Drawable foto;
+    public String codigo;
 
     public Usuario(String nome, String apelido, String email, String universidade, String curso, String nascimento) {
         this.nome = nome;
@@ -21,6 +25,17 @@ public class Usuario {
         this.universidade = universidade;
         this.curso = curso;
         this.nascimento = nascimento;
+    }
+
+    public Usuario(String nome, Drawable foto, String codigo) {
+        this.nome = nome;
+        this.foto = foto;
+        this.codigo = codigo;
+    }
+
+    public Usuario(String nome, Drawable foto) {
+        this.nome = nome;
+        this.foto = foto;
     }
 
     public String getNome() {
@@ -46,4 +61,10 @@ public class Usuario {
     }
 
     public String getPet() { return pet; }
+
+    public Drawable getFoto() { return foto; }
+
+    public String getCodigo() {
+        return codigo;
+    }
 }

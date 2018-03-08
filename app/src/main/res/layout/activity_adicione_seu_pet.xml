@@ -3,13 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/grey_300">
 
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="40dp"
         android:gravity="center_vertical">
 
         <LinearLayout
@@ -34,6 +33,18 @@
                 android:hint="@string/hint_nome"
                 android:inputType="textPersonName" />
 
+            <com.pchmn.materialchips.ChipsInput
+                android:id="@+id/chips_cursos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:chip_backgroundColor="@color/white_transparency"
+                app:chip_hasAvatarIcon="false"
+                app:showChipDetailed="false"
+                app:chip_deletable="true"
+                app:chip_detailed_backgroundColor="#1ba1e2"
+                app:hint="Cursos"
+                app:maxRows="3" />
+
             <EditText
                 android:id="@+id/field_email"
                 android:layout_width="fill_parent"
@@ -55,12 +66,6 @@
                 android:spinnerMode="dialog"
                 android:hint="@string/hint_universidade"/>
 
-            <com.pchmn.materialchips.ChipsInput
-                android:id="@+id/chips_cursos"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hint="Cursos" />
-
             <Spinner
                 android:id="@+id/estado_spinner"
                 android:layout_width="fill_parent"
@@ -80,7 +85,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/hint_ano"
-                android:inputType="textEmailAddress" />
+                android:inputType= "number" />
 
             <EditText
                 android:id="@+id/numero_petianos"

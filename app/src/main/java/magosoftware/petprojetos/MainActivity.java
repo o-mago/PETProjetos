@@ -4,11 +4,9 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -16,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -28,10 +25,13 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-public class MainActivity extends AppCompatActivity implements
+public class MainActivity extends BaseActivity implements
         GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleApiClient mGoogleApiClient;
@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements
     private DrawerLayout mDrawerLayout;
     private String mActivityTitle;
     FragmentTransaction ft;
+    DatabaseReference dbUsuario;
+    FirebaseUser user;
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference userFirebase = database.getReference("User");
@@ -62,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements
         mDrawerList = (ListView)findViewById(R.id.navList);
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
+        dbUsuario = mDatabase.child("Usuarios");
         addDrawerItems();
         setupDrawer();
 
@@ -82,22 +85,62 @@ public class MainActivity extends AppCompatActivity implements
                 .build();
 
         mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
 
-        ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.fragment_container, PetFragment.newInstance());
-        ft.commit();
+        dbUsuario.child(user.getUid()).child("pet").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String codigo;
+                for (DataSnapshot listSnapshots : dataSnapshot.getChildren()) {
+                    String condicao = listSnapshots.getValue(String.class);
+                    if(!condicao.equals("bolsista") && !condicao.equals("oficial") && !condicao.equals("voluntario") && !condicao.equals("aguardando")) {
+                        ft = getSupportFragmentManager().beginTransaction();
+                        ft.addToBackStack(null);
+                        ft.replace(R.id.fragment_container, EncontreSeuPet.newInstance());
+                        ft.commit();
+                        break;
+                    }
+                    else {
+                        ft = getSupportFragmentManager().beginTransaction();
+                        ft.addToBackStack(null);
+                        ft.replace(R.id.fragment_container, MeuPetFragment.newInstance());
+                        ft.commit();
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("UNI", "Deu merda");
+            }
+        });
 
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(position == 0) {
                     ft = getSupportFragmentManager().beginTransaction();
-                    ft.replace(R.id.fragment_container, PetFragment.newInstance());
+                    ft.addToBackStack(null);
+                    ft.replace(R.id.fragment_container, MeuPetFragment.newInstance());
                     ft.commit();
                 }
                 if(position == 1) {
                     ft = getSupportFragmentManager().beginTransaction();
+                    ft.addToBackStack(null);
                     ft.replace(R.id.fragment_container, Perfil.newInstance());
+                    ft.commit();
+                }
+                if(position == 2) {
+                    ft = getSupportFragmentManager().beginTransaction();
+                    ft.addToBackStack(null);
+                    ft.replace(R.id.fragment_container, EncontreSeuPet.newInstance());
+                    ft.commit();
+                }
+                if(position == 3) {
+                    ft = getSupportFragmentManager().beginTransaction();
+                    ft.addToBackStack(null);
+                    ft.replace(R.id.fragment_container, PesquisarPetiano.newInstance());
                     ft.commit();
                 }
                 mDrawerLayout.closeDrawers();
@@ -145,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements
 
     //Navigation
     private void addDrawerItems() {
-        String[] osArray = { "PET", "Perfil", "Grupo"};
+        String[] osArray = { "Meu PET", "Perfil", "Pesquisar PET", "Pesquisar Petiano"};
         //mUser = new ImageButton(this, R.id.)
         mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
         mDrawerList.setAdapter(mAdapter);

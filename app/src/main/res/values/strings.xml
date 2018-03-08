@@ -33,35 +33,49 @@
     <string name="pet_perfil"></string>
     <string name="email_perfil"></string>
 
+    <string name="nome_pet"></string>
+    <string name="site_pet"></string>
+    <string name="universidade_pet"></string>
+    <string name="cursos_pet"></string>
+    <string name="ano_pet"></string>
+    <string name="localizacao_pet"></string>
+    <string name="email_pet"></string>
+
+    <string-array name="opcoes_petiano">
+        <item>Bolsista</item>
+        <item>Voluntario Oficial</item>
+        <item>Extra Oficial</item>
+    </string-array>
+
     <string-array name="estados">
-        <string name="estado">Estado</string>
-        <string name="acre">Acre</string>
-        <string name="alagoas">Alagoas</string>
-        <string name="amapa">Amapá</string>
-        <string name="amazonas">Amazonas</string>
-        <string name="bahia">Bahia</string>
-        <string name="ceara">Ceará</string>
-        <string name="distrito_federal">Distrito Federal</string>
-        <string name="espirito_santo">Espirito Santo</string>
-        <string name="goias">Goiás</string>
-        <string name="maranhao">Maranhão</string>
-        <string name="mato_grosso">Mato Grosso</string>
-        <string name="mato_grosso_do_sul">Mato Grosso do Sul</string>
-        <string name="minas_gerais">Minas Gerais</string>
-        <string name="para">Para</string>
-        <string name="paraiba">Paraíba</string>
-        <string name="paraná">Paraná</string>
-        <string name="pernambuco">Pernambuco</string>
-        <string name="piaui">Piauí</string>
-        <string name="rio_de_janeiro">Rio de Janeiro</string>
-        <string name="rio_grande_do_norte">Rio Grande do Norte</string>
-        <string name="rio_grande do_sul">Rio Grande do Sul</string>
-        <string name="rondonia">Rondônia</string>
-        <string name="roraima">Roraima</string>
-        <string name="santa_catarina">Santa Catarina</string>
-        <string name="sao_paulo">São Paulo</string>
-        <string name="sergipe">Sergipe</string>
-        <string name="tocantins">Tocantins</string>
+        <item name="estado">Estado</item>
+        <item name="acre">Acre</item>
+        <item name="alagoas">Alagoas</item>
+        <item name="amapa">Amapá</item>
+        <item name="amazonas">Amazonas</item>
+        <item name="bahia">Bahia</item>
+        <item name="ceara">Ceará</item>
+        <item name="distrito_federal">Distrito Federal</item>
+        <item name="espirito_santo">Espirito Santo</item>
+        <item name="goias">Goiás</item>
+        <item name="maranhao">Maranhão</item>
+        <item name="mato_grosso">Mato Grosso</item>
+        <item name="mato_grosso_do_sul">Mato Grosso do Sul</item>
+        <item name="minas_gerais">Minas Gerais</item>
+        <item name="para">Para</item>
+        <item name="paraiba">Paraíba</item>
+        <item name="paraná">Paraná</item>
+        <item name="pernambuco">Pernambuco</item>
+        <item name="piaui">Piauí</item>
+        <item name="rio_de_janeiro">Rio de Janeiro</item>
+        <item name="rio_grande_do_norte">Rio Grande do Norte</item>
+        <item name="rio_grande do_sul">Rio Grande do Sul</item>
+        <item name="rondonia">Rondônia</item>
+        <item name="roraima">Roraima</item>
+        <item name="santa_catarina">Santa Catarina</item>
+        <item name="sao_paulo">São Paulo</item>
+        <item name="sergipe">Sergipe</item>
+        <item name="tocantins">Tocantins</item>
     </string-array>
 
     <string name="crop">Salvar</string>
@@ -87,6 +101,7 @@
     <string name="hint_email">Email</string>
     <string name="hint_password">Senha</string>
     <string name="hint_nome">Nome</string>
+    <string name="hint_pesquisa">Pesquisar</string>
     <string name="hint_universidade">Universidade</string>
     <string name="hint_estado">Estado</string>
     <string name="hint_curso">Curso</string>
@@ -160,5 +175,6 @@
     <string name="base_cursos">BaseCursos</string>
     <string name="base_usuarios">Usuarios</string>
 
-    <string name="uri_perfil">uri_perfil</string>
+    <string name="uri_perfil"></string>
+    <string name="uri_pet"></string>
 </resources>

@@ -6,17 +6,19 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.ImageView;
 
 /**
  * Created by root on 23/02/18.
  */
 
-public class FocusView extends View {
+public class FocusView extends AppCompatImageView {
     private Paint mTransparentPaint;
     private Paint mSemiBlackPaint;
     private Path mPath = new Path();

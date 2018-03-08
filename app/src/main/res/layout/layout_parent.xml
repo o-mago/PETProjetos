@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp">
+
+        <TextView
+            android:id="@+id/tvParent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/CabecalhoPerfil.TextView"
+            android:text="Petianos"
+            android:layout_centerVertical="true"/>
+        <TextView
+            android:id="@+id/nPetianos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/arrow"
+            android:layout_toStartOf="@id/arrow"
+            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
+            style="@style/DadosPerfil.TextView"
+            android:layout_centerVertical="true"/>
+
+        <ImageView
+            android:id="@+id/arrow"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="16dp" />
+
+    </RelativeLayout>
+
+</LinearLayout>

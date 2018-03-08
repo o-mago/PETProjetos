@@ -13,14 +13,13 @@
             android:orientation="vertical">
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="240dp"
                 android:orientation="vertical"
                 android:background="#2E4551">
                 <com.mikhaellopez.circularimageview.CircularImageView
-                    android:id="@+id/foto_perfil"
+                    android:id="@+id/foto_pet"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
-                    android:src="@drawable/pet_logo"
                     android:layout_marginTop="20dp"
                     app:civ_border_color="#17C49B"
                     app:civ_border_width="4dp"
@@ -31,30 +30,32 @@
                     android:clickable="true"
                     android:focusable="true"/>
                 <TextView
-                    android:id="@+id/nick"
+                    android:id="@+id/nome"
                     android:layout_centerHorizontal="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="20sp"
-                    android:layout_below="@id/foto_perfil"
-                    android:text="Mago"
+                    android:layout_below="@id/foto_pet"
+                    android:text="PET Elétrica UFJF"
                     android:textColor="#FFFFFF"/>
                 <ImageButton
                     android:id="@+id/edit_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/ic_edit_black_24dp"
-                    android:layout_toRightOf="@id/nick"
-                    android:layout_toEndOf="@id/nick"
-                    android:layout_alignTop="@id/nick" />
-                <TextView
-                    android:id="@+id/pet"
+                    android:background="@drawable/background_transparente"
+                    android:layout_toRightOf="@id/nome"
+                    android:layout_toEndOf="@id/nome"
+                    android:layout_alignTop="@id/nome" />
+                <Button
+                    android:id="@+id/follow"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/pet_perfil"
-                    android:textColor="#FFFFFF"
+                    android:layout_height="30dp"
+                    android:layout_alignTop="@id/nome"
                     android:layout_centerHorizontal="true"
-                    android:layout_below="@id/nick"/>
+                    android:layout_marginTop="30dp"
+                    android:textColor="#03A9F4"
+                    android:text="ENTRAR"
+                    android:background="@drawable/background_contorno" />
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -68,28 +69,13 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
                     <!--<android.support.v7.widget.RecyclerView-->
-                        <!--android:id="@+id/lista"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--tools:listitem="@layout/linhas_recycler"/>-->
-                <!--<ListView-->
+                    <!--android:id="@+id/lista"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--tools:listitem="@layout/linhas_recycler"/>-->
+                    <!--<ListView-->
                     <!--android:layout_width="match_parent"-->
                     <!--android:layout_height="wrap_content"/>-->
-                    <TextView
-                        android:id="@+id/nomeCabecalho"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        style="@style/CabecalhoPerfil.TextView"
-                        android:text="Nome"/>
-                    <TextView
-                        android:id="@+id/nome"
-                        android:layout_marginTop="3dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@style/DadosPerfil.TextView" />
                     <TextView
                         android:id="@+id/universidadeCabecalho"
                         android:layout_width="wrap_content"
@@ -104,15 +90,20 @@
                         android:layout_marginLeft="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/DadosPerfil.TextView"
-                        />
+                        style="@style/DadosPerfil.TextView" />
+                    <iammert.com.expandablelib.ExpandableLayout
+                        android:id="@+id/petianos"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:parentLayout="@layout/layout_parent"
+                        app:childLayout="@layout/layout_child" />
                     <TextView
                         android:id="@+id/cursoCabecalho"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         style="@style/CabecalhoPerfil.TextView"
-                        android:text="Curso"/>
+                        android:text="Cursos"/>
                     <TextView
                         android:id="@+id/curso"
                         android:layout_marginTop="3dp"
@@ -137,14 +128,45 @@
                         android:layout_height="wrap_content"
                         style="@style/DadosPerfil.TextView" />
                     <TextView
-                        android:id="@+id/nascimentoCabecalho"
+                        android:id="@+id/siteCabecalho"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         style="@style/CabecalhoPerfil.TextView"
-                        android:text="Data de Nascimento"/>
+                        android:text="Site"/>
                     <TextView
-                        android:id="@+id/nascimento"
+                        android:id="@+id/site"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/DadosPerfil.TextView" />
+                    <TextView
+                        android:id="@+id/localizacaoCabecalho"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        style="@style/CabecalhoPerfil.TextView"
+                        android:text="Localizacao"/>
+                    <TextView
+                        android:id="@+id/localizacao"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/DadosPerfil.TextView" />
+                    <TextView
+                        android:id="@+id/anoCabecalho"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        style="@style/CabecalhoPerfil.TextView"
+                        android:text="Ano de Surgimento"/>
+                    <TextView
+                        android:id="@+id/ano"
                         android:layout_marginTop="3dp"
                         android:layout_marginStart="10dp"
                         android:layout_marginLeft="10dp"

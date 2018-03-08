@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -57,7 +58,9 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
     FirebaseStorage storage;
     StorageReference storageRef;
     Bitmap bitmapPerfil;
+    ImageButton editButton;
     Uri uriPerfil;
+    String codigo;
     boolean update = false;
     public SharedPreferences sharedPref;
     public SharedPreferences.Editor editor;
@@ -69,6 +72,12 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
         user = mAuth.getCurrentUser();
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
+        try {
+            codigo = getArguments().getString("codigo");
+        }
+        catch (NullPointerException e) {
+            codigo = user.getUid();
+        }
 //        File cacheDir = getDiskCacheDir(this, DISK_CACHE_SUBDIR);
 
 
@@ -86,6 +95,7 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
         curso = getView().findViewById(R.id.curso);
         universidade = getView().findViewById(R.id.universidade);
         pet = getView().findViewById(R.id.pet);
+        getView().findViewById(R.id.edit_button).setOnClickListener(this);
         nascimento = getView().findViewById(R.id.nascimento);
         imagemPerfil = getView().findViewById(R.id.foto_perfil);
         imagemPerfil.setOnClickListener(this);
@@ -113,6 +123,10 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
             intent.setType("image/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+        }
+        if(i == R.id.edit_button) {
+            Intent intent = new Intent(getActivity(), ContainerActivity.class);
+            startActivity(intent);
         }
     }
 
@@ -148,11 +162,11 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
         String petSP = sharedPref.getString(getString(R.string.pet_perfil), null);
         String nascimentoSP = sharedPref.getString(getString(R.string.nascimento_perfil), null);
         if(nomeSP == null || update) {
-            mDatabase.child("Usuarios").child(user.getUid()).child("nome").addValueEventListener(new ValueEventListener() {
+            mDatabase.child("Usuarios").child(codigo).child("nome").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     nome.setText(dataSnapshot.getValue(String.class));
-                    editor.putString(getString(R.string.nome_perfil), uriPerfil.toString());
+                    editor.putString("nome_perfil", dataSnapshot.getValue(String.class));
                 }
 
                 @Override
@@ -165,11 +179,11 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
             nome.setText(nomeSP);
         }
         if(emailSP == null || update) {
-            mDatabase.child("Usuarios").child(user.getUid()).child("email").addValueEventListener(new ValueEventListener() {
+            mDatabase.child("Usuarios").child(codigo).child("email").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     email.setText(dataSnapshot.getValue(String.class));
-                    editor.putString(getString(R.string.email_perfil), uriPerfil.toString());
+                    editor.putString("email_perfil", dataSnapshot.getValue(String.class));
                 }
 
                 @Override
@@ -182,11 +196,11 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
             email.setText(emailSP);
         }
         if(cursoSP == null || update) {
-            mDatabase.child("Usuarios").child(user.getUid()).child("curso").addValueEventListener(new ValueEventListener() {
+            mDatabase.child("Usuarios").child(codigo).child("curso").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     curso.setText(dataSnapshot.getValue(String.class));
-                    editor.putString(getString(R.string.curso_perfil), uriPerfil.toString());
+                    editor.putString("curso_perfil", dataSnapshot.getValue(String.class));
                 }
 
                 @Override
@@ -200,11 +214,11 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
         }
 
         if(universidadeSP == null || update) {
-            mDatabase.child("Usuarios").child(user.getUid()).child("universidade").addValueEventListener(new ValueEventListener() {
+            mDatabase.child("Usuarios").child(codigo).child("universidade").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     universidade.setText(dataSnapshot.getValue(String.class));
-                    editor.putString(getString(R.string.universidade_perfil), uriPerfil.toString());
+                    editor.putString("universidade_perfil", dataSnapshot.getValue(String.class));
                 }
 
                 @Override
@@ -218,11 +232,11 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
         }
 
         if(nascimentoSP == null || update) {
-            mDatabase.child("Usuarios").child(user.getUid()).child("nascimento").addValueEventListener(new ValueEventListener() {
+            mDatabase.child("Usuarios").child(codigo).child("nascimento").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     nascimento.setText(dataSnapshot.getValue(String.class));
-                    editor.putString(getString(R.string.nascimento_perfil), uriPerfil.toString());
+                    editor.putString("nascimento_perfil", dataSnapshot.getValue(String.class));
                 }
 
                 @Override
@@ -236,11 +250,11 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
         }
 
         if(nickSP == null || update) {
-            mDatabase.child("Usuarios").child(user.getUid()).child("nick").addValueEventListener(new ValueEventListener() {
+            mDatabase.child("Usuarios").child(codigo).child("nick").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     nick.setText(dataSnapshot.getValue(String.class));
-                    editor.putString(getString(R.string.nick_perfil), uriPerfil.toString());
+                    editor.putString("nick_perfil", dataSnapshot.getValue(String.class));
                 }
 
                 @Override
@@ -254,11 +268,14 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
         }
 
         if(petSP == null || update) {
-            mDatabase.child("Usuarios").child(user.getUid()).child("pet").addValueEventListener(new ValueEventListener() {
+            mDatabase.child("Usuarios").child(codigo).child("pet").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    pet.setText(dataSnapshot.getValue(String.class));
-                    editor.putString(getString(R.string.pet_perfil), uriPerfil.toString());
+                    for(DataSnapshot listSnapshot : dataSnapshot.getChildren()) {
+                        if(!listSnapshot.getValue(String.class).equals("aguardando"))
+                        pet.setText(listSnapshot.getKey());
+                        editor.putString("pet_perfil", listSnapshot.getKey());
+                    }
                 }
 
                 @Override
@@ -272,7 +289,7 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
         }
 
         try {
-            uriPerfil = Uri.parse(sharedPref.getString(getString(R.string.uri_perfil), null));
+            uriPerfil = Uri.parse(sharedPref.getString("uri_perfil", null));
         }
         catch (NullPointerException e) {
             uriPerfil = null;
@@ -281,7 +298,7 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
             Picasso.with(getActivity()).load(uriPerfil).into(imagemPerfil);
         }
         else {
-            StorageReference perfilRef = storageRef.child("imagensPerfil/" + user.getUid() + ".jpg");
+            StorageReference perfilRef = storageRef.child("imagensPerfil/" + codigo + ".jpg");
 
             final long ONE_MEGABYTE = 1024 * 1024;
             perfilRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
@@ -289,7 +306,7 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
                 public void onSuccess(byte[] bytes) {
                     bitmapPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                     uriPerfil = getImageUri(getActivity(), bitmapPerfil);
-                    editor.putString(getString(R.string.uri_perfil), uriPerfil.toString());
+                    editor.putString("uri_perfil", uriPerfil.toString());
                     editor.commit();
                     imagemPerfil.setImageBitmap(bitmapPerfil);
 

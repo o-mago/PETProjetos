@@ -180,15 +180,14 @@ public class NewUser extends BaseActivity implements
                                 //String postId = pushedPostRef.getKey();
                                 String postId = user.getUid();
 //                                DatabaseReference newChild = dbUsuario.
-                                Map<String, Usuario> users = new HashMap<>();
-                                users.put(postId, new Usuario(nome.getText().toString(),
-                                        nick.getText().toString(),
-                                        email.getText().toString(),
-                                        spinner_universidade.getSelectedItem().toString(),
-                                        spinner_curso.getSelectedItem().toString(),
-                                        nascimento.getText().toString()
-                                ));
-                                dbUsuario.setValue(users);
+                                Map<String, String> users = new HashMap<>();
+                                users.put("nome", nome.getText().toString());
+                                users.put("nick", nick.getText().toString());
+                                users.put("email", email.getText().toString());
+                                users.put("universidade", spinner_universidade.getSelectedItem().toString());
+                                users.put("curso", spinner_curso.getSelectedItem().toString());
+                                users.put("nascimento", nascimento.getText().toString());
+                                dbUsuario.child(user.getUid()).setValue(users);
                                 dbUsuario.child(user.getUid()).orderByPriority();
 
                             } else {
