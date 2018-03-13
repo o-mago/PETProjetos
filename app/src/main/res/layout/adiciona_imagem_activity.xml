@@ -11,7 +11,7 @@
         android:gravity="center_vertical">
 
         <LinearLayout
-            android:id="@+id/dados_usuario"
+            android:id="@+id/pai"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -74,6 +74,15 @@
                     android:text="@string/adiciona_imagem"
                     android:theme="@style/ThemeOverlay.MyDarkButton" />
             </LinearLayout>
+            <TextView
+                android:id="@+id/pular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pular essa etapa>"
+                android:layout_gravity="end"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp"/>
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

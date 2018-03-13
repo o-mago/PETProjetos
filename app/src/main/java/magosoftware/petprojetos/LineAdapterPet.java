@@ -1,6 +1,7 @@
 package magosoftware.petprojetos;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -106,7 +107,7 @@ private final SortedList<Pet> mSortedList = new SortedList<>(Pet.class, new Sort
         mSortedList.endBatchedUpdates();
     }
 
-    public void replaceAll(List<Pet> models) {
+    public void replaceAll(List<Pet> models, Drawable padrao) {
         mSortedList.beginBatchedUpdates();
         for (int i = mSortedList.size() - 1; i >= 0; i--) {
             final Pet model = mSortedList.get(i);
@@ -115,6 +116,10 @@ private final SortedList<Pet> mSortedList = new SortedList<>(Pet.class, new Sort
             }
         }
         mSortedList.addAll(models);
+        if(mSortedList.size() == 0) {
+            Pet naoEncontrou = new Pet("Não encontrou seu PET?", padrao);
+            mSortedList.add(naoEncontrou);
+        }
         mSortedList.endBatchedUpdates();
     }
 

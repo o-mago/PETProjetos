@@ -19,9 +19,9 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -38,7 +38,7 @@ import java.io.IOException;
  * Created by root on 01/03/18.
  */
 
-public class AjustaImagem2 extends BaseActivity implements SeekBar.OnSeekBarChangeListener, View.OnClickListener{
+public class AdicionaImagem extends BaseActivity implements SeekBar.OnSeekBarChangeListener, View.OnClickListener{
 
     BitmapDrawable bitmapDrawable;
     SeekBar seekBar;
@@ -57,15 +57,18 @@ public class AjustaImagem2 extends BaseActivity implements SeekBar.OnSeekBarChan
     private FrameLayout containerZoom;
     private FrameLayout containerFoto;
     private Bitmap bitmap;
+    private LinearLayout pai;
+    private TextView pular;
     FirebaseStorage storage;
     StorageReference storageRef;
     StorageReference petRef;
     Bitmap bitmapBorda;
+    String tipo;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_adicione_seu_pet_2);
+        setContentView(R.layout.adiciona_imagem_activity);
 
         seekBar = findViewById(R.id.zoom_imagem);
         seekBar.setProgress(0);
@@ -75,7 +78,10 @@ public class AjustaImagem2 extends BaseActivity implements SeekBar.OnSeekBarChan
 
         adicionarImagem = findViewById(R.id.adicionar_imagem);
         botoes = findViewById(R.id.botoes);
-        findViewById(R.id.adicionar_imagem).setOnClickListener(this);
+        pai = findViewById(R.id.pai);
+        findViewById(R.id.pular).setOnClickListener(this);
+        pular = findViewById(R.id.pular);
+        pular.setOnClickListener(this);
         focusView = findViewById(R.id.imagem_pet);
         containerZoom = findViewById(R.id.container_zoom);
         containerZoom.removeView(seekBar);
@@ -84,8 +90,12 @@ public class AjustaImagem2 extends BaseActivity implements SeekBar.OnSeekBarChan
         focusView.setLayoutParams(lpFoto);
         Intent intent = getIntent();
 //        String nomePet = intent.getStringExtra("nome");
-        String nomePet = "PET F";
-        petRef = storageRef.child("imagensPET/"+nomePet.replace(" ", "_")+".jpg");
+        String child = intent.getStringExtra("caminho");
+        tipo = intent.getStringExtra("tipo");
+        if(!tipo.equals("novo usuario") && !tipo.equals("novo pet")) {
+            pai.removeView(pular);
+        }
+        petRef = storageRef.child(child);
         setButtons();
         seekBar.setOnSeekBarChangeListener(this);
     }
@@ -113,7 +123,7 @@ public class AjustaImagem2 extends BaseActivity implements SeekBar.OnSeekBarChan
             @Override
             public void onClick(View v) {
                 int tamanhoBD = toPx(150);
-                DisplayMetrics displayMetrics = AjustaImagem2.this.getResources().getDisplayMetrics();
+                DisplayMetrics displayMetrics = AdicionaImagem.this.getResources().getDisplayMetrics();
                 int dpWidth = (int) (bitmapBorda.getWidth()/displayMetrics.density);
                 int dpHeight = (int) (bitmapBorda.getHeight()/displayMetrics.density);
                 int inicioHorizontal = toPx((dpWidth-radius)/2);
@@ -140,9 +150,16 @@ public class AjustaImagem2 extends BaseActivity implements SeekBar.OnSeekBarChan
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                         Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                        Intent intent = new Intent(AjustaImagem2.this, ContainerActivity.class);
-                        startActivity(intent);
-                        finish();
+                        if(tipo.equals("novo usuario")) {
+                            Intent intent = new Intent(AdicionaImagem.this, EmailPasswordActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                        else {
+                            Intent intent = new Intent(AdicionaImagem.this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
                     }
                 });
 
@@ -220,6 +237,18 @@ public class AjustaImagem2 extends BaseActivity implements SeekBar.OnSeekBarChan
             intent.setType("image/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+        }
+        if(i == R.id.pular) {
+            if(tipo.equals("novo usuario")) {
+                Intent intent = new Intent(AdicionaImagem.this, EmailPasswordActivity.class);
+                startActivity(intent);
+                finish();
+            }
+            else {
+                Intent intent = new Intent(AdicionaImagem.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
         }
     }
 

@@ -14,7 +14,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -40,8 +39,6 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -94,6 +91,10 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
     Drawable bitmapDrawablePet;
     final long ONE_MEGABYTE = 1024 * 1024;
     Section<String, Usuario> section = new Section<>();
+    Boolean temPET = false;
+    String nomeOldPET = "";
+    String situacaoPET = "";
+    Boolean tenhoCerteza = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -161,7 +162,7 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
                 String codigo;
                 for (DataSnapshot listSnapshots : dataSnapshot.getChildren()) {
                     String condicao = listSnapshots.getValue(String.class);
-                    if(condicao.equals("bolsista") || condicao.equals("oficial") || condicao.equals("voluntario")) {
+                    if(condicao.equals("bolsistas") || condicao.equals("oficiais") || condicao.equals("voluntarios")) {
                         editButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_edit_black_24dp));
                         break;
                     }
@@ -210,39 +211,91 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
         }
         if(i == R.id.edit_button) {
-            Intent intent = new Intent(getActivity(), AjustaImagem2.class);
+            Intent intent = new Intent(getActivity(), AdicionaImagem.class);
             startActivity(intent);
         }
         if(i == R.id.follow) {
+            dbUsuario.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.hasChild("pet")) {
+                        temPET = true;
+                        for (DataSnapshot listSnapshots : dataSnapshot.child("pet").getChildren()) {
+                            nomeOldPET = listSnapshots.getKey();
+                            situacaoPET = listSnapshots.getValue(String.class);
+                        }
+                    }
+                    else {
+                        temPET = false;
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.d("UNI", "Deu merda");
+                }
+            });
             final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle("Selecione seu status:");
             builder.setItems(getResources().getStringArray(R.array.opcoes_petiano), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Log.d("WHICH", Integer.toString(which));
-                    if(which == 0) {
-                        Map<String, String> novoPetiano = new HashMap<>();
-                        novoPetiano.put(user.getUid(), "bolsistas");
-                        mDatabase.child("PETs").child(nomePet).child("aguardando").setValue(novoPetiano);
+                    if(temCerteza()) {
+                        if(temPET) {
+                            Map<String, String> novoPetiano = new HashMap<>();
+                            novoPetiano.put(user.getUid(), "bolsistas");
+                            mDatabase.child("PETs").child(nomeOldPET).child("petianos").child(situacaoPET).removeValue();
+                        }
+                        Log.d("WHICH", Integer.toString(which));
+                        if (which == 0) {
+                            Map<String, String> novoPetiano = new HashMap<>();
+                            novoPetiano.put(user.getUid(), "bolsistas");
+                            mDatabase.child("PETs").child(nomePet).child("petianos").child("aguardando").setValue(novoPetiano);
+                        }
+                        if (which == 1) {
+                            Map<String, String> novoPetiano = new HashMap<>();
+                            novoPetiano.put(user.getUid(), "oficiais");
+                            mDatabase.child("PETs").child(nomePet).child("petianos").child("aguardando").setValue(novoPetiano);
+                        }
+                        if (which == 2) {
+                            Map<String, String> novoPetiano = new HashMap<>();
+                            novoPetiano.put(user.getUid(), "voluntarios");
+                            mDatabase.child("PETs").child(nomePet).child("petianos").child("aguardando").setValue(novoPetiano);
+                        }
+                        Map<String, String> pet = new HashMap<>();
+                        pet.put(nomePet, "aguardando");
+                        dbUsuario.child(user.getUid()).child("pet").setValue(pet);
+                        setupFollow("aguardando", "AGUARDANDO", "#FFFF00", getResources().getDrawable(R.drawable.background_contorno_aguardando));
                     }
-                    if(which == 1) {
-                        Map<String, String> novoPetiano = new HashMap<>();
-                        novoPetiano.put(user.getUid(), "oficiais");
-                        mDatabase.child("PETs").child(nomePet).child("aguardando").setValue(novoPetiano);
-                    }
-                    if(which == 2) {
-                        Map<String, String> novoPetiano = new HashMap<>();
-                        novoPetiano.put(user.getUid(), "voluntarios");
-                        mDatabase.child("PETs").child(nomePet).child("aguardando").setValue(novoPetiano);
-                    }
-                    Map<String, String> pet = new HashMap<>();
-                    pet.put(nomePet, "aguardando");
-                    dbUsuario.child(user.getUid()).child("pet").setValue(pet);
-                    setupFollow("aguardando", "AGUARDANDO","#FFFF00", getResources().getDrawable(R.drawable.background_contorno_aguardando));
                 }
             });
             builder.show();
         }
+    }
+
+    public Boolean temCerteza() {
+        if(temPET) {
+            final AlertDialog.Builder builderCerteza = new AlertDialog.Builder(getActivity());
+            builderCerteza.setTitle("Você tem certeza que deseja sair de "+nomeOldPET+"?");
+            builderCerteza.setItems(getResources().getStringArray(R.array.tem_certeza), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Log.d("WHICH", Integer.toString(which));
+                    if (which == 0) {
+                        tenhoCerteza = true;
+                        Map<String, String> pet = new HashMap<>();
+                        pet.put(nomePet, "aguardando");
+                        dbUsuario.child(user.getUid()).child("pet").setValue(pet);
+                        setupFollow("aguardando", "AGUARDANDO", "#FFFF00", getResources().getDrawable(R.drawable.background_contorno_aguardando));
+                    }
+                    if (which == 1) {
+                        tenhoCerteza = false;
+                    }
+                }
+            });
+            builderCerteza.show();
+        }
+        return tenhoCerteza;
     }
 
     @Override
@@ -259,6 +312,7 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
 
             }
         }
+
     }
 
     public void preenchePerfil() {

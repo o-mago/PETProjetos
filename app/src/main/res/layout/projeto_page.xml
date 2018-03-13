@@ -6,12 +6,12 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/perfil_pet"
+        android:id="@+id/perfil_projeto"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:background="#ECEFF1">
         <com.mikhaellopez.circularimageview.CircularImageView
-            android:id="@+id/logo_pet"
+            android:id="@+id/logo_projeto"
             android:layout_marginLeft="15dp"
             android:layout_marginStart="15dp"
             android:layout_width="60dp"
@@ -19,17 +19,17 @@
             android:layout_centerVertical="true"
             android:src="@drawable/logo_pet"/>
         <TextView
-            android:id="@+id/nome_pet"
+            android:id="@+id/nome_projeto"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/logo_pet"
+            android:layout_toRightOf="@id/logo_projeto"
             android:layout_marginLeft="20dp"
-            android:layout_toEndOf="@id/logo_pet"
+            android:layout_toEndOf="@id/logo_projeto"
             android:layout_toStartOf="@id/drive"
             android:layout_toLeftOf="@id/drive"
             android:layout_marginStart="20dp"
-            android:text="PET Elétrica UFJF"
+            android:text="LinusBot"
             android:textSize="20sp"/>
         <ImageView
             android:id="@+id/notificacao"
@@ -72,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:textColor="#03A9F4"
-                android:text="PROJETOS"/>
+                android:text="EQUIPES"/>
         </FrameLayout>
         <FrameLayout
             android:id="@+id/menu_tarefas_click"
@@ -86,7 +86,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="TAREFAS"/>
+                android:text="REUNIÕES"/>
         </FrameLayout>
         <FrameLayout
             android:id="@+id/menu_eventos_click"
@@ -100,7 +100,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="EVENTOS"/>
+                android:text="MEMBROS"/>
         </FrameLayout>
     </LinearLayout>
     <ScrollView
@@ -109,11 +109,11 @@
         android:layout_alignTop="@id/menu"
         android:layout_marginTop="40dp"
         android:layout_alignParentBottom="true">
-    <FrameLayout
-        android:id="@+id/fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    </FrameLayout>
+        </FrameLayout>
     </ScrollView>
 </RelativeLayout>

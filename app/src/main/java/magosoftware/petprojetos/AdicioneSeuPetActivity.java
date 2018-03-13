@@ -3,8 +3,6 @@ package magosoftware.petprojetos;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +23,6 @@ import com.pchmn.materialchips.ChipsInput;
 import com.pchmn.materialchips.model.Chip;
 //import com.pchmn.materialchips.ChipsInput;
 
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -147,8 +144,17 @@ public class AdicioneSeuPetActivity extends BaseActivity implements View.OnClick
                 dbPets.child(postId).child("cursos").child(c.getLabel()).setValue(c.getLabel());
                 dbPets.child(postId).child("cursos").orderByPriority();
             }
-            Intent intent = new Intent(this, AdicioneSeuPet2Activity.class);
-            intent.putExtra("nome", nome.getText().toString());
+            String nomeSemEspaco = "";
+            try {
+                nomeSemEspaco = postId.replace(" ", "_");
+            }
+            catch (NullPointerException e) {
+
+            }
+            String caminho = "imagensPET/"+nomeSemEspaco+".jpg";
+            Intent intent = new Intent(this, AdicionaImagem.class);
+            intent.putExtra("caminho", caminho);
+            intent.putExtra("tipo", "novo pet");
             startActivity(intent);
             finish();
         }

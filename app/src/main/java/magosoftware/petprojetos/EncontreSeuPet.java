@@ -173,14 +173,20 @@ public class EncontreSeuPet extends BaseFragment implements SearchView.OnQueryTe
     public void onItemClick(int position, String nome) {
         final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
-        Bundle bundle = new Bundle();
-        bundle.putString("nome", nome);
-        ft = getFragmentManager().beginTransaction();
-        Fragment fragment = PerfilPetFragment.newInstance();
-        fragment.setArguments(bundle);
-        ft.replace(R.id.fragment_container, fragment);
-        ft.addToBackStack(null);
-        ft.commit();
+        if(nome.equals("Não encontrou seu PET?")) {
+            Intent intent = new Intent(getActivity(), AdicioneSeuPetActivity.class);
+            startActivity(intent);
+        }
+        else {
+            Bundle bundle = new Bundle();
+            bundle.putString("nome", nome);
+            ft = getFragmentManager().beginTransaction();
+            Fragment fragment = PerfilPetFragment.newInstance();
+            fragment.setArguments(bundle);
+            ft.replace(R.id.fragment_container, fragment);
+            ft.addToBackStack(null);
+            ft.commit();
+        }
     }
 
     private void setupRecycler() {
@@ -214,7 +220,8 @@ public class EncontreSeuPet extends BaseFragment implements SearchView.OnQueryTe
     @Override
     public boolean onQueryTextChange(String query) {
         final List<Pet> filteredModelList = filter(mModels, query);
-        mAdapter.replaceAll(filteredModelList);
+        Drawable padrao = getResources().getDrawable(R.drawable.pet_logo);
+        mAdapter.replaceAll(filteredModelList, padrao);
         mRecyclerView.scrollToPosition(0);
         return true;
     }

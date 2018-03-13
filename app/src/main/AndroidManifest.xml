@@ -27,9 +27,8 @@
         <activity android:screenOrientation="portrait" android:name=".NovoCurso"></activity>
         <activity android:screenOrientation="portrait" android:name=".AjustaImagem"></activity>
         <activity android:screenOrientation="portrait" android:name=".AdicioneSeuPetActivity"></activity>
-        <activity android:screenOrientation="portrait" android:name=".AdicioneSeuPet2Activity"></activity>
         <activity android:screenOrientation="portrait" android:name=".ContainerActivity"></activity>
-        <activity android:screenOrientation="portrait" android:name=".AjustaImagem2"></activity>
+        <activity android:screenOrientation="portrait" android:name=".AdicionaImagem"></activity>
     </application>
 
 </manifest>

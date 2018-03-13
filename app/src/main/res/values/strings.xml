@@ -47,6 +47,11 @@
         <item>Extra Oficial</item>
     </string-array>
 
+    <string-array name="tem_certeza">
+        <item>Sim</item>
+        <item>Não</item>
+    </string-array>
+
     <string-array name="estados">
         <item name="estado">Estado</item>
         <item name="acre">Acre</item>

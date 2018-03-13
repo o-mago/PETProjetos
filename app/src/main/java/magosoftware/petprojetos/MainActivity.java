@@ -1,8 +1,14 @@
 package magosoftware.petprojetos;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -23,6 +29,8 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -30,6 +38,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.ByteArrayOutputStream;
 
 public class MainActivity extends BaseActivity implements
         GoogleApiClient.OnConnectionFailedListener {
@@ -48,6 +60,11 @@ public class MainActivity extends BaseActivity implements
     FragmentTransaction ft;
     DatabaseReference dbUsuario;
     FirebaseUser user;
+    public SharedPreferences sharedPref;
+    public SharedPreferences.Editor editor;
+    FirebaseStorage storage;
+    StorageReference storageRef;
+    private String nomeMeuPet = "";
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference userFirebase = database.getReference("User");
@@ -59,6 +76,15 @@ public class MainActivity extends BaseActivity implements
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
+        sharedPref = this.getSharedPreferences("todoApp", 0);
+        editor = sharedPref.edit();
+
+        storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReference();
+
+        setupMeuPET();
 
         //Navigation
         mDrawerList = (ListView)findViewById(R.id.navList);
@@ -93,7 +119,7 @@ public class MainActivity extends BaseActivity implements
                 String codigo;
                 for (DataSnapshot listSnapshots : dataSnapshot.getChildren()) {
                     String condicao = listSnapshots.getValue(String.class);
-                    if(!condicao.equals("bolsista") && !condicao.equals("oficial") && !condicao.equals("voluntario") && !condicao.equals("aguardando")) {
+                    if(!condicao.equals("bolsistas") && !condicao.equals("oficiais") && !condicao.equals("voluntarios") && !condicao.equals("aguardando")) {
                         ft = getSupportFragmentManager().beginTransaction();
                         ft.addToBackStack(null);
                         ft.replace(R.id.fragment_container, EncontreSeuPet.newInstance());
@@ -146,6 +172,60 @@ public class MainActivity extends BaseActivity implements
                 mDrawerLayout.closeDrawers();
             }
         });
+    }
+
+    private void setupMeuPET() {
+        mDatabase.child("Usuarios").child(user.getUid()).child("pet").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot listSnapshots : dataSnapshot.getChildren()) {
+                    String condicao = listSnapshots.getValue(String.class);
+                    nomeMeuPet = listSnapshots.getKey();
+                    editor.putString("nome_meu_pet", nomeMeuPet);
+                    editor.putString("condicao_meu_pet", condicao);
+                    editor.commit();
+                    break;
+                }
+                String nomeImagemPet = nomeMeuPet;
+                try {
+                    nomeImagemPet = nomeMeuPet.replace(" ", "_");
+                }
+                catch (NullPointerException e) {
+
+                }
+                Log.d("ENTROU2", nomeImagemPet);
+                StorageReference perfilRef = storageRef.child("imagensPET/" + nomeImagemPet + ".jpg");
+
+                final long ONE_MEGABYTE = 1024 * 1024;
+                perfilRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                    @Override
+                    public void onSuccess(byte[] bytes) {
+                        Bitmap bitmapPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                        Uri uriPet = getImageUri(MainActivity.this, bitmapPerfil);
+                        editor.putString("uri_pet", uriPet.toString());
+                        editor.commit();
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle any errors
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("UNI", "Deu merda");
+            }
+        });
+    }
+
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
     }
 
     // [START on_start_check_user]
