@@ -90,6 +90,7 @@
     <string name="sign_in">Entrar</string>
     <string name="create_account">Inscrever-se</string>
     <string name="adicionar_pet">Adicionar PET</string>
+    <string name="adicionar_projeto">Adicionar Projeto</string>
     <string name="adiciona_universidade">Adicionar Universidade</string>
     <string name="adiciona_imagem">Adicionar Imagem</string>
     <string name="adiciona_curso">Adicionar Curso</string>
@@ -117,6 +118,7 @@
     <string name="hint_integrantes">Número de petianos</string>
     <string name="hint_cidade">Cidade</string>
     <string name="hint_site">Site</string>
+    <string name="hint_drive">Endereço Google Drive</string>
 
     <string name="desc_firebase_lockup">Firebase logo and name</string>
     <string name="auth_failed">Authentication failed</string>

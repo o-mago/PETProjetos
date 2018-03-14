@@ -9,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DividerItemDecoration;
@@ -33,13 +34,15 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by root on 09/03/18.
  */
 
-public class ProjetosFragment extends BaseFragment implements LineAdapterProjetos.OnItemClicked {
+public class ProjetosFragment extends BaseFragment implements LineAdapterProjetos.OnItemClicked, View.OnClickListener {
 
     FirebaseUser user;
     FirebaseAuth mAuth;
@@ -47,6 +50,7 @@ public class ProjetosFragment extends BaseFragment implements LineAdapterProjeto
     private List<Projeto> mModels;
     FirebaseStorage storage;
     StorageReference storageRef;
+    DatabaseReference dbPET;
     RecyclerView mRecyclerView;
     public SharedPreferences sharedPref;
     String nomePET;
@@ -70,6 +74,7 @@ public class ProjetosFragment extends BaseFragment implements LineAdapterProjeto
         storageRef = storage.getReference();
         sharedPref = getActivity().getSharedPreferences("todoApp", 0);
         nomePET = sharedPref.getString("nome_meu_pet", "nada");
+        dbPET = mDatabase.child("PETs").child(nomePET);
         Log.d("nomePETWOW", nomePET);
 
         return inflater.inflate(R.layout.projetos, container, false);
@@ -79,7 +84,16 @@ public class ProjetosFragment extends BaseFragment implements LineAdapterProjeto
     public void onActivityCreated(Bundle savedIntanceState) {
         super.onActivityCreated(savedIntanceState);
 
+        getView().findViewById(R.id.add_projeto).setOnClickListener(this);
         setupRecycler();
+        setupLista();
+        Log.d("ENTROU3", "PASSOU");
+        mAdapter.setOnClick(this);
+//        mAdapter.add(mModels);
+//        mAdapter.setOnClick(ProjetosFragment.this);
+    }
+
+    public void setupLista() {
         mModels = new ArrayList<>();
         Log.d("ENTROU3", mDatabase.child("PETs").child(nomePET).child("projetos").toString());
         mDatabase.child("PETs").child(nomePET).child("projetos").addValueEventListener(new ValueEventListener() {
@@ -88,19 +102,37 @@ public class ProjetosFragment extends BaseFragment implements LineAdapterProjeto
                 for (DataSnapshot listSnapshots : dataSnapshot.getChildren()) {
                     cont++;
                     final String nome = listSnapshots.child("nome").getValue(String.class);
-                    for(DataSnapshot timeSnapshot : listSnapshots.child("time").getChildren()) {
-                        if(timeSnapshot.getKey().equals(user.getUid())) {
-                            situacao = "membro";
-                            break;
+                    try {
+                        DataSnapshot dbRef = listSnapshots.child("time");
+                        for(DataSnapshot timeSnapshot : dbRef.getChildren()) {
+                            if(timeSnapshot.getKey().equals(user.getUid())) {
+                                situacao = "membro";
+                                break;
+                            }
+                            else {
+                                situacao = "fora";
+                            }
                         }
                     }
-                    for(DataSnapshot aguardandoSnapshot : listSnapshots.child("aguardando").getChildren()) {
-                        if(aguardandoSnapshot.getKey().equals(user.getUid())) {
-                            situacao = "aguardando";
-                            break;
+                    catch (NullPointerException e) {
+
+                    }
+                    try {
+                        DataSnapshot dbRef = listSnapshots.child("aguardando");
+                        for(DataSnapshot aguardandoSnapshot : dbRef.getChildren()) {
+                            if(aguardandoSnapshot.getKey().equals(user.getUid())) {
+                                situacao = "aguardando";
+                                break;
+                            }
+                            else {
+                                situacao = "fora";
+                            }
                         }
                     }
-                    Log.d("PROJETOSWOW", nome);
+                    catch (NullPointerException e) {
+
+                    }
+                    Log.d("PROJETOSWOW", situacao);
                     if (nome != null) {
                         try {
                             String nomeSemEspaco = nome;
@@ -110,10 +142,10 @@ public class ProjetosFragment extends BaseFragment implements LineAdapterProjeto
                             catch (NullPointerException e) {
 
                             }
-                            final StorageReference projetoRef = storageRef.child("imagensProjetos/" + nomeSemEspaco + ".png");
+                            final StorageReference projetoRef = storageRef.child("imagensProjetos/" + nomeSemEspaco + ".jpg");
                             Log.d("Imagem", projetoRef.getPath());
                             final long ONE_MEGABYTE = 1024 * 1024;
-                            projetoRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                            projetoRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListenerString(situacao) {
                                 @Override
                                 public void onSuccess(byte[] bytes) {
                                     i++;
@@ -129,9 +161,15 @@ public class ProjetosFragment extends BaseFragment implements LineAdapterProjeto
 //                                    catch (NullPointerException e) {
 //
 //                                    }
-                                    mModels.add(new Projeto(nome, bitmapDrawableProjeto, situacao));
+                                    mModels.add(new Projeto(nome, bitmapDrawableProjeto, variavel));
                                     if(i == cont) {
-                                        mAdapter.add(mModels);
+                                        Log.d("QUANTIDADE", Integer.toString(mModels.size()));
+                                        Log.d("QUANTIDADE2", Integer.toString(mAdapter.getItemCount()));
+                                        mAdapter.replaceAll(mModels);
+                                        mAdapter.notifyDataSetChanged();
+                                        mModels.clear();
+                                        Log.d("QUANTIDADE", Integer.toString(mModels.size()));
+                                        Log.d("QUANTIDADE2", Integer.toString(mAdapter.getItemCount()));
                                         mRecyclerView.scrollToPosition(0);
                                         Log.d("ENTROU3", "mModelsNaVeia");
                                     }
@@ -156,10 +194,16 @@ public class ProjetosFragment extends BaseFragment implements LineAdapterProjeto
                 Log.d("UNI", "Deu merda");
             }
         });
-        Log.d("ENTROU3", "PASSOU");
-        mAdapter.setOnClick(this);
-//        mAdapter.add(mModels);
-//        mAdapter.setOnClick(ProjetosFragment.this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        if(id == R.id.add_projeto) {
+            Intent intent = new Intent(getActivity(), AdicioneSeuProjeto.class);
+            intent.putExtra("nome", nomePET);
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -167,12 +211,23 @@ public class ProjetosFragment extends BaseFragment implements LineAdapterProjeto
         if(situacao.equals("membro")) {
             Bundle bundle = new Bundle();
             bundle.putString("nome", nome);
-            ft = getChildFragmentManager().beginTransaction();
-            Fragment fragment = PerfilPetFragment.newInstance();
+            ft = getFragmentManager().beginTransaction();
+            Fragment fragment = ProjetoPageFragment.newInstance();
             fragment.setArguments(bundle);
             ft.replace(R.id.fragment_container, fragment);
             ft.addToBackStack(null);
             ft.commit();
+        }
+        if(situacao.equals("fora")) {
+            dbPET.child("projetos").child(nome).child("aguardando").child(user.getUid()).setValue(sharedPref.getString("nome_usuario", "Cumpadi"));
+            Snackbar.make(getView().findViewById(R.id.coordinator), "Solicitação enviada",
+                    Snackbar.LENGTH_SHORT).show();
+//            mAdapter.removeAll();
+//            setupLista();
+        }
+        if(situacao.equals("aguardando")) {
+            Snackbar.make(getView().findViewById(R.id.coordinator), "Aguardando aprovação",
+                    Snackbar.LENGTH_SHORT).show();
         }
     }
 

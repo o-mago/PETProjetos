@@ -81,8 +81,9 @@ public class LineAdapterProjetos extends RecyclerView.Adapter<LineHolderProjetos
         mProjeto.addAll(models);
     }
 
-    public void remove(List<Projeto> models) {
-        for (Projeto model : models) {
+    public void removeAll() {
+        for (int i = mProjeto.size() - 1; i >= 0; i--) {
+            final Projeto model = mProjeto.get(i);
             mProjeto.remove(model);
         }
     }

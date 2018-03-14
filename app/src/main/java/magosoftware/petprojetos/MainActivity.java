@@ -175,10 +175,11 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void setupMeuPET() {
-        mDatabase.child("Usuarios").child(user.getUid()).child("pet").addValueEventListener(new ValueEventListener() {
+        mDatabase.child("Usuarios").child(user.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot listSnapshots : dataSnapshot.getChildren()) {
+                editor.putString("nome_usuario", dataSnapshot.child("nome").getValue(String.class));
+                for (DataSnapshot listSnapshots : dataSnapshot.child("pet").getChildren()) {
                     String condicao = listSnapshots.getValue(String.class);
                     nomeMeuPet = listSnapshots.getKey();
                     editor.putString("nome_meu_pet", nomeMeuPet);

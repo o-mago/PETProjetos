@@ -2,6 +2,7 @@ package magosoftware.petprojetos;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -92,7 +93,7 @@ public class AdicionaImagem extends BaseActivity implements SeekBar.OnSeekBarCha
 //        String nomePet = intent.getStringExtra("nome");
         String child = intent.getStringExtra("caminho");
         tipo = intent.getStringExtra("tipo");
-        if(!tipo.equals("novo usuario") && !tipo.equals("novo pet")) {
+        if(!tipo.equals("novo usuario") && !tipo.equals("novo pet") && !tipo.equals("novo projeto")) {
             pai.removeView(pular);
         }
         petRef = storageRef.child(child);
@@ -239,6 +240,35 @@ public class AdicionaImagem extends BaseActivity implements SeekBar.OnSeekBarCha
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
         }
         if(i == R.id.pular) {
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            Bitmap bitmapPadrao = BitmapFactory.decodeResource(getResources(), R.drawable.ninosca);
+            bitmapPadrao.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
+            UploadTask uploadTask = petRef.putBytes(data);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle unsuccessful uploads
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    if(tipo.equals("novo usuario")) {
+                        Intent intent = new Intent(AdicionaImagem.this, EmailPasswordActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                    else {
+                        Intent intent = new Intent(AdicionaImagem.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }
+            });
+
             if(tipo.equals("novo usuario")) {
                 Intent intent = new Intent(AdicionaImagem.this, EmailPasswordActivity.class);
                 startActivity(intent);

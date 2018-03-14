@@ -304,7 +304,7 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
         if (requestCode == PICK_IMAGE) {
             try {
                 Uri selectedImage = data.getData();
-                Intent intent = new Intent(getActivity(), AjustaImagem.class);
+                Intent intent = new Intent(getActivity(), AdicionaImagem.class);
                 intent.putExtra("imagem", selectedImage.toString());
                 startActivity(intent);
             }
