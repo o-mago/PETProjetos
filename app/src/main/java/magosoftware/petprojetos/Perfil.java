@@ -29,6 +29,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -273,7 +274,7 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for(DataSnapshot listSnapshot : dataSnapshot.getChildren()) {
                         if(!listSnapshot.getValue(String.class).equals("aguardando"))
-                        pet.setText(listSnapshot.getKey());
+                            pet.setText(listSnapshot.getKey());
                         editor.putString("pet_perfil", listSnapshot.getKey());
                     }
                 }
@@ -287,37 +288,36 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
         else {
             pet.setText(petSP);
         }
+        Picasso.Builder builder = new Picasso.Builder(getActivity());
+        builder.listener(new Picasso.Listener()
+        {
+            @Override
+            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception)
+            {
+                uriPerfil = null;
+                StorageReference perfilRef = storageRef.child("imagensPerfil/" + codigo + ".jpg");
 
-        try {
-            uriPerfil = Uri.parse(sharedPref.getString("uri_perfil", null));
-        }
-        catch (NullPointerException e) {
-            uriPerfil = null;
-        }
-        if(uriPerfil != null) {
-            Picasso.with(getActivity()).load(uriPerfil).into(imagemPerfil);
-        }
-        else {
-            StorageReference perfilRef = storageRef.child("imagensPerfil/" + codigo + ".jpg");
+                final long ONE_MEGABYTE = 1024 * 1024;
+                perfilRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                    @Override
+                    public void onSuccess(byte[] bytes) {
+                        bitmapPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                        uriPerfil = getImageUri(getActivity(), bitmapPerfil);
+                        editor.putString("uri_perfil", uriPerfil.toString());
+                        editor.commit();
+                        imagemPerfil.setImageBitmap(bitmapPerfil);
 
-            final long ONE_MEGABYTE = 1024 * 1024;
-            perfilRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                @Override
-                public void onSuccess(byte[] bytes) {
-                    bitmapPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                    uriPerfil = getImageUri(getActivity(), bitmapPerfil);
-                    editor.putString("uri_perfil", uriPerfil.toString());
-                    editor.commit();
-                    imagemPerfil.setImageBitmap(bitmapPerfil);
-
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle any errors
-                }
-            });
-        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle any errors
+                    }
+                });
+            }
+        });
+        uriPerfil = Uri.parse(sharedPref.getString("uri_perfil", null));
+        builder.build().load(uriPerfil).into(imagemPerfil);
     }
 
 

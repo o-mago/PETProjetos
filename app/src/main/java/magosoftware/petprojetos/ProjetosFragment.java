@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -210,13 +211,14 @@ public class ProjetosFragment extends BaseFragment implements LineAdapterProjeto
     public void onItemClick(int position, String nome, String situacao) {
         if(situacao.equals("membro")) {
             Bundle bundle = new Bundle();
-            bundle.putString("nome", nome);
-            ft = getFragmentManager().beginTransaction();
+            bundle.putString("nome_projeto", nome);
+            ft = getActivity().getSupportFragmentManager().beginTransaction();
             Fragment fragment = ProjetoPageFragment.newInstance();
             fragment.setArguments(bundle);
             ft.replace(R.id.fragment_container, fragment);
             ft.addToBackStack(null);
             ft.commit();
+//            MainActivity.changeFragment(getFragmentManager(), nome);
         }
         if(situacao.equals("fora")) {
             dbPET.child("projetos").child(nome).child("aguardando").child(user.getUid()).setValue(sharedPref.getString("nome_usuario", "Cumpadi"));

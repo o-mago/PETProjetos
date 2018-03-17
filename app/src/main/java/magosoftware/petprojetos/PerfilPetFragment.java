@@ -222,7 +222,7 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
                         temPET = true;
                         for (DataSnapshot listSnapshots : dataSnapshot.child("pet").getChildren()) {
                             nomeOldPET = listSnapshots.getKey();
-                            situacaoPET = listSnapshots.getValue(String.class);
+                            situacaoPET = listSnapshots.child(nomeOldPET).child("situacao").getValue(String.class);
                         }
                     }
                     else {

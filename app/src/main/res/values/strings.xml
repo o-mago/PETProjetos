@@ -92,6 +92,7 @@
     <string name="adicionar_pet">Adicionar PET</string>
     <string name="adicionar_projeto">Adicionar Projeto</string>
     <string name="adiciona_universidade">Adicionar Universidade</string>
+    <string name="adiciona_equipe">Adicionar Equipe</string>
     <string name="adiciona_imagem">Adicionar Imagem</string>
     <string name="adiciona_curso">Adicionar Curso</string>
     <string name="sign_out">Sign Out</string>
@@ -102,6 +103,8 @@
     <string name="signed_in">Signed In</string>
     <string name="signed_out">Signed Out</string>
     <string name="token_null">Token: null</string>
+
+    <string name="titulo_color_picker">Selecione a cor</string>
 
     <string name="hint_user_id">User ID</string>
     <string name="hint_email">Email</string>

@@ -10,6 +10,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -118,7 +120,7 @@ public class MainActivity extends BaseActivity implements
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String codigo;
                 for (DataSnapshot listSnapshots : dataSnapshot.getChildren()) {
-                    String condicao = listSnapshots.getValue(String.class);
+                    String condicao = listSnapshots.child("situacao").getValue(String.class);
                     if(!condicao.equals("bolsistas") && !condicao.equals("oficiais") && !condicao.equals("voluntarios") && !condicao.equals("aguardando")) {
                         ft = getSupportFragmentManager().beginTransaction();
                         ft.addToBackStack(null);
@@ -180,7 +182,7 @@ public class MainActivity extends BaseActivity implements
             public void onDataChange(DataSnapshot dataSnapshot) {
                 editor.putString("nome_usuario", dataSnapshot.child("nome").getValue(String.class));
                 for (DataSnapshot listSnapshots : dataSnapshot.child("pet").getChildren()) {
-                    String condicao = listSnapshots.getValue(String.class);
+                    String condicao = listSnapshots.child("situacao").getValue(String.class);
                     nomeMeuPet = listSnapshots.getKey();
                     editor.putString("nome_meu_pet", nomeMeuPet);
                     editor.putString("condicao_meu_pet", condicao);

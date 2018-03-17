@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/meu_pet"
+    android:id="@+id/meu_projeto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -32,7 +32,7 @@
             android:text="LinusBot"
             android:textSize="20sp"/>
         <ImageView
-            android:id="@+id/notificacao"
+            android:id="@+id/config"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerVertical="true"
@@ -40,14 +40,14 @@
             android:layout_alignParentEnd="true"
             android:layout_marginRight="10dp"
             android:layout_marginEnd="10dp"
-            android:src="@drawable/pessoas"/>
+            android:src="@drawable/config"/>
         <ImageView
             android:id="@+id/drive"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/notificacao"
-            android:layout_toStartOf="@id/notificacao"
+            android:layout_toLeftOf="@id/config"
+            android:layout_toStartOf="@id/config"
             android:layout_marginRight="10dp"
             android:layout_marginEnd="10dp"
             android:src="@drawable/drive_button"/>
@@ -62,12 +62,12 @@
         android:background="#CFD8DC">
 
         <FrameLayout
-            android:id="@+id/menu_projetos_click"
+            android:id="@+id/menu_equipes_click"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1">
             <TextView
-                android:id="@+id/menu_projetos"
+                android:id="@+id/menu_equipes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -75,45 +75,41 @@
                 android:text="EQUIPES"/>
         </FrameLayout>
         <FrameLayout
-            android:id="@+id/menu_tarefas_click"
+            android:id="@+id/menu_reunioes_click"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
             android:layout_weight="1">
             <TextView
-                android:id="@+id/menu_tarefas"
+                android:id="@+id/menu_reunioes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="REUNIÕES"/>
         </FrameLayout>
         <FrameLayout
-            android:id="@+id/menu_eventos_click"
+            android:id="@+id/menu_membros_click"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
             android:layout_weight="1">
             <TextView
-                android:id="@+id/menu_eventos"
+                android:id="@+id/menu_membros"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="MEMBROS"/>
         </FrameLayout>
     </LinearLayout>
-    <ScrollView
+    <FrameLayout
+        android:id="@+id/fragment_container_projeto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignTop="@id/menu"
         android:layout_marginTop="40dp"
         android:layout_alignParentBottom="true">
-        <FrameLayout
-            android:id="@+id/fragment_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
 
-        </FrameLayout>
-    </ScrollView>
+    </FrameLayout>
 </RelativeLayout>

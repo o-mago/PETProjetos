@@ -101,7 +101,7 @@ public class MeuPetFragment extends BaseFragment implements View.OnClickListener
         getPET();
         FragmentManager manager = getChildFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        transaction.add(R.id.fragment_container, ProjetosFragment.newInstance());
+        transaction.add(R.id.fragment_container_meu_pet, ProjetosFragment.newInstance());
         transaction.commit();
 //        if(nomePET.equals("nada")) {
 //            semPet();
@@ -120,7 +120,7 @@ public class MeuPetFragment extends BaseFragment implements View.OnClickListener
             menuEventos.setTextColor(corPadrao);
             FragmentManager manager = getChildFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
-            transaction.add(R.id.fragment_container, ProjetosFragment.newInstance());
+            transaction.add(R.id.fragment_container_meu_pet, ProjetosFragment.newInstance());
             transaction.commit();
         }
         else if (id == R.id.menu_tarefas_click) {
@@ -129,7 +129,7 @@ public class MeuPetFragment extends BaseFragment implements View.OnClickListener
             menuEventos.setTextColor(corPadrao);
             FragmentManager manager = getChildFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
-            transaction.add(R.id.fragment_container, TarefasFragment.newInstance());
+            transaction.add(R.id.fragment_container_meu_pet, TarefasFragment.newInstance());
             transaction.commit();
         }
         else if (id == R.id.menu_eventos_click) {
@@ -138,7 +138,7 @@ public class MeuPetFragment extends BaseFragment implements View.OnClickListener
             menuEventos.setTextColor(Color.parseColor("#03A9F4"));
             FragmentManager manager = getChildFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
-            transaction.add(R.id.fragment_container, EventosFragment.newInstance());
+            transaction.add(R.id.fragment_container_meu_pet, EventosFragment.newInstance());
             transaction.commit();
         }
     }
