@@ -6,11 +6,9 @@
     android:orientation="vertical" >
     <CalendarView
         android:id="@+id/calendar_alert"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="270dp"
+        android:layout_height="320dp"
         android:contentDescription="Calendario"
-        android:maxDate="01/01/2013"
-        android:minDate="09/01/2012"
         android:showWeekNumber="false"
         android:tag="my tag" />
 </LinearLayout>

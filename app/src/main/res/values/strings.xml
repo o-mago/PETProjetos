@@ -52,6 +52,9 @@
         <item>Não</item>
     </string-array>
 
+    <string name="sim">Sim</string>
+    <string name="nao">Não</string>
+
     <string-array name="estados">
         <item name="estado">Estado</item>
         <item name="acre">Acre</item>

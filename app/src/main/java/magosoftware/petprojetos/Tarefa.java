@@ -25,8 +25,6 @@ public class Tarefa {
     public Tarefa(String titulo, String descricao, boolean concluido) {
         this.titulo = titulo;
         this.descricao = descricao;
-        this.prazo = prazo;
-        this.petianos = petianos;
         this.concluido = concluido;
     }
 

@@ -25,7 +25,7 @@ public class LineAdapterTarefa extends RecyclerView.Adapter<LineHolderTarefa> {
 
     //make interface like this
     public interface OnItemClicked {
-        void onItemClick(int position, String nome);
+        void onItemClick(int position, int id,String nome);
     }
 
     @Override
@@ -41,10 +41,22 @@ public class LineAdapterTarefa extends RecyclerView.Adapter<LineHolderTarefa> {
         if(mTarefa.get(position).getConcluido()) {
             holder.concluido.setBackgroundColor(Color.parseColor("#2962FF"));
         }
+        holder.deletar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClick.onItemClick(position, v.getId(), mTarefa.get(position).getTitulo());
+            }
+        });
+        holder.concluido.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClick.onItemClick(position, v.getId(), mTarefa.get(position).getTitulo());
+            }
+        });
         holder.cardTarefa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onClick.onItemClick(position, mTarefa.get(position).getTitulo());
+                onClick.onItemClick(position, v.getId(), mTarefa.get(position).getTitulo());
             }
         });
     }

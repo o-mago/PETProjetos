@@ -1,5 +1,7 @@
 package magosoftware.petprojetos;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -54,7 +56,7 @@ public class TarefasFragment extends BaseFragment implements LineAdapterTarefa.O
         storageRef = storage.getReference();
         equipePath = getArguments().getString("equipe_path");
         dbEquipe = mDatabase.child(equipePath);
-        Log.d("nomePETWOW", equipePath);
+        Log.d("TAREFASFRAGMENT", equipePath);
 
         return inflater.inflate(R.layout.tarefas_page, container, false);
     }
@@ -66,7 +68,7 @@ public class TarefasFragment extends BaseFragment implements LineAdapterTarefa.O
         getView().findViewById(R.id.add_tarefa).setOnClickListener(this);
         setupRecycler();
         setupLista();
-        Log.d("ENTROU3", "PASSOU");
+        Log.d("ENTROU4", "PASSOU");
         mAdapter.setOnClick(this);
     }
 
@@ -81,23 +83,86 @@ public class TarefasFragment extends BaseFragment implements LineAdapterTarefa.O
     }
 
     @Override
-    public void onItemClick(int position, String nome) {
+    public void onItemClick(int position,int id, final String nome) {
+        if(id == R.id.card) {
             Intent intent = new Intent(getActivity(), TarefasEditActivity.class);
             intent.putExtra("equipe_path", equipePath);
+            intent.putExtra("nome_tarefa", nome);
             startActivity(intent);
+        }
+        if(id == R.id.deletar) {
+            new AlertDialog.Builder(getActivity())
+                    .setTitle("Você tem certeza?")
+                    .setPositiveButton(R.string.sim, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dbEquipe.child("tarefas").child("fazer").child(nome).removeValue();
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton(R.string.nao, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .create()
+                    .show();
+        }
+        if(id == R.id.concluido) {
+            new AlertDialog.Builder(getActivity())
+                    .setTitle("A tarefa foi concluída?")
+                    .setPositiveButton(R.string.sim, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dbEquipe.child("tarefas").child("fazer").child(nome).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    Object data = dataSnapshot.getValue();
+                                    dbEquipe.child("tarefas").child("concluidas").child(nome).setValue(data, new DatabaseReference.CompletionListener() {
+                                        @Override
+                                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                            dbEquipe.child("tarefas").child("fazer").child(nome).removeValue();
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton(R.string.nao, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .create()
+                    .show();
+        }
     }
 
     private void setupLista() {
         mModels = new ArrayList<>();
-        dbEquipe.child("tarefas").child("completas").addValueEventListener(new ValueEventListener() {
+        dbEquipe.child("tarefas").child("fazer").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot listSnapshot : dataSnapshot.getChildren()) {
                     String titulo = listSnapshot.child("titulo").getValue(String.class);
                     String descricao = listSnapshot.child("descricao").getValue(String.class);
+                    Log.d("DEV/TAREFASFRAGMENT", titulo);
                     mModels.add(new Tarefa(titulo, descricao, false));
                 }
-                mAdapter.add(mModels);
+                Log.d("DEV/TAREFASFRAGMENT", Integer.toString(mModels.size()));
+                mAdapter.replaceAll(mModels);
+                mAdapter.notifyDataSetChanged();
+                mModels.clear();
+//                mAdapter.add(mModels);
+                mRecyclerView.scrollToPosition(0);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -111,6 +176,7 @@ public class TarefasFragment extends BaseFragment implements LineAdapterTarefa.O
         // Configurando o gerenciador de layout para ser uma lista.
         StaggeredGridLayoutManager layoutManager =
                 new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView = getView().findViewById(R.id.lista_tarefas);
         mRecyclerView.setLayoutManager(layoutManager);
         mAdapter = new LineAdapterTarefa();

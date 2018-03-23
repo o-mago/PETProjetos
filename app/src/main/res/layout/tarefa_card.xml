@@ -6,7 +6,9 @@
     android:layout_width="150dp"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    card_view:cardCornerRadius="10dp">
+    card_view:cardCornerRadius="10dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp">
     <LinearLayout
         android:id="@+id/tarefa"
         android:layout_width="match_parent"
@@ -21,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:maxLength="30"
+            android:maxLines="2"
             android:ellipsize="end"
             android:text="Título muitodsd as m fdsnfsdl"
             android:textSize="15sp"
@@ -35,7 +37,7 @@
             android:layout_marginEnd="2dp"
             android:layout_marginRight="2dp"
             android:layout_marginTop="5dp"
-            android:maxLength="90"
+            android:maxLines="5"
             android:ellipsize="end"
             android:text="Aqui tem uma descrição maneira sobre as paradas. Aproveito para testar limite de caracteredmsd kdf  mfdk f"
             android:textSize="15sp"

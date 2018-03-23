@@ -48,10 +48,11 @@ public class EquipePageFragment extends BaseFragment implements View.OnClickList
     ColorStateList corPadrao;
     TextView menuMembros;
     String nomeEquipe;
+    String equipePath;
 
-    public static ProjetoPageFragment newInstance() {
-        ProjetoPageFragment projetoPageFragment = new ProjetoPageFragment();
-        return projetoPageFragment;
+    public static EquipePageFragment newInstance() {
+        EquipePageFragment equipePageFragment = new EquipePageFragment();
+        return equipePageFragment;
     }
 
     @Override
@@ -65,7 +66,7 @@ public class EquipePageFragment extends BaseFragment implements View.OnClickList
         sharedPref = getActivity().getSharedPreferences("todoApp", 0);
         nomePET = sharedPref.getString("nome_meu_pet", "nada");
         dbProjeto = mDatabase.child("PETs").child(nomePET).child("projetos").child(nomeProjeto);
-        Log.d("nomePETWOW", nomePET);
+        Log.d("EQUIPEPAGEFRAGMENT", "onCreateView");
 
         return inflater.inflate(R.layout.equipe_page, container, false);
     }
@@ -86,14 +87,15 @@ public class EquipePageFragment extends BaseFragment implements View.OnClickList
         menuTarefasConcluidas = getView().findViewById(R.id.menu_tarefas_concluidas);
         menuReunioes = getView().findViewById(R.id.menu_reunioes);
         corPadrao = menuReunioes.getTextColors();
-
+        equipePath = "PETs/"+nomePET+"/projetos/"+nomeProjeto+"/equipes/" + nomeEquipe;
         FragmentManager manager = getChildFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         Bundle bundle = new Bundle();
-        bundle.putString("equipe_path", nomeProjeto);
+        bundle.putString("equipe_path", equipePath);
         Fragment fragment= TarefasFragment.newInstance();
         fragment.setArguments(bundle);
-        transaction.add(R.id.fragment_container_projeto, fragment);
+        Log.d("EQUIPEPAGEFRAGMENT", "chamou fragment tarefas");
+        transaction.add(R.id.fragment_container_equipe, fragment);
         transaction.commit();
     }
 
@@ -107,7 +109,7 @@ public class EquipePageFragment extends BaseFragment implements View.OnClickList
             FragmentManager manager = getChildFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             Bundle bundle = new Bundle();
-            bundle.putString("equipe_path", nomeProjeto);
+            bundle.putString("equipe_path", equipePath);
             Fragment fragment= TarefasFragment.newInstance();
             fragment.setArguments(bundle);
             transaction.add(R.id.fragment_container_equipe, fragment);
@@ -120,7 +122,7 @@ public class EquipePageFragment extends BaseFragment implements View.OnClickList
             FragmentManager manager = getChildFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             Bundle bundle = new Bundle();
-            bundle.putString("equipe_path", nomeProjeto);
+            bundle.putString("equipe_path", equipePath);
             Fragment fragment= TarefasFragment.newInstance();
             fragment.setArguments(bundle);
             transaction.add(R.id.fragment_container_equipe, fragment);
@@ -133,7 +135,7 @@ public class EquipePageFragment extends BaseFragment implements View.OnClickList
             FragmentManager manager = getChildFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             Bundle bundle = new Bundle();
-            bundle.putString("equipe_path", nomeProjeto);
+            bundle.putString("equipe_path", equipePath);
             Fragment fragment= TarefasFragment.newInstance();
             fragment.setArguments(bundle);
             transaction.add(R.id.fragment_container_equipe, fragment);

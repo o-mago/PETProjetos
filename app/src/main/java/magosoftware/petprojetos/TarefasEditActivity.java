@@ -43,6 +43,7 @@ public class TarefasEditActivity extends BaseActivity implements View.OnClickLis
     private String dataSelecionada;
     private String caminhoEquipe;
     private DatabaseReference dbEquipe;
+    private String nomeTarefa;
 
     @Override
     public void onCreate(Bundle savedInstantState) {
@@ -51,17 +52,43 @@ public class TarefasEditActivity extends BaseActivity implements View.OnClickLis
 
         certo = findViewById(R.id.certo);
         cancela = findViewById(R.id.cancela);
+        dataText = findViewById(R.id.data_text);
         certo.setOnClickListener(this);
         cancela.setOnClickListener(this);
+        dataText.setOnClickListener(this);
         titulo = findViewById(R.id.titulo);
         chipsPetianos = findViewById(R.id.chips_responsaveis);
-        dataText = findViewById(R.id.data_text);
         descricao = findViewById(R.id.descricao);
-
         Intent intent = getIntent();
         caminhoEquipe = intent.getStringExtra("equipe_path");
         dbEquipe = mDatabase.child(caminhoEquipe);
         getPetianos(chipsPetianos);
+        try {
+            nomeTarefa = intent.getStringExtra("nome_tarefa");
+            getInfoTarefa();
+        }
+        catch (NullPointerException e) {
+
+        }
+    }
+
+    private void getInfoTarefa() {
+        dbEquipe.child("tarefas").child("fazer").child(nomeTarefa).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                titulo.setText(dataSnapshot.child("titulo").getValue(String.class));
+                descricao.setText(dataSnapshot.child("titulo").getValue(String.class));
+                dataText.setText(dataSnapshot.child("prazo").getValue(String.class));
+                final List<Chip> mPetianosList = new ArrayList<>();
+                for(DataSnapshot listSnapshot : dataSnapshot.child("time").getChildren()) {
+                    chipsPetianos.addChip(listSnapshot.getValue(String.class), "");
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void setupCalendar() {
@@ -96,12 +123,13 @@ public class TarefasEditActivity extends BaseActivity implements View.OnClickLis
         int id = view.getId();
         if(id == R.id.certo) {
             String tarefa = titulo.getText().toString();
-            dbEquipe.child(tarefa).child("titulo").setValue(titulo.getText().toString());
-            dbEquipe.child(tarefa).child("prazo").setValue(dataSelecionada);
-            dbEquipe.child(tarefa).child("descricao").setValue(descricao.getText().toString());
+            dbEquipe.child("tarefas").child("fazer").child(tarefa).child("titulo").setValue(titulo.getText().toString());
+            dbEquipe.child("tarefas").child("fazer").child(tarefa).child("prazo").setValue(dataSelecionada);
+            dbEquipe.child("tarefas").child("fazer").child(tarefa).child("descricao").setValue(descricao.getText().toString());
             List<Chip> contactsSelected = (List<Chip>) chipsPetianos.getSelectedChipList();
             for(Chip c : contactsSelected) {
-                mDatabase.child(caminhoEquipe).child(tarefa).child("time").child(c.getLabel()).setValue(c.getLabel());
+                Log.d("DEV/TAREFASEDIT", "Entrou");
+                dbEquipe.child("tarefas").child("fazer").child(tarefa).child("time").child(c.getLabel()).setValue(c.getLabel());
             }
             finish();
         }
@@ -115,10 +143,12 @@ public class TarefasEditActivity extends BaseActivity implements View.OnClickLis
 
     private void getPetianos(final ChipsInput chipsPetianos) {
         String[] caminhos = caminhoEquipe.split("/");
-        DatabaseReference timeProjeto = mDatabase;
-        for(int i =0; i < 6; i++) {
-            timeProjeto = timeProjeto.child(caminhos[i]);
-        }
+        DatabaseReference timeProjeto = mDatabase.child(caminhoEquipe).child("time");
+//        for(int i =0; i < 6; i++) {
+//            timeProjeto = timeProjeto.child(caminhos[i]);
+//        }
+//        timeProjeto.child("time");
+        Log.d("TAREFASEDITACTIVITY", timeProjeto.toString());
         timeProjeto.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

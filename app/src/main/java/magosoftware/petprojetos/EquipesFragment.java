@@ -129,6 +129,7 @@ public class EquipesFragment extends BaseFragment implements LineAdapterEquipe.O
         fragment.setArguments(bundle);
         ft.replace(R.id.fragment_container, fragment);
         ft.addToBackStack(null);
+        Log.d("EQUIPESFRAGMENT", "chamou fragment page");
         ft.commit();
     }
 
