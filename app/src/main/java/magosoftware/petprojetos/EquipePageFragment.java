@@ -91,6 +91,7 @@ public class EquipePageFragment extends BaseFragment implements View.OnClickList
         FragmentManager manager = getChildFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         Bundle bundle = new Bundle();
+        bundle.putString("situacao_tarefas", "fazer");
         bundle.putString("equipe_path", equipePath);
         Fragment fragment= TarefasFragment.newInstance();
         fragment.setArguments(bundle);
@@ -110,9 +111,12 @@ public class EquipePageFragment extends BaseFragment implements View.OnClickList
             FragmentTransaction transaction = manager.beginTransaction();
             Bundle bundle = new Bundle();
             bundle.putString("equipe_path", equipePath);
+            bundle.putString("situacao_tarefas", "fazer");
             Fragment fragment= TarefasFragment.newInstance();
             fragment.setArguments(bundle);
-            transaction.add(R.id.fragment_container_equipe, fragment);
+            transaction.replace(R.id.fragment_container_equipe, fragment);
+            transaction.detach(fragment);
+            transaction.attach(fragment);
             transaction.commit();
         }
         else if (id == R.id.menu_tarefas_concluidas_click) {
@@ -123,9 +127,10 @@ public class EquipePageFragment extends BaseFragment implements View.OnClickList
             FragmentTransaction transaction = manager.beginTransaction();
             Bundle bundle = new Bundle();
             bundle.putString("equipe_path", equipePath);
+            bundle.putString("situacao_tarefas", "concluidas");
             Fragment fragment= TarefasFragment.newInstance();
             fragment.setArguments(bundle);
-            transaction.add(R.id.fragment_container_equipe, fragment);
+            transaction.replace(R.id.fragment_container_equipe, fragment);
             transaction.commit();
         }
         else if (id == R.id.menu_reunioes_click) {
@@ -138,7 +143,7 @@ public class EquipePageFragment extends BaseFragment implements View.OnClickList
             bundle.putString("equipe_path", equipePath);
             Fragment fragment= TarefasFragment.newInstance();
             fragment.setArguments(bundle);
-            transaction.add(R.id.fragment_container_equipe, fragment);
+            transaction.replace(R.id.fragment_container_equipe, fragment);
             transaction.commit();
         }
     }

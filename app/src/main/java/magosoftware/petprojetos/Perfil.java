@@ -65,6 +65,7 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
     boolean update = false;
     public SharedPreferences sharedPref;
     public SharedPreferences.Editor editor;
+    String nomePET;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -73,6 +74,8 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
         user = mAuth.getCurrentUser();
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
+        sharedPref = getActivity().getSharedPreferences("todoApp", 0);
+        nomePET = sharedPref.getString("nome_meu_pet", null);
         try {
             codigo = getArguments().getString("codigo");
         }
@@ -126,7 +129,7 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
         }
         if(i == R.id.edit_button) {
-            Intent intent = new Intent(getActivity(), ContainerActivity.class);
+            Intent intent = new Intent(getActivity(), PerfilEdit.class);
             startActivity(intent);
         }
     }
@@ -269,14 +272,12 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
         }
 
         if(petSP == null || update) {
-            mDatabase.child("Usuarios").child(codigo).child("pet").addValueEventListener(new ValueEventListener() {
+            mDatabase.child("Usuarios").child(codigo).child("pet").child(nomePET).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    for(DataSnapshot listSnapshot : dataSnapshot.getChildren()) {
-                        if(!listSnapshot.getValue(String.class).equals("aguardando"))
-                            pet.setText(listSnapshot.getKey());
-                        editor.putString("pet_perfil", listSnapshot.getKey());
-                    }
+                        if(!dataSnapshot.child("situacao").getValue(String.class).equals("aguardando")) {
+                            pet.setText(nomePET);
+                        }
                 }
 
                 @Override
@@ -316,8 +317,13 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
                 });
             }
         });
-        uriPerfil = Uri.parse(sharedPref.getString("uri_perfil", null));
-        builder.build().load(uriPerfil).into(imagemPerfil);
+        try {
+            uriPerfil = Uri.parse(sharedPref.getString("uri_perfil", null));
+            builder.build().load(uriPerfil).into(imagemPerfil);
+        }
+        catch (NullPointerException e) {
+            Log.d("DEV/PERFIL", "Deu merda aqui");
+        }
     }
 
 

@@ -11,14 +11,6 @@
         android:id="@+id/equipe"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <!--<com.mikhaellopez.circularimageview.CircularImageView-->
-            <!--android:id="@+id/imagem_projeto"-->
-            <!--android:layout_marginLeft="15dp"-->
-            <!--android:layout_marginStart="15dp"-->
-            <!--android:layout_width="70dp"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:layout_height="70dp"-->
-            <!--android:src="@drawable/logo_pet"/>-->
         <TextView
             android:id="@+id/nome_projeto"
             android:layout_width="wrap_content"

@@ -1,5 +1,6 @@
 package magosoftware.petprojetos;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <ImageView
+            android:id="@+id/certo"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/check"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/cancela"
+            android:layout_toStartOf="@id/cancela"
+            android:layout_marginRight="20dp"
+            android:layout_marginEnd="20dp"/>
+        <ImageView
+            android:id="@+id/cancela"
+            android:layout_width="40dp"
+            android:layout_centerVertical="true"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/cancel"/>
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Marque os horários disponíveis"
+        android:layout_gravity="center_horizontal"
+        android:textSize="20sp"/>
+
+    <ExpandableListView
+        android:id="@+id/lista_dias"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

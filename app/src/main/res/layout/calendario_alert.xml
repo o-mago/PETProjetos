@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    <CalendarView
+    <DatePicker
         android:id="@+id/calendar_alert"
         android:layout_width="270dp"
         android:layout_height="320dp"

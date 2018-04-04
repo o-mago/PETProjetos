@@ -113,31 +113,39 @@ public class ProjetoPageFragment extends BaseFragment implements View.OnClickLis
     @Override
     public void onClick(View view) {
         int id = view.getId();
-        if(id == R.id.menu_projetos_click) {
+        if(id == R.id.menu_equipes_click) {
             menuEquipes.setTextColor(Color.parseColor("#03A9F4"));
             menuReunioes.setTextColor(corPadrao);
             menuMembros.setTextColor(corPadrao);
             FragmentManager manager = getChildFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
-            transaction.add(R.id.fragment_container_projeto, EquipesFragment.newInstance());
+            Bundle bundle = new Bundle();
+            bundle.putString("nome_projeto", nomeProjeto);
+            Fragment fragment= EquipesFragment.newInstance();
+            fragment.setArguments(bundle);
+            transaction.replace(R.id.fragment_container_projeto, fragment);
             transaction.commit();
         }
-        else if (id == R.id.menu_tarefas_click) {
+        else if (id == R.id.menu_reunioes_click) {
             menuEquipes.setTextColor(corPadrao);
             menuReunioes.setTextColor(Color.parseColor("#03A9F4"));
             menuMembros.setTextColor(corPadrao);
             FragmentManager manager = getChildFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
-            transaction.add(R.id.fragment_container_projeto, TarefasFragment.newInstance());
+            Bundle bundle = new Bundle();
+            bundle.putString("projeto_path", "PETs/"+nomePET+"/projetos/"+nomeProjeto);
+            Fragment fragment= ReunioesFragment.newInstance();
+            fragment.setArguments(bundle);
+            transaction.replace(R.id.fragment_container_projeto, fragment);
             transaction.commit();
         }
-        else if (id == R.id.menu_eventos_click) {
+        else if (id == R.id.menu_membros_click) {
             menuEquipes.setTextColor(corPadrao);
             menuReunioes.setTextColor(corPadrao);
             menuMembros.setTextColor(Color.parseColor("#03A9F4"));
             FragmentManager manager = getChildFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
-            transaction.add(R.id.fragment_container_projeto, EventosFragment.newInstance());
+            transaction.replace(R.id.fragment_container_projeto, EventosFragment.newInstance());
             transaction.commit();
         }
     }

@@ -33,6 +33,10 @@
         <activity android:screenOrientation="portrait" android:name=".AdicioneSeuProjeto"></activity>
         <activity android:screenOrientation="portrait" android:name=".AdicioneEquipe"></activity>
         <activity android:screenOrientation="portrait" android:name=".TarefasEditActivity"></activity>
+        <activity android:screenOrientation="portrait" android:name=".ReunioesEditActivity"></activity>
+        <activity android:screenOrientation="portrait" android:name=".PerfilEdit"></activity>
+        <activity android:screenOrientation="portrait" android:name=".HorariosEdit"></activity>
+        <activity android:screenOrientation="portrait" android:name=".MarcarReuniaoActivity"></activity>
     </application>
 
 </manifest>

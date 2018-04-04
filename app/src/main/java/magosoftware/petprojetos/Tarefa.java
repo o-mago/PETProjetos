@@ -13,6 +13,7 @@ public class Tarefa {
     String prazo;
     ArrayList<String> petianos;
     boolean concluido;
+    String situacaoPrazo;
 
     public Tarefa(String titulo, String descricao, String prazo, ArrayList<String> petianos, boolean concluido) {
         this.titulo = titulo;
@@ -22,10 +23,11 @@ public class Tarefa {
         this.concluido = concluido;
     }
 
-    public Tarefa(String titulo, String descricao, boolean concluido) {
+    public Tarefa(String titulo, String descricao, boolean concluido, String situacaoPrazo) {
         this.titulo = titulo;
         this.descricao = descricao;
         this.concluido = concluido;
+        this.situacaoPrazo = situacaoPrazo;
     }
 
     public String getTitulo() { return titulo; }
@@ -37,4 +39,6 @@ public class Tarefa {
     public ArrayList<String> getPetianos() { return petianos; }
 
     public Boolean getConcluido() { return concluido; }
+
+    public String getSituacaoPrazo() { return situacaoPrazo; }
 }

@@ -83,6 +83,7 @@
                     android:paddingStart="10dp"
                     android:paddingRight="10dp"
                     android:paddingEnd="10dp"
+                    android:gravity="center_vertical"
                     android:textSize="20sp"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/background_cinza"
@@ -100,15 +101,13 @@
             </RelativeLayout>
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="300dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/background_cinza">
-
                 <ScrollView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
-
                     <EditText
                         android:id="@+id/descricao"
                         android:layout_width="match_parent"

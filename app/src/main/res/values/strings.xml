@@ -86,6 +86,34 @@
         <item name="tocantins">Tocantins</item>
     </string-array>
 
+    <string-array name="horarios">
+        <item name="horario1">8:00&#8211;9:00</item>
+        <item name="horario2">9:00&#8211;10:00</item>
+        <item name="horario3">10:00&#8211;11:00</item>
+        <item name="horario4">11:00&#8211;12:00</item>
+        <item name="horario5">12:00&#8211;13:00</item>
+        <item name="horario6">13:00&#8211;14:00</item>
+        <item name="horario7">14:00&#8211;15:00</item>
+        <item name="horario8">15:00&#8211;16:00</item>
+        <item name="horario9">16:00&#8211;17:00</item>
+        <item name="horario10">17:00&#8211;18:00</item>
+        <item name="horario11">18:00&#8211;19:00</item>
+        <item name="horario12">19:00&#8211;20:00</item>
+        <item name="horario13">20:00&#8211;21:00</item>
+        <item name="horario14">21:00&#8211;22:00</item>
+        <item name="horario15">22:00&#8211;23:00</item>
+    </string-array>
+
+    <string-array name="dias">
+        <item name="segunda">SEGUNDA</item>
+        <item name="terca">TERÇA</item>
+        <item name="quarta">QUARTA</item>
+        <item name="quinta">QUINTA</item>
+        <item name="sexta">SEXTA</item>
+        <item name="sabado">SABADO</item>
+        <item name="domingo">DOMINGO</item>
+    </string-array>
+
     <string name="crop">Salvar</string>
     <string name="voltar">Voltar</string>
 

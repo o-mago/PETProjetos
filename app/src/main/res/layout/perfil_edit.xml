@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:background="@color/grey_300"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:id="@+id/dados_usuario"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="60dp"
+                android:background="@drawable/pet_logo"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="30dp"/>
+
+            <EditText
+                android:id="@+id/field_nome"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_nome"
+                android:inputType="textPersonName" />
+
+            <EditText
+                android:id="@+id/field_nick"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_nick"
+                android:inputType="textPersonName" />
+
+            <Spinner
+                android:id="@+id/universidade_spinner"
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:spinnerMode="dialog"
+                android:hint="@string/hint_universidade"/>
+
+            <Spinner
+                android:id="@+id/curso_spinner"
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:spinnerMode="dialog"
+                android:hint="@string/hint_curso" />
+
+            <magosoftware.petprojetos.EditTextEnd
+                android:id="@+id/field_nascimento"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_nascimento"
+                android:inputType="date" />
+
+            <ImageButton
+                android:id="@+id/horarios"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/calendar"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/background_borda_cinza"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <Button
+                    android:id="@+id/aceitar"
+                    android:layout_width="0dp"
+                    android:layout_height="45dp"
+                    android:layout_weight="1"
+                    android:text="OK"
+                    android:theme="@style/ThemeOverlay.MyDarkButton" />
+
+                <Button
+                    android:id="@+id/cancelar"
+                    android:layout_width="0dp"
+                    android:layout_height="45dp"
+                    android:layout_weight="1"
+                    android:text="CANCELAR"
+                    android:theme="@style/ThemeOverlay.MyDarkButton" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

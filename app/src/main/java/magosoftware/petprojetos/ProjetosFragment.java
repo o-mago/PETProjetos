@@ -1,5 +1,6 @@
 package magosoftware.petprojetos;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ProgressBar;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -61,6 +63,7 @@ public class ProjetosFragment extends BaseFragment implements LineAdapterProjeto
     private int i = 0;
     private int cont = 0;
     private String nomeProjeto;
+    ProgressBar progress;
 
     public static ProjetosFragment newInstance() {
         ProjetosFragment projetosFragment = new ProjetosFragment();
@@ -85,6 +88,8 @@ public class ProjetosFragment extends BaseFragment implements LineAdapterProjeto
     public void onActivityCreated(Bundle savedIntanceState) {
         super.onActivityCreated(savedIntanceState);
 
+        progress = getView().findViewById(R.id.progress_bar);
+
         getView().findViewById(R.id.add_projeto).setOnClickListener(this);
         setupRecycler();
         setupLista();
@@ -97,7 +102,7 @@ public class ProjetosFragment extends BaseFragment implements LineAdapterProjeto
     public void setupLista() {
         mModels = new ArrayList<>();
         Log.d("ENTROU3", mDatabase.child("PETs").child(nomePET).child("projetos").toString());
-        mDatabase.child("PETs").child(nomePET).child("projetos").addValueEventListener(new ValueEventListener() {
+        mDatabase.child("PETs").child(nomePET).child("projetos").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot listSnapshots : dataSnapshot.getChildren()) {
@@ -173,6 +178,7 @@ public class ProjetosFragment extends BaseFragment implements LineAdapterProjeto
                                         Log.d("QUANTIDADE2", Integer.toString(mAdapter.getItemCount()));
                                         mRecyclerView.scrollToPosition(0);
                                         Log.d("ENTROU3", "mModelsNaVeia");
+                                        progress.setVisibility(View.GONE);
                                     }
                                 }
                             }).addOnFailureListener(new OnFailureListener() {

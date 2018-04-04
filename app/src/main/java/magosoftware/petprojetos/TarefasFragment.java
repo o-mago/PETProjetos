@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,7 +25,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -42,6 +47,8 @@ public class TarefasFragment extends BaseFragment implements LineAdapterTarefa.O
     RecyclerView mRecyclerView;
     DatabaseReference dbEquipe;
     String equipePath;
+    String situacaoTarefas;
+    private LinearLayout containerTarefas;
 
     public static TarefasFragment newInstance() {
         TarefasFragment tarefasFragment = new TarefasFragment();
@@ -55,6 +62,7 @@ public class TarefasFragment extends BaseFragment implements LineAdapterTarefa.O
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
         equipePath = getArguments().getString("equipe_path");
+        situacaoTarefas = getArguments().getString("situacao_tarefas");
         dbEquipe = mDatabase.child(equipePath);
         Log.d("TAREFASFRAGMENT", equipePath);
 
@@ -64,8 +72,11 @@ public class TarefasFragment extends BaseFragment implements LineAdapterTarefa.O
     @Override
     public void onActivityCreated(Bundle savedIntanceState) {
         super.onActivityCreated(savedIntanceState);
-
+        containerTarefas = getView().findViewById(R.id.container_tarefas);
         getView().findViewById(R.id.add_tarefa).setOnClickListener(this);
+        if(situacaoTarefas.equals("concluidas")) {
+            containerTarefas.removeView(getView().findViewById(R.id.add_tarefa));
+        }
         setupRecycler();
         setupLista();
         Log.d("ENTROU4", "PASSOU");
@@ -90,7 +101,7 @@ public class TarefasFragment extends BaseFragment implements LineAdapterTarefa.O
             intent.putExtra("nome_tarefa", nome);
             startActivity(intent);
         }
-        if(id == R.id.deletar) {
+        if(id == R.id.frame_deletar) {
             new AlertDialog.Builder(getActivity())
                     .setTitle("Você tem certeza?")
                     .setPositiveButton(R.string.sim, new DialogInterface.OnClickListener() {
@@ -109,53 +120,107 @@ public class TarefasFragment extends BaseFragment implements LineAdapterTarefa.O
                     .create()
                     .show();
         }
-        if(id == R.id.concluido) {
-            new AlertDialog.Builder(getActivity())
-                    .setTitle("A tarefa foi concluída?")
-                    .setPositiveButton(R.string.sim, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dbEquipe.child("tarefas").child("fazer").child(nome).addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    Object data = dataSnapshot.getValue();
-                                    dbEquipe.child("tarefas").child("concluidas").child(nome).setValue(data, new DatabaseReference.CompletionListener() {
-                                        @Override
-                                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                            dbEquipe.child("tarefas").child("fazer").child(nome).removeValue();
-                                        }
-                                    });
-                                }
+        if(id == R.id.frame_concluido) {
+            if (situacaoTarefas.equals("fazer")) {
+                new AlertDialog.Builder(getActivity())
+                        .setTitle("A tarefa foi concluída?")
+                        .setPositiveButton(R.string.sim, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dbEquipe.child("tarefas").child("fazer").child(nome).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        Object data = dataSnapshot.getValue();
+                                        dbEquipe.child("tarefas").child("concluidas").child(nome).setValue(data, new DatabaseReference.CompletionListener() {
+                                            @Override
+                                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                dbEquipe.child("tarefas").child("fazer").child(nome).removeValue();
+                                            }
+                                        });
+                                    }
 
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
 
-                                }
-                            });
-                            dialog.dismiss();
-                        }
-                    })
-                    .setNegativeButton(R.string.nao, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .create()
-                    .show();
+                                    }
+                                });
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNegativeButton(R.string.nao, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .create()
+                        .show();
+            }
+            else {
+                new AlertDialog.Builder(getActivity())
+                        .setTitle("Tem certeza?")
+                        .setPositiveButton(R.string.sim, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dbEquipe.child("tarefas").child("concluidas").child(nome).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        Object data = dataSnapshot.getValue();
+                                        dbEquipe.child("tarefas").child("fazer").child(nome).setValue(data, new DatabaseReference.CompletionListener() {
+                                            @Override
+                                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                dbEquipe.child("tarefas").child("concluidas").child(nome).removeValue();
+                                            }
+                                        });
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNegativeButton(R.string.nao, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .create()
+                        .show();
+            }
         }
     }
 
     private void setupLista() {
         mModels = new ArrayList<>();
-        dbEquipe.child("tarefas").child("fazer").addValueEventListener(new ValueEventListener() {
+        dbEquipe.child("tarefas").child(situacaoTarefas).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot listSnapshot : dataSnapshot.getChildren()) {
                     String titulo = listSnapshot.child("titulo").getValue(String.class);
                     String descricao = listSnapshot.child("descricao").getValue(String.class);
+//                    long data = (listSnapshot.child("prazo").getValue(String.class));
+                    String data = listSnapshot.child("prazo").getValue(String.class);
+                    long dataLong = dateToMillis(data);
+                    long dataAtual = System.currentTimeMillis()-1000;
+                    Log.d("DEV/DATAS", getDate(dataLong, "dd/MM/yyyy"));
+                    Log.d("DEV/DATAS",getDate(dataAtual, "dd/MM/yyyy"));
                     Log.d("DEV/TAREFASFRAGMENT", titulo);
-                    mModels.add(new Tarefa(titulo, descricao, false));
+                    String situacaoPrazo;
+                    Log.d("DEV/DATAS", Long.toString(dataLong - dataAtual));
+                    if(situacaoTarefas.equals("concluidas")) {
+                        situacaoPrazo = "concluido";
+                    }
+                    else if(dataLong - dataAtual < 259200000) {
+                        situacaoPrazo = "proximo";
+                    }
+                    else {
+                        situacaoPrazo = "ok";
+                    }
+                    mModels.add(new Tarefa(titulo, descricao, false, situacaoPrazo));
                 }
                 Log.d("DEV/TAREFASFRAGMENT", Integer.toString(mModels.size()));
                 mAdapter.replaceAll(mModels);
@@ -169,6 +234,29 @@ public class TarefasFragment extends BaseFragment implements LineAdapterTarefa.O
 
             }
         });
+    }
+
+    public static String getDate(long milliSeconds, String dateFormat)
+    {
+        // Create a DateFormatter object for displaying date in specified format.
+        SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
+
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(milliSeconds);
+        return formatter.format(calendar.getTime());
+    }
+
+    private long dateToMillis(String data) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        long timeInMilliseconds = 0;
+        try {
+            Date mDate = sdf.parse(data);
+            timeInMilliseconds = mDate.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return timeInMilliseconds;
     }
 
     private void setupRecycler() {

@@ -1,5 +1,6 @@
 package magosoftware.petprojetos;
 
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
@@ -38,16 +39,22 @@ public class LineAdapterTarefa extends RecyclerView.Adapter<LineHolderTarefa> {
     public void onBindViewHolder(LineHolderTarefa holder, final int position) {
         holder.tituloTarefa.setText(mTarefa.get(position).getTitulo());
         holder.descricaoTarefa.setText(mTarefa.get(position).getDescricao());
+        if(mTarefa.get(position).getSituacaoPrazo().equals("proximo")) {
+            holder.time.setColorFilter(Color.parseColor("#FF4081"));
+        }
+        if(mTarefa.get(position).getSituacaoPrazo().equals("concluido")) {
+            holder.concluido.setColorFilter(Color.parseColor("#1976D2"));
+        }
         if(mTarefa.get(position).getConcluido()) {
             holder.concluido.setBackgroundColor(Color.parseColor("#2962FF"));
         }
-        holder.deletar.setOnClickListener(new View.OnClickListener() {
+        holder.frameDeletar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onClick.onItemClick(position, v.getId(), mTarefa.get(position).getTitulo());
             }
         });
-        holder.concluido.setOnClickListener(new View.OnClickListener() {
+        holder.frameConcluido.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onClick.onItemClick(position, v.getId(), mTarefa.get(position).getTitulo());
