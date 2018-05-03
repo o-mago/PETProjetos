@@ -1,6 +1,7 @@
 package magosoftware.petprojetos;
 
 import android.content.Context;
+import android.support.v7.util.SortedList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,16 +10,17 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
 public class ExpandableListAdapterCompara extends BaseExpandableListAdapter {
 
     private List<String> lstGrupos;
-    private HashMap<String, List<Horario>> lstItensGrupos;
+    private HashMap<String, List<String>> lstItensGrupos;
     private Context context;
 
-    public ExpandableListAdapterCompara(Context context, List<String> grupos, HashMap<String, List<Horario>> itensGrupos) {
+    public ExpandableListAdapterCompara(Context context, List<String> grupos, HashMap<String, List<String>> itensGrupos) {
         // inicializa as variáveis da classe
         this.context = context;
         lstGrupos = grupos;
@@ -44,7 +46,7 @@ public class ExpandableListAdapterCompara extends BaseExpandableListAdapter {
     }
 
     @Override
-    public Horario getChild(int groupPosition, int childPosition) {
+    public Object getChild(int groupPosition, int childPosition) {
         // retorna um item do grupo
         return lstItensGrupos.get(getGroup(groupPosition)).get(childPosition);
     }
@@ -79,12 +81,14 @@ public class ExpandableListAdapterCompara extends BaseExpandableListAdapter {
         if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(
                     Context.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(R.layout.expandable_header, null);
+            convertView = layoutInflater.inflate(R.layout.compara_horario_group, null);
         }
 
-        TextView tvGrupo = (TextView) convertView.findViewById(R.id.header);
+        TextView horario = (TextView) convertView.findViewById(R.id.header_horario);
+        TextView quantidade = (TextView) convertView.findViewById(R.id.header_quantidade);
 
-        tvGrupo.setText((String) getGroup(groupPosition));
+        horario.setText((String) getGroup(groupPosition));
+        quantidade.setText(Integer.toString(lstItensGrupos.get(getGroup(groupPosition)).size()));
 
         return convertView;
     }
@@ -96,26 +100,11 @@ public class ExpandableListAdapterCompara extends BaseExpandableListAdapter {
         if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(
                     Context.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(R.layout.expandable_item, null);
+            convertView = layoutInflater.inflate(R.layout.compara_horario_item, null);
         }
 
-        TextView tvItem = (TextView) convertView.findViewById(R.id.item);
-        CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.checkBox);
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
-                    lstItensGrupos.get(getGroup(groupPosition)).get(childPosition).disponivel = true;
-                }
-                else {
-                    lstItensGrupos.get(getGroup(groupPosition)).get(childPosition).disponivel = false;
-                }
-            }
-        });
-        Horario horario = (Horario) getChild(groupPosition, childPosition);
-        tvItem.setText(horario.getHora());
-        checkBox.setChecked(horario.isDisponivel());
-
+        TextView tvItem = (TextView) convertView.findViewById(R.id.item_nome);
+        tvItem.setText((String) getChild(groupPosition, childPosition));
         return convertView;
     }
 

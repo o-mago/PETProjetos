@@ -40,6 +40,7 @@ public class AdicioneSeuProjeto extends BaseActivity implements View.OnClickList
         nomeUsuario = intent.getStringExtra("nomeUsuario");
         dbProjetos = mDatabase.child("PETs").child(nomePET).child("projetos");
         nomeProjeto = findViewById(R.id.field_nome);
+        nomeUsuario = sharedPref.getString("nome_usuario", "Cumpadi");
         findViewById(R.id.adicionar_projeto).setOnClickListener(this);
     }
 
@@ -48,21 +49,23 @@ public class AdicioneSeuProjeto extends BaseActivity implements View.OnClickList
         int id = view.getId();
 
         if(id == R.id.adicionar_projeto) {
-            String nomeSemEspaco = nomeProjeto.getText().toString();
-            Map<String, String> projeto = new HashMap<>();
-            projeto.put("nome", nomeSemEspaco);
+//            String nomeSemEspaco = nomeProjeto.getText().toString();
+//            Map<String, String> projeto = new HashMap<>();
+//            projeto.put("nome", nomeSemEspaco);
             Map<String, String> situacao = new HashMap<>();
-            situacao.put(user.getUid(), sharedPref.getString("nome_usuario", "Cumpadi"));
-            dbProjetos.child(nomeSemEspaco).setValue(projeto);
-            dbProjetos.child(nomeSemEspaco).child("time").setValue(situacao);
-            dbProjetos.child(nomeSemEspaco).orderByPriority();
-            try {
-                nomeSemEspaco = nomeSemEspaco.replace(" ", "_");
-            }
-            catch (NullPointerException e) {
-
-            }
-            String caminho = "imagensProjetos/"+nomeSemEspaco+".jpg";
+            situacao.put(user.getUid(), nomeUsuario);
+            DatabaseReference dbNovoProjeto = dbProjetos.push();
+//            dbNovoProjeto.setValue(projeto);
+            dbNovoProjeto.child("time").setValue(situacao);
+            dbNovoProjeto.orderByPriority();
+            dbNovoProjeto.child("coordenador").child(user.getUid()).setValue(nomeUsuario);
+//            try {
+//                nomeSemEspaco = nomeSemEspaco.replace(" ", "_");
+//            }
+//            catch (NullPointerException e) {
+//
+//            }
+            String caminho = "imagensProjetos/"+dbNovoProjeto.getKey()+".jpg";
             Intent intent = new Intent(this, AdicionaImagem.class);
             intent.putExtra("caminho", caminho);
             intent.putExtra("tipo", "novo projeto");

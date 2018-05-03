@@ -15,6 +15,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -46,6 +47,7 @@ public class AdicioneSeuPetActivity extends BaseActivity implements View.OnClick
     ChipsInput chipsCursos;
     private Spinner spinner_universidade;
     private Spinner spinner_estado;
+    FirebaseUser user;
 
     @Override
     public void onCreate(Bundle savedInstaceState) {
@@ -65,6 +67,7 @@ public class AdicioneSeuPetActivity extends BaseActivity implements View.OnClick
         site = findViewById(R.id.field_site);
 
         mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
 
         dbPets = mDatabase.child("PETs");
 
@@ -126,7 +129,8 @@ public class AdicioneSeuPetActivity extends BaseActivity implements View.OnClick
     public void onClick(View view) {
         int i = view.getId();
         if(i == R.id.adicionar_pet) {
-            String postId = nome.getText().toString();
+            DatabaseReference dbNovoPet = dbPets.push();
+            String nomePet = nome.getText().toString();
             Map<String, String> pets = new HashMap<>();
             pets.put("nome", nome.getText().toString());
             pets.put("nPetianos", nPetianos.getText().toString());
@@ -136,22 +140,34 @@ public class AdicioneSeuPetActivity extends BaseActivity implements View.OnClick
             pets.put("site", site.getText().toString());
             pets.put("cidade", arrumaTexto(cidade.getText().toString()));
             pets.put("estado", spinner_estado.getSelectedItem().toString());
-            dbPets.child(postId).setValue(pets);
-            dbPets.child(postId).orderByPriority();
+            dbNovoPet.setValue(pets);
+            dbNovoPet.orderByPriority();
+
+            mDatabase.child("Usuarios").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
 
             List<Chip> contactsSelected = (List<Chip>) chipsCursos.getSelectedChipList();
             for(Chip c : contactsSelected) {
-                dbPets.child(postId).child("cursos").child(c.getLabel()).setValue(c.getLabel());
-                dbPets.child(postId).child("cursos").orderByPriority();
+                dbNovoPet.child("cursos").child(c.getLabel()).setValue(c.getLabel());
+                dbNovoPet.child("cursos").orderByPriority();
             }
-            String nomeSemEspaco = "";
-            try {
-                nomeSemEspaco = postId.replace(" ", "_");
-            }
-            catch (NullPointerException e) {
-
-            }
-            String caminho = "imagensPET/"+nomeSemEspaco+".jpg";
+//            String nomeSemEspaco = "";
+//            try {
+//                nomeSemEspaco = nomePet.replace(" ", "_");
+//            }
+//            catch (NullPointerException e) {
+//
+//            }
+            String caminho = "imagensPET/"+dbNovoPet.getKey()+".jpg";
             Intent intent = new Intent(this, AdicionaImagem.class);
             intent.putExtra("caminho", caminho);
             intent.putExtra("tipo", "novo pet");

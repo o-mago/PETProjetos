@@ -19,6 +19,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -41,12 +43,13 @@ import java.io.ByteArrayOutputStream;
 public class ProjetoPageFragment extends BaseFragment implements View.OnClickListener {
 
     FirebaseUser user;
-    FirebaseAuth mAuth; FirebaseStorage storage;
+    FirebaseAuth mAuth;
+    FirebaseStorage storage;
     StorageReference storageRef;
     DatabaseReference dbProjeto;
     RecyclerView mRecyclerView;
     public SharedPreferences sharedPref;
-    private String nomeProjeto;
+    private String nodeProjeto;
     private String nomePET;
     Uri uriProjeto;
     CircularImageView imagemProjeto;
@@ -59,6 +62,10 @@ public class ProjetoPageFragment extends BaseFragment implements View.OnClickLis
     TextView menuReunioes;
     ColorStateList corPadrao;
     TextView menuMembros;
+    private ProgressBar progressBar;
+    private RelativeLayout perfilProjeto;
+    private LinearLayout menu;
+    private String nomeProjeto;
 
     public static ProjetoPageFragment newInstance() {
         ProjetoPageFragment projetoPageFragment = new ProjetoPageFragment();
@@ -71,10 +78,12 @@ public class ProjetoPageFragment extends BaseFragment implements View.OnClickLis
         user = mAuth.getCurrentUser();
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
+        nodeProjeto = getArguments().getString("node_projeto");
+        Log.d("DEV/PROJETOSPAGE", "node: "+nodeProjeto);
         nomeProjeto = getArguments().getString("nome_projeto");
         sharedPref = getActivity().getSharedPreferences("todoApp", 0);
         nomePET = sharedPref.getString("nome_meu_pet", "nada");
-        dbProjeto = mDatabase.child("PETs").child(nomePET).child("projetos").child(nomeProjeto);
+        dbProjeto = mDatabase.child("PETs").child(nomePET).child("projetos").child(nodeProjeto);
         Log.d("nomePETWOW", nomePET);
 
         return inflater.inflate(R.layout.projeto_page, container, false);
@@ -84,9 +93,14 @@ public class ProjetoPageFragment extends BaseFragment implements View.OnClickLis
     public void onActivityCreated(Bundle savedIntanceState) {
         super.onActivityCreated(savedIntanceState);
 
+        perfilProjeto = getView().findViewById(R.id.perfil_projeto);
+        menu = getView().findViewById(R.id.menu);
+        perfilProjeto.setVisibility(View.GONE);
+        menu.setVisibility(View.GONE);
         imagemProjeto = getView().findViewById(R.id.logo_projeto);
         meuProjeto = getView().findViewById(R.id.meu_projeto);
         nomeProjetos = getView().findViewById(R.id.nome_projeto);
+        progressBar = getView().findViewById(R.id.progress_bar);
         menuEquipesClick = getView().findViewById(R.id.menu_equipes_click);
         menuReunioesClick = getView().findViewById(R.id.menu_reunioes_click);
         menuMembrosClick = getView().findViewById(R.id.menu_membros_click);
@@ -97,79 +111,97 @@ public class ProjetoPageFragment extends BaseFragment implements View.OnClickLis
         menuReunioes = getView().findViewById(R.id.menu_reunioes);
         corPadrao = menuReunioes.getTextColors();
         menuMembros = getView().findViewById(R.id.menu_membros);
+        nomeProjetos.setText(nomeProjeto);
 
         setImagemProjeto();
-
-        FragmentManager manager = getChildFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        Bundle bundle = new Bundle();
-        bundle.putString("nome_projeto", nomeProjeto);
-        Fragment fragment= EquipesFragment.newInstance();
-        fragment.setArguments(bundle);
-        transaction.add(R.id.fragment_container_projeto, fragment);
-        transaction.commit();
     }
 
     @Override
     public void onClick(View view) {
         int id = view.getId();
         if(id == R.id.menu_equipes_click) {
+            progressBar.setVisibility(View.GONE);
             menuEquipes.setTextColor(Color.parseColor("#03A9F4"));
             menuReunioes.setTextColor(corPadrao);
             menuMembros.setTextColor(corPadrao);
             FragmentManager manager = getChildFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             Bundle bundle = new Bundle();
-            bundle.putString("nome_projeto", nomeProjeto);
+            bundle.putString("node_projeto", nodeProjeto);
             Fragment fragment= EquipesFragment.newInstance();
             fragment.setArguments(bundle);
-            transaction.replace(R.id.fragment_container_projeto, fragment);
+            transaction.replace(R.id.fragment_container_child, fragment);
             transaction.commit();
         }
         else if (id == R.id.menu_reunioes_click) {
+            progressBar.setVisibility(View.GONE);
             menuEquipes.setTextColor(corPadrao);
             menuReunioes.setTextColor(Color.parseColor("#03A9F4"));
             menuMembros.setTextColor(corPadrao);
             FragmentManager manager = getChildFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             Bundle bundle = new Bundle();
-            bundle.putString("projeto_path", "PETs/"+nomePET+"/projetos/"+nomeProjeto);
+            bundle.putString("reunioes_path", "PETs/"+nomePET+"/projetos/"+nodeProjeto);
+            bundle.putString("node_projeto", nodeProjeto);
             Fragment fragment= ReunioesFragment.newInstance();
             fragment.setArguments(bundle);
-            transaction.replace(R.id.fragment_container_projeto, fragment);
+            transaction.replace(R.id.fragment_container_child, fragment);
             transaction.commit();
         }
         else if (id == R.id.menu_membros_click) {
+            progressBar.setVisibility(View.GONE);
             menuEquipes.setTextColor(corPadrao);
             menuReunioes.setTextColor(corPadrao);
             menuMembros.setTextColor(Color.parseColor("#03A9F4"));
             FragmentManager manager = getChildFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
-            transaction.replace(R.id.fragment_container_projeto, EventosFragment.newInstance());
+            Bundle bundle = new Bundle();
+            bundle.putString("membros_path", "PETs/"+nomePET+"/projetos/"+nodeProjeto);
+            bundle.putString("origem", "projetos");
+            Fragment fragment= MembrosFragment.newInstance();
+            fragment.setArguments(bundle);
+            transaction.replace(R.id.fragment_container_child, fragment);
             transaction.commit();
         }
     }
 
     public void setImagemProjeto() {
-        String nomeProjetoFoto = nomeProjeto;
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 8;
+        String nodeProjetoFoto = nodeProjeto;
         try {
-            nomeProjetoFoto = nomeProjeto.replace(" ", "_");
+            nodeProjetoFoto = nodeProjeto.replace(" ", "_");
         }
         catch (NullPointerException e) {
 
         }
-        Log.d("ENTROU", nomeProjetoFoto);
-        StorageReference perfilRef = storageRef.child("imagensProjetos/" + nomeProjetoFoto + ".jpg");
+        Log.d("ENTROU", nodeProjetoFoto);
+        StorageReference perfilRef = storageRef.child("imagensProjetos/" + nodeProjetoFoto + ".jpg");
 
         final long ONE_MEGABYTE = 1024 * 1024;
         perfilRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
-                Log.d("ENTROU", "foi");
-                Bitmap bitmapPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                try {
+                    Log.d("ENTROU", "foi");
+                    Bitmap bitmapPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
 //                    uriProjeto = getImageUri(getActivity(), bitmapPerfil);
-                imagemProjeto.setImageBitmap(bitmapPerfil);
+                    imagemProjeto.setImageBitmap(bitmapPerfil);
+                    progressBar.setVisibility(View.GONE);
+                    perfilProjeto.setVisibility(View.VISIBLE);
+                    menu.setVisibility(View.VISIBLE);
+                    FragmentManager manager = getChildFragmentManager();
+                    FragmentTransaction transaction = manager.beginTransaction();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("node_projeto", nodeProjeto);
+                    Fragment fragment = EquipesFragment.newInstance();
+                    fragment.setArguments(bundle);
+                    transaction.replace(R.id.fragment_container_child, fragment);
+                    transaction.commit();
+                }
+                catch (IllegalStateException e) {
 
+                }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

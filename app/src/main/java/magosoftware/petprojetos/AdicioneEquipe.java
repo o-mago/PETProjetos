@@ -16,6 +16,7 @@ import com.android.colorpicker.ColorPickerPalette;
 import com.android.colorpicker.ColorPickerSwatch;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 
 /**
@@ -44,12 +45,13 @@ public class AdicioneEquipe extends BaseActivity implements View.OnClickListener
         user = mAuth.getCurrentUser();
         Intent intent = getIntent();
         nomePET = intent.getStringExtra("nome_pet");
-        nomeProjeto = intent.getStringExtra("nome_projeto");
+        nomeProjeto = intent.getStringExtra("node_projeto");
         dbEquipes = mDatabase.child("PETs").child(nomePET).child("projetos").child(nomeProjeto).child("equipes");
         nomeEquipe = findViewById(R.id.field_nome);
         frameCor = findViewById(R.id.corEscolhida);
         findViewById(R.id.adicionar_equipe).setOnClickListener(this);
         findViewById(R.id.seleciona_cor).setOnClickListener(this);
+        corEscolhida = Color.parseColor("#F6402C");
 
         LayoutInflater layoutInflater = LayoutInflater.from(this);
         final ColorPickerPalette colorPickerPalette =
@@ -94,9 +96,9 @@ public class AdicioneEquipe extends BaseActivity implements View.OnClickListener
             catch (NullPointerException e) {
 
             }
-            dbEquipes.child(nomeSemEspaco).child("nome").setValue(nome);
-            dbEquipes.child(nomeSemEspaco).child("cor").setValue(corEscolhida);
-            dbEquipes.child(nomeSemEspaco).orderByPriority();
+            DatabaseReference dbNovaEquipe = dbEquipes.push();
+            dbNovaEquipe.child("nome").setValue(nome);
+            dbNovaEquipe.child("cor").setValue(corEscolhida);
             finish();
         }
     }

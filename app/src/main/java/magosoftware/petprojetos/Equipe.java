@@ -15,13 +15,15 @@ public class Equipe {
 //    String coordenador;
 //    ArrayList<String> petianos;
     int corEquipe;
+    String node;
 //    String situacao;
 
-    public Equipe (String nome, int corEquipe) {
+    public Equipe (String nome, int corEquipe, String node) {
         this.nome = nome;
 //        this.coordenador = coordenador;
 //        this.petianos = petianos;
         this.corEquipe = corEquipe;
+        this.node = node;
     }
 
     public String getNome() { return nome; }
@@ -32,5 +34,9 @@ public class Equipe {
 
     public int getCorEquipe() { return corEquipe; }
 
-//    public String getSituacao() { return situacao; }
+    public String getNode() {
+        return node;
+    }
+
+    //    public String getSituacao() { return situacao; }
 }

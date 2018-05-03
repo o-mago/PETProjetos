@@ -3,17 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginStart="10dp"
-    android:layout_marginLeft="10dp"
-    android:layout_marginEnd="10dp"
-    android:layout_marginRight="10dp"
-    android:layout_marginTop="10dp"
+
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp">
-        <Button
+        android:layout_height="50dp"
+        android:background="@drawable/shadow">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:gravity="center_vertical"
+            android:textSize="25sp"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_toStartOf="@id/certo"
+            android:layout_toLeftOf="@id/certo"
+            android:text="Editar Reunião"/>
+        <ImageButton
             android:id="@+id/certo"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -22,19 +31,27 @@
             android:layout_marginRight="10dp"
             android:layout_marginEnd="10dp"
             android:layout_centerVertical="true"
-            android:background="@drawable/check"/>
-        <Button
+            android:src="@drawable/check"
+            android:background="@drawable/background_contorno_ok"/>
+        <ImageButton
             android:id="@+id/cancela"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
             android:layout_centerVertical="true"
-            android:background="@drawable/cancel"/>
+            android:src="@drawable/cancel"
+            android:background="@drawable/background_contorno_remover"/>
     </RelativeLayout>
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -92,7 +109,7 @@
             </RelativeLayout>
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="200dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/background_cinza">

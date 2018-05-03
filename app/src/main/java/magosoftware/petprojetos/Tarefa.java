@@ -8,12 +8,13 @@ import java.util.ArrayList;
 
 public class Tarefa {
 
-    String titulo;
-    String descricao;
-    String prazo;
-    ArrayList<String> petianos;
-    boolean concluido;
-    String situacaoPrazo;
+    private String titulo;
+    private String descricao;
+    private String prazo;
+    private ArrayList<String> petianos;
+    private boolean concluido;
+    private String situacaoPrazo;
+    private String node;
 
     public Tarefa(String titulo, String descricao, String prazo, ArrayList<String> petianos, boolean concluido) {
         this.titulo = titulo;
@@ -23,11 +24,12 @@ public class Tarefa {
         this.concluido = concluido;
     }
 
-    public Tarefa(String titulo, String descricao, boolean concluido, String situacaoPrazo) {
+    public Tarefa(String titulo, String descricao, boolean concluido, String situacaoPrazo, String node) {
         this.titulo = titulo;
         this.descricao = descricao;
         this.concluido = concluido;
         this.situacaoPrazo = situacaoPrazo;
+        this.node = node;
     }
 
     public String getTitulo() { return titulo; }
@@ -41,4 +43,8 @@ public class Tarefa {
     public Boolean getConcluido() { return concluido; }
 
     public String getSituacaoPrazo() { return situacaoPrazo; }
+
+    public String getNode() {
+        return node;
+    }
 }

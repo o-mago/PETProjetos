@@ -21,6 +21,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -51,7 +52,9 @@ public class EquipesFragment extends BaseFragment implements LineAdapterEquipe.O
     public SharedPreferences sharedPref;
     String nomePET;
     FragmentTransaction ft;
-    private String nomeProjeto;
+    private String nodeProjeto;
+    ValueEventListener valueEventListener;
+    private ProgressBar progressBar;
 
     public static EquipesFragment newInstance() {
         EquipesFragment equipesFragment = new EquipesFragment();
@@ -66,8 +69,10 @@ public class EquipesFragment extends BaseFragment implements LineAdapterEquipe.O
         storageRef = storage.getReference();
         sharedPref = getActivity().getSharedPreferences("todoApp", 0);
         nomePET = sharedPref.getString("nome_meu_pet", "nada");
-        nomeProjeto = getArguments().getString("nome_projeto");
-        dbEquipes = mDatabase.child("PETs").child(nomePET).child("projetos").child(nomeProjeto).child("equipes");
+        Log.d("DEV/EQUIPESFRAG", "nomePET: "+nomePET);
+        nodeProjeto = getArguments().getString("node_projeto");
+        Log.d("DEV/EQUIPESFRAG", "nodeProjeto: "+nodeProjeto);
+        dbEquipes = mDatabase.child("PETs").child(nomePET).child("projetos").child(nodeProjeto).child("equipes");
         Log.d("nomePETWOW", nomePET);
 
         return inflater.inflate(R.layout.equipes, container, false);
@@ -78,6 +83,7 @@ public class EquipesFragment extends BaseFragment implements LineAdapterEquipe.O
         super.onActivityCreated(savedIntanceState);
 
         getView().findViewById(R.id.add_equipe).setOnClickListener(this);
+        progressBar = getView().findViewById(R.id.progress_bar);
         setupRecycler();
         setupLista();
         Log.d("ENTROU3", "PASSOU");
@@ -88,14 +94,22 @@ public class EquipesFragment extends BaseFragment implements LineAdapterEquipe.O
 
     public void setupLista() {
         mModels = new ArrayList<>();
-        dbEquipes.addValueEventListener(new ValueEventListener() {
+        valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot listSnapshot : dataSnapshot.getChildren()) {
-                    String nome = listSnapshot.child("nome").getValue(String.class);
-                    int cor = listSnapshot.child("cor").getValue(Integer.class);
-                    mModels.add(new Equipe(nome, cor));
+                    String nodeEquipe = listSnapshot.getKey();
+                    try {
+                        String nome = listSnapshot.child("nome").getValue(String.class);
+                        int cor = listSnapshot.child("cor").getValue(Integer.class);
+                        mModels.add(new Equipe(nome, cor, nodeEquipe));
+                    }
+                    catch (NullPointerException e) {
+                        dbEquipes.removeEventListener(valueEventListener);
+                        setupLista();
+                    }
                 }
+                progressBar.setVisibility(View.GONE);
                 mAdapter.replaceAll(mModels);
                 mAdapter.notifyDataSetChanged();
                 mModels.clear();
@@ -105,7 +119,8 @@ public class EquipesFragment extends BaseFragment implements LineAdapterEquipe.O
             public void onCancelled(DatabaseError databaseError) {
                 Log.d("UNI", "Deu merda");
             }
-        });
+        };
+        dbEquipes.addValueEventListener(valueEventListener);
     }
 
     @Override
@@ -114,16 +129,20 @@ public class EquipesFragment extends BaseFragment implements LineAdapterEquipe.O
         if(id == R.id.add_equipe) {
             Intent intent = new Intent(getActivity(), AdicioneEquipe.class);
             intent.putExtra("nome_pet", nomePET);
-            intent.putExtra("nome_projeto", nomeProjeto);
+            intent.putExtra("node_projeto", nodeProjeto);
             startActivity(intent);
         }
     }
 
     @Override
-    public void onItemClick(int position, String nome) {
+    public void onItemClick(int position, String nome, String node) {
         Bundle bundle = new Bundle();
+        bundle.putString("node_equipe", node);
+        bundle.putString("node_projeto", nodeProjeto);
         bundle.putString("nome_equipe", nome);
-        bundle.putString("nome_projeto", nomeProjeto);
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.remove(this);
+        fragmentTransaction.commit();
         ft = getActivity().getSupportFragmentManager().beginTransaction();
         Fragment fragment = EquipePageFragment.newInstance();
         fragment.setArguments(bundle);
@@ -145,8 +164,8 @@ public class EquipesFragment extends BaseFragment implements LineAdapterEquipe.O
         mAdapter = new LineAdapterEquipe();
         mRecyclerView.setAdapter(mAdapter);
 
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
-                layoutManager.getOrientation());
-        mRecyclerView.addItemDecoration(dividerItemDecoration);
+//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
+//                layoutManager.getOrientation());
+//        mRecyclerView.addItemDecoration(dividerItemDecoration);
     }
 }

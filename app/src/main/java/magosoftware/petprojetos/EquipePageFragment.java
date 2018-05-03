@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -47,8 +48,9 @@ public class EquipePageFragment extends BaseFragment implements View.OnClickList
     TextView menuReunioes;
     ColorStateList corPadrao;
     TextView menuMembros;
-    String nomeEquipe;
-    String equipePath;
+    String nodeEquipe;
+    String tarefaPath;
+    private String nomeEquipe;
 
     public static EquipePageFragment newInstance() {
         EquipePageFragment equipePageFragment = new EquipePageFragment();
@@ -61,7 +63,8 @@ public class EquipePageFragment extends BaseFragment implements View.OnClickList
         user = mAuth.getCurrentUser();
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
-        nomeProjeto = getArguments().getString("nome_projeto");
+        nomeProjeto = getArguments().getString("node_projeto");
+        nodeEquipe = getArguments().getString("node_equipe");
         nomeEquipe = getArguments().getString("nome_equipe");
         sharedPref = getActivity().getSharedPreferences("todoApp", 0);
         nomePET = sharedPref.getString("nome_meu_pet", "nada");
@@ -78,25 +81,23 @@ public class EquipePageFragment extends BaseFragment implements View.OnClickList
         minhaEquipe = getView().findViewById(R.id.minha_equipe);
         nomeEquipes = getView().findViewById(R.id.nome_equipe);
         menuTarefasClick = getView().findViewById(R.id.menu_tarefas_click);
-        menuTarefasConcluidasClick = getView().findViewById(R.id.menu_tarefas_concluidas_click);
         menuReunioesClick = getView().findViewById(R.id.menu_reunioes_click);
         menuTarefasClick.setOnClickListener(this);
-        menuTarefasConcluidasClick.setOnClickListener(this);
         menuReunioesClick.setOnClickListener(this);
         menuTarefas = getView().findViewById(R.id.menu_tarefas);
-        menuTarefasConcluidas = getView().findViewById(R.id.menu_tarefas_concluidas);
         menuReunioes = getView().findViewById(R.id.menu_reunioes);
         corPadrao = menuReunioes.getTextColors();
-        equipePath = "PETs/"+nomePET+"/projetos/"+nomeProjeto+"/equipes/" + nomeEquipe;
+        tarefaPath = "PETs/"+nomePET+"/projetos/"+nomeProjeto+"/equipes/"+nodeEquipe;
+        nomeEquipes.setText(nodeEquipe);
         FragmentManager manager = getChildFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         Bundle bundle = new Bundle();
         bundle.putString("situacao_tarefas", "fazer");
-        bundle.putString("equipe_path", equipePath);
-        Fragment fragment= TarefasFragment.newInstance();
+        bundle.putString("tarefa_path", tarefaPath);
+        Fragment fragment= TarefasConcentradas.newInstance();
         fragment.setArguments(bundle);
         Log.d("EQUIPEPAGEFRAGMENT", "chamou fragment tarefas");
-        transaction.add(R.id.fragment_container_equipe, fragment);
+        transaction.add(R.id.fragment_container_child, fragment);
         transaction.commit();
     }
 
@@ -105,45 +106,30 @@ public class EquipePageFragment extends BaseFragment implements View.OnClickList
         int id = view.getId();
         if(id == R.id.menu_tarefas_click) {
             menuTarefas.setTextColor(Color.parseColor("#03A9F4"));
-            menuTarefasConcluidas.setTextColor(corPadrao);
             menuReunioes.setTextColor(corPadrao);
             FragmentManager manager = getChildFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             Bundle bundle = new Bundle();
-            bundle.putString("equipe_path", equipePath);
+            bundle.putString("tarefa_path", tarefaPath);
             bundle.putString("situacao_tarefas", "fazer");
-            Fragment fragment= TarefasFragment.newInstance();
+            Fragment fragment= TarefasConcentradas.newInstance();
             fragment.setArguments(bundle);
-            transaction.replace(R.id.fragment_container_equipe, fragment);
+            transaction.replace(R.id.fragment_container_child, fragment);
             transaction.detach(fragment);
             transaction.attach(fragment);
             transaction.commit();
         }
-        else if (id == R.id.menu_tarefas_concluidas_click) {
-            menuTarefas.setTextColor(corPadrao);
-            menuTarefasConcluidas.setTextColor(Color.parseColor("#03A9F4"));
-            menuReunioes.setTextColor(corPadrao);
-            FragmentManager manager = getChildFragmentManager();
-            FragmentTransaction transaction = manager.beginTransaction();
-            Bundle bundle = new Bundle();
-            bundle.putString("equipe_path", equipePath);
-            bundle.putString("situacao_tarefas", "concluidas");
-            Fragment fragment= TarefasFragment.newInstance();
-            fragment.setArguments(bundle);
-            transaction.replace(R.id.fragment_container_equipe, fragment);
-            transaction.commit();
-        }
         else if (id == R.id.menu_reunioes_click) {
             menuTarefas.setTextColor(corPadrao);
-            menuTarefasConcluidas.setTextColor(corPadrao);
             menuReunioes.setTextColor(Color.parseColor("#03A9F4"));
             FragmentManager manager = getChildFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             Bundle bundle = new Bundle();
-            bundle.putString("equipe_path", equipePath);
-            Fragment fragment= TarefasFragment.newInstance();
+            bundle.putString("reunioes_path", tarefaPath);
+            bundle.putString("node_projeto", nodeEquipe);
+            Fragment fragment= ReunioesFragment.newInstance();
             fragment.setArguments(bundle);
-            transaction.replace(R.id.fragment_container_equipe, fragment);
+            transaction.replace(R.id.fragment_container_child, fragment);
             transaction.commit();
         }
     }

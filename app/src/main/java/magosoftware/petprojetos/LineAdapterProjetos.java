@@ -33,7 +33,7 @@ public class LineAdapterProjetos extends RecyclerView.Adapter<LineHolderProjetos
 
     //make interface like this
     public interface OnItemClicked {
-        void onItemClick(int position, String nome, String situacao);
+        void onItemClick(int position, String nome, String situacao, String node);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class LineAdapterProjetos extends RecyclerView.Adapter<LineHolderProjetos
         }
         else if(mProjeto.get(position).getSituacao().equals("aguardando")) {
             holder.opcao.setText("AGUARDANDO");
-            holder.opcao.setTextColor(Color.parseColor("#FFFF00"));
+            holder.opcao.setTextColor(Color.parseColor("#FFD600"));
             holder.opcao.setBackgroundDrawable(backgroundAguardando);
         }
         else if(mProjeto.get(position).getSituacao().equals("membro")) {
@@ -64,7 +64,7 @@ public class LineAdapterProjetos extends RecyclerView.Adapter<LineHolderProjetos
         holder.cardProjeto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onClick.onItemClick(position, mProjeto.get(position).getNome(), mProjeto.get(position).getSituacao());
+                onClick.onItemClick(position, mProjeto.get(position).getNome(), mProjeto.get(position).getSituacao(), mProjeto.get(position).getNode());
             }
         });
     }

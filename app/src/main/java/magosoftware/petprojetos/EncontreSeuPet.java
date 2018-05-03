@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -56,6 +57,10 @@ public class EncontreSeuPet extends BaseFragment implements SearchView.OnQueryTe
     String nomePet;
     private int cont = 0;
     private int i = 0;
+    private StorageReference perfilRef;
+    final long ONE_MEGABYTE = 1024 * 1024;
+    private ValueEventListener valueEventListener;
+    ProgressBar progressBar;
 
     private static List<Pet> filter(List<Pet> models, String query) {
         final String lowerCaseQuery = query.toLowerCase();
@@ -101,6 +106,7 @@ public class EncontreSeuPet extends BaseFragment implements SearchView.OnQueryTe
 //            String query = intent.getStringExtra(SearchManager.QUERY);
 //            doMySearch(query);
 //        }
+        progressBar = getView().findViewById(R.id.progress_bar);
         searchView = getView().findViewById(R.id.field_search);
         searchView.setOnQueryTextListener(this);
         searchView.setIconified(false);
@@ -116,7 +122,7 @@ public class EncontreSeuPet extends BaseFragment implements SearchView.OnQueryTe
         searchView.setQueryHint("Pesquisar PET");
         setupRecycler();
         mModels = new ArrayList<>();
-        mDatabase.child("PETs").addValueEventListener(new ValueEventListener() {
+        valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot listSnapshots : dataSnapshot.getChildren()) {
@@ -127,26 +133,33 @@ public class EncontreSeuPet extends BaseFragment implements SearchView.OnQueryTe
                     Log.d("PETS", nome);
                     if (nome != null) {
                         try {
-                            final StorageReference perfilRef = storageRef.child("imagensPET/" + nome.replace(" ", "_") + ".jpg");
+                            perfilRef = storageRef.child("imagensPET/" + nome.replace(" ", "_") + ".jpg");
                             Log.d("LOGO", perfilRef.getPath());
-                            final long ONE_MEGABYTE = 1024 * 1024;
-                            perfilRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                            OnSuccessListener onSuccessListener = new OnSuccessListenerString(perfilRef) {
                                 @Override
                                 public void onSuccess(byte[] bytes) {
-                                    Bitmap bitmapPet = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                    Bitmap resizedBmp = Bitmap.createScaledBitmap(bitmapPet, toPx(100), toPx(100), false);
-                                    bitmapDrawablePet = new BitmapDrawable(getResources(), resizedBmp);
-                                    nomePet = perfilRef.getName();
-                                    nomePet = nomePet.split(".jpg")[0];
-                                    nomePet = nomePet.replace("_", " ");
-                                    Log.d("LOGO", bitmapPet.toString());
-                                    mModels.add(new Pet(nomePet, bitmapDrawablePet));
-                                    i++;
-                                    if(i == cont) {
-                                        searchView.setQuery("", false);
+                                    try {
+                                        Bitmap bitmapPet = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                        Bitmap resizedBmp = Bitmap.createScaledBitmap(bitmapPet, toPx(100), toPx(100), false);
+                                        bitmapDrawablePet = new BitmapDrawable(getResources(), resizedBmp);
+                                        nomePet = ((StorageReference) variavel1).getName();
+                                        nomePet = nomePet.split(".jpg")[0];
+                                        nomePet = nomePet.replace("_", " ");
+                                        Log.d("LOGO", bitmapPet.toString());
+                                        mModels.add(new Pet(nomePet, bitmapDrawablePet));
+                                        i++;
+                                        if (i == cont) {
+                                            progressBar.setVisibility(View.GONE);
+                                            searchView.setQuery(" ", false);
+                                            searchView.setQuery("", false);
+                                        }
+                                    }
+                                    catch (IllegalStateException e) {
+
                                     }
                                 }
-                            }).addOnFailureListener(new OnFailureListener() {
+                            };
+                            perfilRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(onSuccessListener).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception exception) {
                                     Log.d("LOGO", "Deu merda");
@@ -164,7 +177,8 @@ public class EncontreSeuPet extends BaseFragment implements SearchView.OnQueryTe
             public void onCancelled(DatabaseError databaseError) {
                 Log.d("UNI", "Deu merda");
             }
-        });
+        };
+        mDatabase.child("PETs").addListenerForSingleValueEvent(valueEventListener);
         mAdapter.add(mModels);
         mAdapter.setOnClick(this);
     }
@@ -202,9 +216,9 @@ public class EncontreSeuPet extends BaseFragment implements SearchView.OnQueryTe
         //mAdapter = new LineAdapterPet(new ArrayList<>(0));
         mRecyclerView.setAdapter(mAdapter);
 
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
-                layoutManager.getOrientation());
-        mRecyclerView.addItemDecoration(dividerItemDecoration);
+//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
+//                layoutManager.getOrientation());
+//        mRecyclerView.addItemDecoration(dividerItemDecoration);
 
         // Configurando um dividr entre linhas, para uma melhor visualização.
 //        mRecyclerView.addItemDecoration(
@@ -229,5 +243,27 @@ public class EncontreSeuPet extends BaseFragment implements SearchView.OnQueryTe
     public int toPx(float dp){
         int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
         return px;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        mDatabase.child("PETs").removeEventListener(valueEventListener);
+        searchView.setOnQueryTextListener(null);
+        mAdapter.setOnClick(null);
+
+        mRecyclerView = null;
+        searchView = null;
+        mAdapter = null;
+        mModels = null;
+        storage = null;
+        storageRef = null;
+        bitmapDrawablePet = null;
+        ft = null;
+        nomePet = null;
+        perfilRef = null;
+        valueEventListener = null;
+        progressBar = null;
     }
 }

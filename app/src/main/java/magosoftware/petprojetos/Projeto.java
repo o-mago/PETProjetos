@@ -15,6 +15,7 @@ public class Projeto {
     ArrayList<String> petianos;
     Drawable imagemProjeto;
     String situacao;
+    String node;
 
     public Projeto (String nome, String coordenador, ArrayList<String> petianos, Drawable imagemProjeto) {
         this.nome = nome;
@@ -23,10 +24,11 @@ public class Projeto {
         this.imagemProjeto = imagemProjeto;
     }
 
-    public Projeto (String nome, Drawable imagemProjeto, String situacao) {
+    public Projeto (String nome, Drawable imagemProjeto, String situacao, String node) {
         this.nome = nome;
         this.imagemProjeto = imagemProjeto;
         this.situacao = situacao;
+        this.node = node;
     }
 
     public String getNome() { return nome; }
@@ -38,4 +40,8 @@ public class Projeto {
     public Drawable getImagemProjeto() { return imagemProjeto; }
 
     public String getSituacao() { return situacao; }
+
+    public String getNode() {
+        return node;
+    }
 }

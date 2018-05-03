@@ -8,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginTop="20dp"
         android:weightSum="3">
 
         <RelativeLayout
@@ -16,13 +17,14 @@
             android:layout_weight="1"
             android:gravity="center">
 
-        <TextView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:text="SEG"
-            android:textSize="25sp"
-            android:gravity="center"
-            android:background="@drawable/circulo"/>
+            <TextView
+                android:id="@+id/segunda"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:text="SEG"
+                android:textSize="25sp"
+                android:gravity="center"
+                android:background="@drawable/circulo" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -32,6 +34,7 @@
             android:gravity="center">
 
             <TextView
+                android:id="@+id/terca"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:text="TER"
@@ -47,6 +50,7 @@
             android:gravity="center">
 
             <TextView
+                android:id="@+id/quarta"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:text="QUA"
@@ -70,6 +74,7 @@
             android:gravity="center">
 
             <TextView
+                android:id="@+id/quinta"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:text="QUI"
@@ -85,6 +90,7 @@
             android:gravity="center">
 
             <TextView
+                android:id="@+id/sexta"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:text="SEX"
@@ -100,24 +106,10 @@
             android:gravity="center">
 
             <TextView
+                android:id="@+id/sabado"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:text="SÁB"
-                android:textSize="25sp"
-                android:gravity="center"
-                android:background="@drawable/circulo"/>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <TextView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:text="DOM"
                 android:textSize="25sp"
                 android:gravity="center"
                 android:background="@drawable/circulo"/>
@@ -138,6 +130,7 @@
             android:gravity="center">
 
             <TextView
+                android:id="@+id/domingo"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:text="DOM"

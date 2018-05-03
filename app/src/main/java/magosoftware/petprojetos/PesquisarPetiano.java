@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -49,6 +50,8 @@ public class PesquisarPetiano extends BaseFragment implements SearchView.OnQuery
     String nomePet;
     private int cont = 0;
     private int i = 0;
+    private ProgressBar progressBar;
+    private ValueEventListener valueEventListener;
 
     private static List<Usuario> filter(List<Usuario> models, String query) {
         final String lowerCaseQuery = query.toLowerCase();
@@ -94,6 +97,7 @@ public class PesquisarPetiano extends BaseFragment implements SearchView.OnQuery
 //            String query = intent.getStringExtra(SearchManager.QUERY);
 //            doMySearch(query);
 //        }
+        progressBar = getView().findViewById(R.id.progress_bar);
         searchView = getView().findViewById(R.id.field_search);
         searchView.setOnQueryTextListener(this);
         searchView.setIconified(false);
@@ -109,7 +113,7 @@ public class PesquisarPetiano extends BaseFragment implements SearchView.OnQuery
         searchView.setQueryHint("Pesquisar Petiano");
         setupRecycler();
         mModels = new ArrayList<>();
-        mDatabase.child("Usuarios").addValueEventListener(new ValueEventListener() {
+        valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot listSnapshots : dataSnapshot.getChildren()) {
@@ -127,23 +131,29 @@ public class PesquisarPetiano extends BaseFragment implements SearchView.OnQuery
                             perfilRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                 @Override
                                 public void onSuccess(byte[] bytes) {
-                                    Bitmap bitmapPet = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                    Bitmap resizedBmp = Bitmap.createScaledBitmap(bitmapPet, toPx(100), toPx(100), false);
-                                    bitmapDrawablePet = new BitmapDrawable(getResources(), resizedBmp);
-                                    String[] nomes = nome.split(" ");
-                                    String nomeSobrenome;
-                                    if(nomes.length > 1) {
-                                        nomeSobrenome = nomes[0] + " " + nomes[1];
-                                        Log.d("NOME", nomeSobrenome);
-                                    }
-                                    else {
-                                        nomeSobrenome = nome;
-                                    }
-                                    Log.d("LOGO", bitmapPet.toString());
-                                    mModels.add(new Usuario(nomeSobrenome, bitmapDrawablePet, codigo));
-                                    i++;
-                                    if(i == cont) {
-                                        searchView.setQuery("", false);
+                                    try{
+                                        Bitmap bitmapPet = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                        Bitmap resizedBmp = Bitmap.createScaledBitmap(bitmapPet, toPx(100), toPx(100), false);
+                                        bitmapDrawablePet = new BitmapDrawable(getResources(), resizedBmp);
+                                        String[] nomes = nome.split(" ");
+                                        String nomeSobrenome;
+                                        if(nomes.length > 1) {
+                                            nomeSobrenome = nomes[0] + " " + nomes[1];
+                                            Log.d("NOME", nomeSobrenome);
+                                        }
+                                        else {
+                                            nomeSobrenome = nome;
+                                        }
+                                        mModels.add(new Usuario(nomeSobrenome, bitmapDrawablePet, codigo));
+                                        i++;
+                                        if(i == cont) {
+                                            Log.d("DEV/PESQUISARPETIANO", "Mostra petianos");
+                                            progressBar.setVisibility(View.GONE);
+                                            searchView.setQuery(" ", false);
+                                            searchView.setQuery("", false);
+                                        }
+                                    } catch (IllegalStateException e) {
+
                                     }
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
@@ -164,7 +174,8 @@ public class PesquisarPetiano extends BaseFragment implements SearchView.OnQuery
             public void onCancelled(DatabaseError databaseError) {
                 Log.d("UNI", "Deu merda");
             }
-        });
+        };
+        mDatabase.child("Usuarios").addListenerForSingleValueEvent(valueEventListener);
         mAdapter.add(mModels);
         mAdapter.setOnClick(this);
     }
@@ -196,9 +207,9 @@ public class PesquisarPetiano extends BaseFragment implements SearchView.OnQuery
         //mAdapter = new LineAdapterPet(new ArrayList<>(0));
         mRecyclerView.setAdapter(mAdapter);
 
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
-                layoutManager.getOrientation());
-        mRecyclerView.addItemDecoration(dividerItemDecoration);
+//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
+//                layoutManager.getOrientation());
+//        mRecyclerView.addItemDecoration(dividerItemDecoration);
 
         // Configurando um dividr entre linhas, para uma melhor visualização.
 //        mRecyclerView.addItemDecoration(
@@ -222,5 +233,25 @@ public class PesquisarPetiano extends BaseFragment implements SearchView.OnQuery
     public int toPx(float dp){
         int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
         return px;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        mDatabase.child("PETs").removeEventListener(valueEventListener);
+        searchView.setOnQueryTextListener(null);
+        mAdapter.setOnClick(null);
+
+        mRecyclerView = null;
+        searchView = null;
+        mAdapter = null;
+        mModels = null;
+        storage = null;
+        storageRef = null;
+        bitmapDrawablePet = null;
+        ft = null;
+        nomePet = null;
+        progressBar = null;
     }
 }

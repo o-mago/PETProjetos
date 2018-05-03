@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
         android:paddingStart="?android:attr/expandableListPreferredItemPaddingLeft"
-        android:textSize="22sp"
+        android:textSize="18sp"
         android:text="SEGUNDA 9:00-10:00"
         android:textStyle="bold"/>
 

@@ -47,8 +47,9 @@ public class ReunioesFragment extends BaseFragment implements LineAdapterReuniao
     private List<Reuniao> mModels;
     StorageReference storageRef;
     RecyclerView mRecyclerView;
-    DatabaseReference dbProjeto;
-    String projetoPath;
+    DatabaseReference dbReuniao;
+    String reunioesPath;
+    String nomeProjeto;
 
     public static ReunioesFragment newInstance() {
         ReunioesFragment reunioesFragment = new ReunioesFragment();
@@ -61,9 +62,10 @@ public class ReunioesFragment extends BaseFragment implements LineAdapterReuniao
         user = mAuth.getCurrentUser();
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
-        projetoPath = getArguments().getString("projeto_path");
-        dbProjeto = mDatabase.child(projetoPath);
-        Log.d("TAREFASFRAGMENT", projetoPath);
+        reunioesPath = getArguments().getString("reunioes_path");
+        nomeProjeto = getArguments().getString("node_projeto");
+        dbReuniao = mDatabase.child(reunioesPath);
+        Log.d("TAREFASFRAGMENT", reunioesPath);
 
         return inflater.inflate(R.layout.reunioes_layout, container, false);
     }
@@ -84,22 +86,24 @@ public class ReunioesFragment extends BaseFragment implements LineAdapterReuniao
         int id = view.getId();
         if(id == R.id.add_reuniao) {
             Intent intent = new Intent(getActivity(), ReunioesEditActivity.class);
-            intent.putExtra("titulo_reuniao", "NADA9232CMXC3");
-            intent.putExtra("projeto_path", projetoPath);
+            intent.putExtra("node", "NADA9232CMXC3");
+            intent.putExtra("reunioes_path", reunioesPath);
             startActivity(intent);
         }
         if(id == R.id.setup_reuniao) {
             Intent intent = new Intent(getActivity(), MarcarReuniaoActivity.class);
+            intent.putExtra("reunioes_path", reunioesPath);
+            intent.putExtra("node_projeto", nomeProjeto);
             startActivity(intent);
         }
     }
 
     @Override
-    public void onItemClick(int position, int id, final String titulo) {
+    public void onItemClick(int position, int id, final String titulo, String node) {
         if(id == R.id.card) {
             Intent intent = new Intent(getActivity(), ReunioesEditActivity.class);
-            intent.putExtra("projeto_path", projetoPath);
-            intent.putExtra("titulo_reuniao", titulo);
+            intent.putExtra("reunioes_path", reunioesPath);
+            intent.putExtra("node", node);
             startActivity(intent);
         }
         if(id == R.id.frame_deletar) {
@@ -108,7 +112,7 @@ public class ReunioesFragment extends BaseFragment implements LineAdapterReuniao
                     .setPositiveButton(R.string.sim, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            dbProjeto.child("reunioes").child("historico").child(titulo).removeValue();
+                            dbReuniao.child("reunioes").child("historico").child(titulo).removeValue();
                             dialog.dismiss();
                         }
                     })
@@ -125,13 +129,14 @@ public class ReunioesFragment extends BaseFragment implements LineAdapterReuniao
 
     private void setupLista() {
         mModels = new ArrayList<>();
-        dbProjeto.child("reunioes").child("historico").addValueEventListener(new ValueEventListener() {
+        dbReuniao.child("reunioes").child("historico").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot listSnapshot : dataSnapshot.getChildren()) {
                     String titulo = listSnapshot.child("titulo").getValue(String.class);
+                    String node = listSnapshot.getKey();
                     String data = listSnapshot.child("data").getValue(String.class);
-                    mModels.add(new Reuniao(titulo, data));
+                    mModels.add(new Reuniao(titulo, data, node));
                 }
                 Log.d("DEV/REUNIOESFRAGMENT", Integer.toString(mModels.size()));
                 mAdapter.replaceAll(mModels);
@@ -155,8 +160,8 @@ public class ReunioesFragment extends BaseFragment implements LineAdapterReuniao
         mRecyclerView.setLayoutManager(layoutManager);
         mAdapter = new LineAdapterReuniao();
         mRecyclerView.setAdapter(mAdapter);
-//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
-//                layoutManager.getOrientation());
-//        mRecyclerView.addItemDecoration(dividerItemDecoration);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
+                layoutManager.getOrientation());
+        mRecyclerView.addItemDecoration(dividerItemDecoration);
     }
 }

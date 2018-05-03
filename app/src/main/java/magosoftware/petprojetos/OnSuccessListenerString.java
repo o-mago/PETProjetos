@@ -9,9 +9,22 @@ import com.google.android.gms.tasks.Task;
 
 public class OnSuccessListenerString implements OnSuccessListener<byte[]> {
 
-    String variavel;
-    public OnSuccessListenerString(String variavel) {
-        this.variavel = variavel;
+    Object variavel1;
+    Object variavel2;
+    Object variavel3;
+    public OnSuccessListenerString(Object variavel1) {
+        this.variavel1 = variavel1;
+    }
+
+    public OnSuccessListenerString(Object variavel1, Object variavel2) {
+        this.variavel1 = variavel1;
+        this.variavel2 = variavel2;
+    }
+
+    public OnSuccessListenerString(Object variavel1, Object variavel2, Object variavel3) {
+        this.variavel1 = variavel1;
+        this.variavel2 = variavel2;
+        this.variavel3 = variavel3;
     }
 
     public void onSuccess(byte[] var1){

@@ -17,6 +17,7 @@ public class Usuario {
     public String nascimento;
     public Drawable foto;
     public String codigo;
+    public String situacao;
 
     public Usuario(String nome, String apelido, String email, String universidade, String curso, String nascimento) {
         this.nome = nome;
@@ -30,6 +31,13 @@ public class Usuario {
     public Usuario(String nome, Drawable foto, String codigo) {
         this.nome = nome;
         this.foto = foto;
+        this.codigo = codigo;
+    }
+
+    public Usuario(String nome, Drawable foto, String situacao, String codigo) {
+        this.nome = nome;
+        this.foto = foto;
+        this.situacao = situacao;
         this.codigo = codigo;
     }
 
@@ -66,5 +74,9 @@ public class Usuario {
 
     public String getCodigo() {
         return codigo;
+    }
+
+    public String getSituacao() {
+        return situacao;
     }
 }

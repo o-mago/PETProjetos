@@ -3,10 +3,17 @@ package magosoftware.petprojetos;
 public class Horario {
     private String hora;
     public boolean disponivel;
+    private String quantidade;
 
     public Horario(String hora, boolean disponivel) {
         this.hora = hora;
         this.disponivel = disponivel;
+    }
+
+    public Horario(String hora, boolean disponivel, String quantidade) {
+        this.hora = hora;
+        this.disponivel = disponivel;
+        this.quantidade = quantidade;
     }
 
     public String getHora() {
@@ -15,5 +22,9 @@ public class Horario {
 
     public boolean isDisponivel() {
         return disponivel;
+    }
+
+    public String getQuantidade() {
+        return quantidade;
     }
 }

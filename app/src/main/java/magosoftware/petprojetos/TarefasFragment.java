@@ -73,10 +73,7 @@ public class TarefasFragment extends BaseFragment implements LineAdapterTarefa.O
     public void onActivityCreated(Bundle savedIntanceState) {
         super.onActivityCreated(savedIntanceState);
         containerTarefas = getView().findViewById(R.id.container_tarefas);
-        getView().findViewById(R.id.add_tarefa).setOnClickListener(this);
-        if(situacaoTarefas.equals("concluidas")) {
-            containerTarefas.removeView(getView().findViewById(R.id.add_tarefa));
-        }
+        getView().findViewById(R.id.adicionar_tarefa).setOnClickListener(this);
         setupRecycler();
         setupLista();
         Log.d("ENTROU4", "PASSOU");
@@ -86,7 +83,7 @@ public class TarefasFragment extends BaseFragment implements LineAdapterTarefa.O
     @Override
     public void onClick(View view) {
         int id = view.getId();
-        if(id == R.id.add_tarefa) {
+        if(id == R.id.adicionar_tarefa) {
             Intent intent = new Intent(getActivity(), TarefasEditActivity.class);
             intent.putExtra("equipe_path", equipePath);
             startActivity(intent);
@@ -94,11 +91,11 @@ public class TarefasFragment extends BaseFragment implements LineAdapterTarefa.O
     }
 
     @Override
-    public void onItemClick(int position,int id, final String nome) {
+    public void onItemClick(int position,int id, final String nome, String node) {
         if(id == R.id.card) {
             Intent intent = new Intent(getActivity(), TarefasEditActivity.class);
             intent.putExtra("equipe_path", equipePath);
-            intent.putExtra("nome_tarefa", nome);
+            intent.putExtra("node", node);
             startActivity(intent);
         }
         if(id == R.id.frame_deletar) {
@@ -200,6 +197,7 @@ public class TarefasFragment extends BaseFragment implements LineAdapterTarefa.O
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot listSnapshot : dataSnapshot.getChildren()) {
+                    String node = listSnapshot.getKey();
                     String titulo = listSnapshot.child("titulo").getValue(String.class);
                     String descricao = listSnapshot.child("descricao").getValue(String.class);
 //                    long data = (listSnapshot.child("prazo").getValue(String.class));
@@ -220,7 +218,7 @@ public class TarefasFragment extends BaseFragment implements LineAdapterTarefa.O
                     else {
                         situacaoPrazo = "ok";
                     }
-                    mModels.add(new Tarefa(titulo, descricao, false, situacaoPrazo));
+                    mModels.add(new Tarefa(titulo, descricao, false, situacaoPrazo, node));
                 }
                 Log.d("DEV/TAREFASFRAGMENT", Integer.toString(mModels.size()));
                 mAdapter.replaceAll(mModels);

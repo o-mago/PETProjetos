@@ -6,27 +6,42 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp">
-        <ImageView
+        android:layout_height="50dp"
+        android:background="@drawable/shadow">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:gravity="center_vertical"
+            android:textSize="25sp"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_toStartOf="@id/certo"
+            android:layout_toLeftOf="@id/certo"
+            android:text="Editar Horários"/>
+        <ImageButton
             android:id="@+id/certo"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/check"
-            android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/cancela"
             android:layout_toStartOf="@id/cancela"
-            android:layout_marginRight="20dp"
-            android:layout_marginEnd="20dp"/>
-        <ImageView
-            android:id="@+id/cancela"
-            android:layout_width="40dp"
-            android:layout_centerVertical="true"
-            android:layout_height="40dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:layout_marginEnd="10dp"
-            android:src="@drawable/cancel"/>
+            android:layout_centerVertical="true"
+            android:src="@drawable/check"
+            android:background="@drawable/background_contorno_ok"/>
+        <ImageButton
+            android:id="@+id/cancela"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/cancel"
+            android:background="@drawable/background_contorno_remover"/>
     </RelativeLayout>
 
     <TextView

@@ -10,6 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -64,6 +66,7 @@ public class ProjetosFragment extends BaseFragment implements LineAdapterProjeto
     private int cont = 0;
     private String nomeProjeto;
     ProgressBar progress;
+    private FloatingActionButton addProjeto;
 
     public static ProjetosFragment newInstance() {
         ProjetosFragment projetosFragment = new ProjetosFragment();
@@ -90,7 +93,9 @@ public class ProjetosFragment extends BaseFragment implements LineAdapterProjeto
 
         progress = getView().findViewById(R.id.progress_bar);
 
-        getView().findViewById(R.id.add_projeto).setOnClickListener(this);
+        addProjeto = getView().findViewById(R.id.add_projeto);
+        addProjeto.setVisibility(View.GONE);
+        addProjeto.setOnClickListener(this);
         setupRecycler();
         setupLista();
         Log.d("ENTROU3", "PASSOU");
@@ -100,17 +105,22 @@ public class ProjetosFragment extends BaseFragment implements LineAdapterProjeto
     }
 
     public void setupLista() {
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 8;
         mModels = new ArrayList<>();
         Log.d("ENTROU3", mDatabase.child("PETs").child(nomePET).child("projetos").toString());
-        mDatabase.child("PETs").child(nomePET).child("projetos").addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child("PETs").child(nomePET).child("projetos").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot listSnapshots : dataSnapshot.getChildren()) {
                     cont++;
+                    final String node = listSnapshots.getKey();
+                    Log.d("DEV/PROJETOSFRAG", "node: "+node);
                     final String nome = listSnapshots.child("nome").getValue(String.class);
                     try {
                         DataSnapshot dbRef = listSnapshots.child("time");
                         for(DataSnapshot timeSnapshot : dbRef.getChildren()) {
+                            Log.d("DEV/PROJETOSFRAG", nome+" ;"+timeSnapshot.getKey()+" ;"+user.getUid());
                             if(timeSnapshot.getKey().equals(user.getUid())) {
                                 situacao = "membro";
                                 break;
@@ -130,7 +140,7 @@ public class ProjetosFragment extends BaseFragment implements LineAdapterProjeto
                                 situacao = "aguardando";
                                 break;
                             }
-                            else {
+                            else if(!situacao.equals("membro")){
                                 situacao = "fora";
                             }
                         }
@@ -151,14 +161,15 @@ public class ProjetosFragment extends BaseFragment implements LineAdapterProjeto
                             final StorageReference projetoRef = storageRef.child("imagensProjetos/" + nomeSemEspaco + ".jpg");
                             Log.d("Imagem", projetoRef.getPath());
                             final long ONE_MEGABYTE = 1024 * 1024;
-                            projetoRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListenerString(situacao) {
+                            projetoRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListenerString(situacao, node) {
                                 @Override
                                 public void onSuccess(byte[] bytes) {
-                                    i++;
-                                    Bitmap bitmapPet = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                    Bitmap resizedBmp = Bitmap.createScaledBitmap(bitmapPet, toPx(60), toPx(60), false);
-                                    bitmapDrawableProjeto = new BitmapDrawable(getResources(), resizedBmp);
-                                    Log.d("LOGO", bitmapPet.toString());
+                                    try {
+                                        i++;
+                                        Bitmap bitmapPet = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
+                                        Bitmap resizedBmp = Bitmap.createScaledBitmap(bitmapPet, toPx(60), toPx(60), false);
+                                        bitmapDrawableProjeto = new BitmapDrawable(getResources(), resizedBmp);
+                                        Log.d("LOGO", bitmapPet.toString());
 //                                    nomeProjeto = projetoRef.getName();
 //                                    nomeProjeto = nomeProjeto.split(".jpg")[0];
 //                                    try {
@@ -167,18 +178,28 @@ public class ProjetosFragment extends BaseFragment implements LineAdapterProjeto
 //                                    catch (NullPointerException e) {
 //
 //                                    }
-                                    mModels.add(new Projeto(nome, bitmapDrawableProjeto, variavel));
-                                    if(i == cont) {
-                                        Log.d("QUANTIDADE", Integer.toString(mModels.size()));
-                                        Log.d("QUANTIDADE2", Integer.toString(mAdapter.getItemCount()));
-                                        mAdapter.replaceAll(mModels);
-                                        mAdapter.notifyDataSetChanged();
-                                        mModels.clear();
-                                        Log.d("QUANTIDADE", Integer.toString(mModels.size()));
-                                        Log.d("QUANTIDADE2", Integer.toString(mAdapter.getItemCount()));
-                                        mRecyclerView.scrollToPosition(0);
-                                        Log.d("ENTROU3", "mModelsNaVeia");
-                                        progress.setVisibility(View.GONE);
+                                        mModels.add(new Projeto(nome, bitmapDrawableProjeto, (String) variavel1, (String) variavel2));
+//                                        bitmapPet.recycle();
+//                                        bitmapPet = null;
+//                                        resizedBmp.recycle();
+//                                        resizedBmp = null;
+                                        if (i == cont) {
+                                            Log.d("QUANTIDADE", Integer.toString(mModels.size()));
+                                            Log.d("QUANTIDADE2", Integer.toString(mAdapter.getItemCount()));
+                                            ordenar(mModels);
+                                            mAdapter.replaceAll(mModels);
+                                            mAdapter.notifyDataSetChanged();
+                                            mModels.clear();
+                                            Log.d("QUANTIDADE", Integer.toString(mModels.size()));
+                                            Log.d("QUANTIDADE2", Integer.toString(mAdapter.getItemCount()));
+                                            mRecyclerView.scrollToPosition(0);
+                                            Log.d("ENTROU3", "mModelsNaVeia");
+                                            progress.setVisibility(View.GONE);
+                                            addProjeto.setVisibility(View.VISIBLE);
+                                        }
+                                    }
+                                    catch (IllegalStateException e) {
+
                                     }
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
@@ -186,7 +207,7 @@ public class ProjetosFragment extends BaseFragment implements LineAdapterProjeto
                                 public void onFailure(@NonNull Exception exception) {
                                     Log.d("LOGO", "Deu merda");
                                     bitmapDrawableProjeto = getResources().getDrawable(R.drawable.pet_logo);
-                                    mModels.add(new Projeto(nomeProjeto, bitmapDrawableProjeto, situacao));
+                                    mModels.add(new Projeto(nomeProjeto, bitmapDrawableProjeto, situacao, node));
                                 }
                             });
                         } catch (NullPointerException e) {
@@ -214,9 +235,11 @@ public class ProjetosFragment extends BaseFragment implements LineAdapterProjeto
     }
 
     @Override
-    public void onItemClick(int position, String nome, String situacao) {
+    public void onItemClick(int position, String nome, String situacao, String node) {
         if(situacao.equals("membro")) {
             Bundle bundle = new Bundle();
+            bundle.putString("node_projeto", node);
+            Log.d("DEV/PROJETOSFRAG", "node2: "+node);
             bundle.putString("nome_projeto", nome);
             ft = getActivity().getSupportFragmentManager().beginTransaction();
             Fragment fragment = ProjetoPageFragment.newInstance();
@@ -227,7 +250,7 @@ public class ProjetosFragment extends BaseFragment implements LineAdapterProjeto
 //            MainActivity.changeFragment(getFragmentManager(), nome);
         }
         if(situacao.equals("fora")) {
-            dbPET.child("projetos").child(nome).child("aguardando").child(user.getUid()).setValue(sharedPref.getString("nome_usuario", "Cumpadi"));
+            dbPET.child("projetos").child(node).child("aguardando").child(user.getUid()).setValue(sharedPref.getString("nome_usuario", "Cumpadi"));
             Snackbar.make(getView().findViewById(R.id.coordinator), "Solicitação enviada",
                     Snackbar.LENGTH_SHORT).show();
 //            mAdapter.removeAll();
@@ -254,9 +277,9 @@ public class ProjetosFragment extends BaseFragment implements LineAdapterProjeto
         //mAdapter = new LineAdapterPet(new ArrayList<>(0));
         mRecyclerView.setAdapter(mAdapter);
 
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
-                layoutManager.getOrientation());
-        mRecyclerView.addItemDecoration(dividerItemDecoration);
+//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
+//                layoutManager.getOrientation());
+//        mRecyclerView.addItemDecoration(dividerItemDecoration);
 
         // Configurando um dividr entre linhas, para uma melhor visualização.
 //        mRecyclerView.addItemDecoration(

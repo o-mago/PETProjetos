@@ -15,11 +15,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -44,9 +48,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends BaseActivity implements
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener, DrawerAdapter.OnItemClicked {
 
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mAuth;
@@ -54,8 +60,8 @@ public class MainActivity extends BaseActivity implements
     private static final String TAG = "MainActivity";
 
     //Navigation
-    private ListView mDrawerList;
-    private ArrayAdapter<String> mAdapter;
+    private RecyclerView mDrawerList;
+    private DrawerAdapter mAdapter;
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private String mActivityTitle;
@@ -67,6 +73,7 @@ public class MainActivity extends BaseActivity implements
     FirebaseStorage storage;
     StorageReference storageRef;
     private String nomeMeuPet = "";
+    private List<ItemMenu> mModels;
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference userFirebase = database.getReference("User");
@@ -86,15 +93,13 @@ public class MainActivity extends BaseActivity implements
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
 
-        setupMeuPET();
-
         //Navigation
-        mDrawerList = (ListView)findViewById(R.id.navList);
+//        mDrawerList = (RecyclerView) findViewById(R.id.navList);
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
         dbUsuario = mDatabase.child("Usuarios");
-        addDrawerItems();
         setupDrawer();
+        addDrawerItems();
 
         assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -115,26 +120,28 @@ public class MainActivity extends BaseActivity implements
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
 
-        dbUsuario.child(user.getUid()).child("pet").addValueEventListener(new ValueEventListener() {
+        setupMeuPET();
+
+        dbUsuario.child(user.getUid()).child("pet").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String codigo;
-                for (DataSnapshot listSnapshots : dataSnapshot.getChildren()) {
+                if(dataSnapshot.hasChildren()) {
+                    for (DataSnapshot listSnapshots : dataSnapshot.getChildren()) {
                     String condicao = listSnapshots.child("situacao").getValue(String.class);
-                    if(!condicao.equals("bolsistas") && !condicao.equals("oficiais") && !condicao.equals("voluntarios") && !condicao.equals("aguardando")) {
-                        ft = getSupportFragmentManager().beginTransaction();
-                        ft.addToBackStack(null);
-                        ft.replace(R.id.fragment_container, EncontreSeuPet.newInstance());
-                        ft.commit();
-                        break;
-                    }
-                    else {
+                        Log.d("DEV/MAIN", "Entrou situacao");
                         ft = getSupportFragmentManager().beginTransaction();
                         ft.addToBackStack(null);
                         ft.replace(R.id.fragment_container, MeuPetFragment.newInstance());
                         ft.commit();
                         break;
                     }
+                }
+                else {
+                    Log.d("DEV/MAIN", "Entrou else");
+                    ft = getSupportFragmentManager().beginTransaction();
+                    ft.addToBackStack(null);
+                    ft.replace(R.id.fragment_container, EncontreSeuPet.newInstance());
+                    ft.commit();
                 }
             }
 
@@ -143,37 +150,34 @@ public class MainActivity extends BaseActivity implements
                 Log.d("UNI", "Deu merda");
             }
         });
+    }
 
-        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(position == 0) {
-                    ft = getSupportFragmentManager().beginTransaction();
-                    ft.addToBackStack(null);
-                    ft.replace(R.id.fragment_container, MeuPetFragment.newInstance());
-                    ft.commit();
-                }
-                if(position == 1) {
-                    ft = getSupportFragmentManager().beginTransaction();
-                    ft.addToBackStack(null);
-                    ft.replace(R.id.fragment_container, Perfil.newInstance());
-                    ft.commit();
-                }
-                if(position == 2) {
-                    ft = getSupportFragmentManager().beginTransaction();
-                    ft.addToBackStack(null);
-                    ft.replace(R.id.fragment_container, EncontreSeuPet.newInstance());
-                    ft.commit();
-                }
-                if(position == 3) {
-                    ft = getSupportFragmentManager().beginTransaction();
-                    ft.addToBackStack(null);
-                    ft.replace(R.id.fragment_container, PesquisarPetiano.newInstance());
-                    ft.commit();
-                }
-                mDrawerLayout.closeDrawers();
-            }
-        });
+    @Override
+    public void onBackPressed() {
+        int count = getSupportFragmentManager().getBackStackEntryCount();
+//        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+//        int countChild = fragment.getChildFragmentManager().getBackStackEntryCount();
+//        Log.d("DEV/MAIN", "Fragment: "+count);
+//        Log.d("DEV/MAIN", "ChildFragment: "+countChild);
+
+        if (count == 0) {
+            super.onBackPressed();
+        }
+        else if(count == 1){
+            getSupportFragmentManager().popBackStack();
+            super.onBackPressed();
+        }
+        else {
+            getSupportFragmentManager().popBackStack();
+        }
+//        else if (countChild == 0) {
+//            getSupportFragmentManager().popBackStack();
+//        }
+//        else {
+//            fragment.getChildFragmentManager().popBackStack();
+//            getSupportFragmentManager().popBackStack();
+//            Log.d("DEV/MAIN", "Child closed");
+//        }
     }
 
     private void setupMeuPET() {
@@ -186,35 +190,35 @@ public class MainActivity extends BaseActivity implements
                     nomeMeuPet = listSnapshots.getKey();
                     editor.putString("nome_meu_pet", nomeMeuPet);
                     editor.putString("condicao_meu_pet", condicao);
-                    editor.commit();
+                    editor.apply();
                     break;
                 }
-                String nomeImagemPet = nomeMeuPet;
-                try {
-                    nomeImagemPet = nomeMeuPet.replace(" ", "_");
-                }
-                catch (NullPointerException e) {
-
-                }
-                Log.d("ENTROU2", nomeImagemPet);
-                StorageReference perfilRef = storageRef.child("imagensPET/" + nomeImagemPet + ".jpg");
-
-                final long ONE_MEGABYTE = 1024 * 1024;
-                perfilRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                    @Override
-                    public void onSuccess(byte[] bytes) {
-                        Bitmap bitmapPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                        Uri uriPet = getImageUri(MainActivity.this, bitmapPerfil);
-                        editor.putString("uri_pet", uriPet.toString());
-                        editor.commit();
-
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle any errors
-                    }
-                });
+//                String nomeImagemPet = nomeMeuPet;
+//                try {
+//                    nomeImagemPet = nomeMeuPet.replace(" ", "_");
+//                }
+//                catch (NullPointerException e) {
+//
+//                }
+//                Log.d("ENTROU2", nomeImagemPet);
+//                StorageReference perfilRef = storageRef.child("imagensPET/" + nomeImagemPet + ".jpg");
+//
+//                final long ONE_MEGABYTE = 1024 * 1024;
+//                perfilRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+//                    @Override
+//                    public void onSuccess(byte[] bytes) {
+//                        Bitmap bitmapPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+//                        Uri uriPet = getImageUri(MainActivity.this, bitmapPerfil);
+//                        editor.putString("uri_pet", uriPet.toString());
+//                        editor.commit();
+//
+//                    }
+//                }).addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception exception) {
+//                        // Handle any errors
+//                    }
+//                });
             }
 
             @Override
@@ -264,20 +268,86 @@ public class MainActivity extends BaseActivity implements
     }
 
     public void volta_login(){
-        Intent i = new Intent(this,EmailPasswordActivity.class);
+        Intent i = new Intent(this, EmailPasswordActivity.class);
         startActivity(i);
         finish();
     }
 
     //Navigation
     private void addDrawerItems() {
-        String[] osArray = { "Meu PET", "Perfil", "Pesquisar PET", "Pesquisar Petiano"};
+//        String[] osArray = { "Meu PET", "Perfil", "Pesquisar PET", "Pesquisar Petiano"};
+        mModels = new ArrayList<>();
+        mModels.add(new ItemMenu("Meu PET", getResources().getDrawable(R.drawable.pet_icone)));
+        mModels.add(new ItemMenu("Perfil", getResources().getDrawable(R.drawable.icone_perfil)));
+        mModels.add(new ItemMenu("Horários Petianos", getResources().getDrawable(R.drawable.time)));
+        mModels.add(new ItemMenu("Calendário", getResources().getDrawable(R.drawable.calendar)));
+        mModels.add(new ItemMenu("Pesquisar PET", getResources().getDrawable(R.drawable.search)));
+        mModels.add(new ItemMenu("Pesquisar Petiano", getResources().getDrawable(R.drawable.pessoas)));
         //mUser = new ImageButton(this, R.id.)
-        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
+//        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
+        mAdapter.add(mModels);
+        mAdapter.setOnClick(this);
         mDrawerList.setAdapter(mAdapter);
     }
 
+    @Override
+    public void onItemClick(int position, View itemView, String opcaoEscolhida) {
+        if(position == 0) {
+            ft = getSupportFragmentManager().beginTransaction();
+            ft.addToBackStack(null);
+            ft.replace(R.id.fragment_container, MeuPetFragment.newInstance());
+            ft.commit();
+        }
+        if(position == 1) {
+            ft = getSupportFragmentManager().beginTransaction();
+            ft.addToBackStack(null);
+            getSupportFragmentManager().popBackStack();
+            ft.replace(R.id.fragment_container, Perfil.newInstance());
+            ft.commit();
+        }
+        if(position == 2) {
+            ft = getSupportFragmentManager().beginTransaction();
+            ft.addToBackStack(null);
+            getSupportFragmentManager().popBackStack();
+            ft.replace(R.id.fragment_container, HorariosFragment.newInstance());
+            ft.commit();
+        }
+        if(position == 3) {
+            ft = getSupportFragmentManager().beginTransaction();
+            ft.addToBackStack(null);
+            getSupportFragmentManager().popBackStack();
+            ft.replace(R.id.fragment_container, Perfil.newInstance());
+            ft.commit();
+        }
+        if(position == 4) {
+            ft = getSupportFragmentManager().beginTransaction();
+            ft.addToBackStack(null);
+            ft.replace(R.id.fragment_container, EncontreSeuPet.newInstance());
+            ft.commit();
+        }
+        if(position == 5) {
+            ft = getSupportFragmentManager().beginTransaction();
+            ft.addToBackStack(null);
+            ft.replace(R.id.fragment_container, PesquisarPetiano.newInstance());
+            ft.commit();
+        }
+        mDrawerLayout.closeDrawers();
+    }
+
     private void setupDrawer() {
+
+        LinearLayoutManager layoutManager= new LinearLayoutManager(this);
+
+        mDrawerList = findViewById(R.id.navList);
+        mDrawerList.setLayoutManager(layoutManager);
+
+        mAdapter = new DrawerAdapter();
+        mDrawerList.setAdapter(mAdapter);
+
+        DividerItemDecoration dividerItemDecorationRequisicao = new DividerItemDecoration(mDrawerList.getContext(),
+                layoutManager.getOrientation());
+        mDrawerList.addItemDecoration(dividerItemDecorationRequisicao);
+
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
 
             /** Called when a drawer has settled in a completely open state. */

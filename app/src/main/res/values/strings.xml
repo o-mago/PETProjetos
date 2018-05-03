@@ -47,6 +47,11 @@
         <item>Extra Oficial</item>
     </string-array>
 
+    <string-array name="opcoes_membros">
+        <item>Tornar Coordenador</item>
+        <item>Remover</item>
+    </string-array>
+
     <string-array name="tem_certeza">
         <item>Sim</item>
         <item>Não</item>
@@ -87,8 +92,8 @@
     </string-array>
 
     <string-array name="horarios">
-        <item name="horario1">8:00&#8211;9:00</item>
-        <item name="horario2">9:00&#8211;10:00</item>
+        <item name="horario1">08:00&#8211;09:00</item>
+        <item name="horario2">09:00&#8211;10:00</item>
         <item name="horario3">10:00&#8211;11:00</item>
         <item name="horario4">11:00&#8211;12:00</item>
         <item name="horario5">12:00&#8211;13:00</item>
@@ -110,7 +115,7 @@
         <item name="quarta">QUARTA</item>
         <item name="quinta">QUINTA</item>
         <item name="sexta">SEXTA</item>
-        <item name="sabado">SABADO</item>
+        <item name="sabado">SÁBADO</item>
         <item name="domingo">DOMINGO</item>
     </string-array>
 

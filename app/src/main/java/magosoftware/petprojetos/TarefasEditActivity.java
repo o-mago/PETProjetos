@@ -1,6 +1,7 @@
 package magosoftware.petprojetos;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.pchmn.materialchips.ChipsInput;
 import com.pchmn.materialchips.model.Chip;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -38,12 +41,15 @@ public class TarefasEditActivity extends BaseActivity implements View.OnClickLis
     private ChipsInput chipsPetianos;
     private TextView dataText;
     private EditText descricao;
-    private CalendarView calendario;
+    private DatePicker calendario;
     private LinearLayout linearLayout;
     private String dataSelecionada;
-    private String caminhoEquipe;
-    private DatabaseReference dbEquipe;
-    private String nomeTarefa;
+    private String tarefaPath;
+    private DatabaseReference dbTarefa;
+    private String node = "NADAIEJ993R8JFN";
+    private DatabaseReference dbAtualizaTarefa;
+    private DatePickerDialog datePickerDialog;
+    private String situacaoTarefa;
 
     @Override
     public void onCreate(Bundle savedInstantState) {
@@ -60,20 +66,23 @@ public class TarefasEditActivity extends BaseActivity implements View.OnClickLis
         chipsPetianos = findViewById(R.id.chips_responsaveis);
         descricao = findViewById(R.id.descricao);
         Intent intent = getIntent();
-        caminhoEquipe = intent.getStringExtra("equipe_path");
-        dbEquipe = mDatabase.child(caminhoEquipe);
+        tarefaPath = intent.getStringExtra("tarefa_path");
+        situacaoTarefa = intent.getStringExtra("situacao_tarefa");
+        dbTarefa = mDatabase.child(tarefaPath);
         getPetianos(chipsPetianos);
+        setupCalendar();
         try {
-            nomeTarefa = intent.getStringExtra("nome_tarefa");
+            node = intent.getStringExtra("node");
+            dbAtualizaTarefa = dbTarefa.child("tarefas").child(situacaoTarefa).child(node);
             getInfoTarefa();
         }
         catch (NullPointerException e) {
-
+            node = "NADAIEJ993R8JFN";
         }
     }
 
     private void getInfoTarefa() {
-        dbEquipe.child("tarefas").child("fazer").child(nomeTarefa).addValueEventListener(new ValueEventListener() {
+        dbTarefa.child("tarefas").child(situacaoTarefa).child(node).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 titulo.setText(dataSnapshot.child("titulo").getValue(String.class));
@@ -92,44 +101,61 @@ public class TarefasEditActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void setupCalendar() {
-        linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.calendario_alert, null, false);
-        calendario = (CalendarView) linearLayout.getChildAt(0);
-        calendario.setMinDate(System.currentTimeMillis()-1000);
-        calendario.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+//        linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.calendario_alert, null, false);
+//        calendario = (DatePicker) linearLayout.getChildAt(0);
+//        calendario.setMinDate(System.currentTimeMillis()-1000);
+//        calendario.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+//            @Override
+//            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+//                dataSelecionada = dayOfMonth+"/"+month+"/"+year;
+//            }
+//        });
+//        new AlertDialog.Builder(this)
+//                .setTitle("Prazo")
+//                .setMessage("Selecione o Prazo")
+//                .setView(linearLayout)
+//                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int whichButton) {
+//                        dataText.setText(dataSelecionada);
+//                        dialog.dismiss();
+//                    }
+//                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int whichButton) {
+//                        dialog.dismiss();
+//                    }
+//                }
+//        ).show();
+        datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                dataSelecionada = dayOfMonth+"/"+month+"/"+year;
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+//                dataSelecionada = dayOfMonth + "/" + (month+1) + "/" + year;
+                dataSelecionada = formatoData(year, month, dayOfMonth, "dd/MM/yyyy");
+                dataText.setText(dataSelecionada);
             }
-        });
-        new AlertDialog.Builder(this)
-                .setTitle("Prazo")
-                .setMessage("Selecione o Prazo")
-                .setView(linearLayout)
-                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        dataText.setText(dataSelecionada);
-                        dialog.dismiss();
-                    }
-                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        dialog.dismiss();
-                    }
-                }
-        ).show();
+        }, 2018, 3, 1);
+    }
+
+    public String formatoData(int year, int month, int date, String pattern) {
+        DateFormat format = new SimpleDateFormat(pattern);
+        Date data = new Date(year-1900, month, date);
+        return format.format(data);
     }
 
     @Override
     public void onClick(View view) {
         int id = view.getId();
         if(id == R.id.certo) {
+            if(node.equals("NADAIEJ993R8JFN")) {
+                dbAtualizaTarefa = dbTarefa.child("tarefas").child("fazer").push();
+            }
             String tarefa = titulo.getText().toString();
-            dbEquipe.child("tarefas").child("fazer").child(tarefa).child("titulo").setValue(titulo.getText().toString());
-            dbEquipe.child("tarefas").child("fazer").child(tarefa).child("prazo").setValue(dataSelecionada);
-            dbEquipe.child("tarefas").child("fazer").child(tarefa).child("descricao").setValue(descricao.getText().toString());
+            dbAtualizaTarefa.child("titulo").setValue(titulo.getText().toString());
+            dbAtualizaTarefa.child("prazo").setValue(dataSelecionada);
+            dbAtualizaTarefa.child("descricao").setValue(descricao.getText().toString());
             List<Chip> contactsSelected = (List<Chip>) chipsPetianos.getSelectedChipList();
             for(Chip c : contactsSelected) {
                 Log.d("DEV/TAREFASEDIT", "Entrou");
-                dbEquipe.child("tarefas").child("fazer").child(tarefa).child("time").child(c.getLabel()).setValue(c.getLabel());
+                dbAtualizaTarefa.child("time").child(c.getLabel()).setValue(c.getLabel());
             }
             finish();
         }
@@ -137,26 +163,38 @@ public class TarefasEditActivity extends BaseActivity implements View.OnClickLis
             finish();
         }
         if(id == R.id.data_text) {
-            setupCalendar();
+            datePickerDialog.show();
         }
     }
 
     private void getPetianos(final ChipsInput chipsPetianos) {
-        String[] caminhos = caminhoEquipe.split("/");
-        DatabaseReference timeProjeto = mDatabase.child(caminhoEquipe).child("time");
-//        for(int i =0; i < 6; i++) {
+        String[] caminhos = tarefaPath.split("/");
+        DatabaseReference timeProjeto = mDatabase.child(tarefaPath).child("time");
+//        DatabaseReference timeProjeto = mDatabase;
+//        for(int i =0; i < 4; i++) {
 //            timeProjeto = timeProjeto.child(caminhos[i]);
 //        }
-//        timeProjeto.child("time");
+//        timeProjeto = timeProjeto.child("time");
         Log.d("TAREFASEDITACTIVITY", timeProjeto.toString());
         timeProjeto.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 final List<Chip> mPetianosList = new ArrayList<>();
                 for (DataSnapshot listSnapshots : dataSnapshot.getChildren()) {
-                    String nome = listSnapshots.getValue(String.class);
-                    Log.d("OI", nome);
-                    mPetianosList.add(new Chip(nome, ""));
+                    if(listSnapshots.hasChildren()) {
+                        for (DataSnapshot subListSnapshots : listSnapshots.getChildren()) {
+                            if (!listSnapshots.getKey().equals("aguardando")) {
+                                String nome = subListSnapshots.getValue(String.class);
+                                Log.d("OI", nome);
+                                mPetianosList.add(new Chip(nome, ""));
+                            }
+                        }
+                    }
+                    else {
+                        String nome = listSnapshots.getValue(String.class);
+                        Log.d("OI", nome);
+                        mPetianosList.add(new Chip(nome, ""));
+                    }
                 }
                 chipsPetianos.setFilterableList(mPetianosList);
             }

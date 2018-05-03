@@ -32,7 +32,7 @@
             android:text="PET Elétrica UFJF"
             android:textSize="20sp"/>
         <ImageView
-            android:id="@+id/notificacao"
+            android:id="@+id/eventos"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerVertical="true"
@@ -40,14 +40,14 @@
             android:layout_alignParentEnd="true"
             android:layout_marginRight="10dp"
             android:layout_marginEnd="10dp"
-            android:src="@drawable/pessoas"/>
+            android:src="@drawable/calendar"/>
         <ImageView
             android:id="@+id/drive"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/notificacao"
-            android:layout_toStartOf="@id/notificacao"
+            android:layout_toLeftOf="@id/eventos"
+            android:layout_toStartOf="@id/eventos"
             android:layout_marginRight="10dp"
             android:layout_marginEnd="10dp"
             android:src="@drawable/drive_button"/>
@@ -89,22 +89,22 @@
                 android:text="TAREFAS"/>
         </FrameLayout>
         <FrameLayout
-            android:id="@+id/menu_eventos_click"
+            android:id="@+id/menu_membros_click"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
             android:layout_weight="1">
             <TextView
-                android:id="@+id/menu_eventos"
+                android:id="@+id/menu_membros"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="EVENTOS"/>
+                android:text="MEMBROS"/>
         </FrameLayout>
     </LinearLayout>
     <FrameLayout
-        android:id="@+id/fragment_container_meu_pet"
+        android:id="@+id/fragment_container_child"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/menu"

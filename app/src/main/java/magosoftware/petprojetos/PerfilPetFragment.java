@@ -95,6 +95,8 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
     String nomeOldPET = "";
     String situacaoPET = "";
     Boolean tenhoCerteza = true;
+    private String nomeUsuario;
+    private ValueEventListener valueEventListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -104,9 +106,9 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
         nomePet = getArguments().getString("nome");
-        dbBolsistas = mDatabase.child("PETs").child(nomePet).child("petianos").child("bolsistas");
-        dbOficiais = mDatabase.child("PETs").child(nomePet).child("petianos").child("oficiais");
-        dbVoluntarios = mDatabase.child("PETs").child(nomePet).child("petianos").child("voluntarios");
+        dbBolsistas = mDatabase.child("PETs").child(nomePet).child("time").child("bolsistas");
+        dbOficiais = mDatabase.child("PETs").child(nomePet).child("time").child("oficiais");
+        dbVoluntarios = mDatabase.child("PETs").child(nomePet).child("time").child("voluntarios");
 //        File cacheDir = getDiskCacheDir(this, DISK_CACHE_SUBDIR);
 
 
@@ -161,8 +163,8 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String codigo;
                 for (DataSnapshot listSnapshots : dataSnapshot.getChildren()) {
-                    String condicao = listSnapshots.getValue(String.class);
-                    if(condicao.equals("bolsistas") || condicao.equals("oficiais") || condicao.equals("voluntarios")) {
+                    String condicao = listSnapshots.child("situacao").getValue(String.class);
+                    if (condicao.equals("bolsistas") || condicao.equals("oficiais") || condicao.equals("voluntarios")) {
                         editButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_edit_black_24dp));
                         break;
                     }
@@ -178,7 +180,7 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
     }
 
     public void setupFollow(String categoria, final String mensagem, final String cor, final Drawable fundo) {
-        mDatabase.child("PETs").child(nomePet).child("petianos/"+categoria).addValueEventListener(new ValueEventListener() {
+        mDatabase.child("PETs").child(nomePet).child("time/"+categoria).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String codigo;
@@ -222,7 +224,7 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
                         temPET = true;
                         for (DataSnapshot listSnapshots : dataSnapshot.child("pet").getChildren()) {
                             nomeOldPET = listSnapshots.getKey();
-                            situacaoPET = listSnapshots.child(nomeOldPET).child("situacao").getValue(String.class);
+                            situacaoPET = listSnapshots.getValue(String.class);
                         }
                     }
                     else {
@@ -240,40 +242,14 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
             builder.setItems(getResources().getStringArray(R.array.opcoes_petiano), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    if(temCerteza()) {
-                        if(temPET) {
-                            Map<String, String> novoPetiano = new HashMap<>();
-                            novoPetiano.put(user.getUid(), "bolsistas");
-                            mDatabase.child("PETs").child(nomeOldPET).child("petianos").child(situacaoPET).removeValue();
-                        }
-                        Log.d("WHICH", Integer.toString(which));
-                        if (which == 0) {
-                            Map<String, String> novoPetiano = new HashMap<>();
-                            novoPetiano.put(user.getUid(), "bolsistas");
-                            mDatabase.child("PETs").child(nomePet).child("petianos").child("aguardando").setValue(novoPetiano);
-                        }
-                        if (which == 1) {
-                            Map<String, String> novoPetiano = new HashMap<>();
-                            novoPetiano.put(user.getUid(), "oficiais");
-                            mDatabase.child("PETs").child(nomePet).child("petianos").child("aguardando").setValue(novoPetiano);
-                        }
-                        if (which == 2) {
-                            Map<String, String> novoPetiano = new HashMap<>();
-                            novoPetiano.put(user.getUid(), "voluntarios");
-                            mDatabase.child("PETs").child(nomePet).child("petianos").child("aguardando").setValue(novoPetiano);
-                        }
-                        Map<String, String> pet = new HashMap<>();
-                        pet.put(nomePet, "aguardando");
-                        dbUsuario.child(user.getUid()).child("pet").setValue(pet);
-                        setupFollow("aguardando", "AGUARDANDO", "#FFFF00", getResources().getDrawable(R.drawable.background_contorno_aguardando));
-                    }
+                    temCerteza(which);
                 }
             });
             builder.show();
         }
     }
 
-    public Boolean temCerteza() {
+    public void temCerteza(final int escolha) {
         if(temPET) {
             final AlertDialog.Builder builderCerteza = new AlertDialog.Builder(getActivity());
             builderCerteza.setTitle("Você tem certeza que deseja sair de "+nomeOldPET+"?");
@@ -287,15 +263,74 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
                         pet.put(nomePet, "aguardando");
                         dbUsuario.child(user.getUid()).child("pet").setValue(pet);
                         setupFollow("aguardando", "AGUARDANDO", "#FFFF00", getResources().getDrawable(R.drawable.background_contorno_aguardando));
+                        if(temPET) {
+                            Map<String, String> novoPetiano = new HashMap<>();
+                            novoPetiano.put(user.getUid(), "bolsistas");
+                            mDatabase.child("PETs").child(nomeOldPET).child("time").child(situacaoPET).removeValue();
+                        }
+                        Log.d("WHICH", Integer.toString(which));
+                        if (escolha == 0) {
+                            dbUsuario.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    nomeUsuario = dataSnapshot.child("nome").getValue(String.class);
+                                    mDatabase.child("PETs").child(nomePet).child("time")
+                                            .child("aguardando")
+                                            .child("bolsistas")
+                                            .child(user.getUid())
+                                            .setValue(nomeUsuario);
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+                        if (escolha == 1) {
+                            dbUsuario.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    nomeUsuario = dataSnapshot.child("nome").getValue(String.class);
+                                    mDatabase.child("PETs").child(nomePet).child("time")
+                                            .child("aguardando")
+                                            .child("oficiais")
+                                            .child(user.getUid())
+                                            .setValue(nomeUsuario);
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+                        if (escolha == 2) {
+                            dbUsuario.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    nomeUsuario = dataSnapshot.child("nome").getValue(String.class);
+                                    mDatabase.child("PETs").child(nomePet).child("time")
+                                            .child("aguardando")
+                                            .child("voluntatios")
+                                            .child(user.getUid())
+                                            .setValue(nomeUsuario);
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
                     }
                     if (which == 1) {
-                        tenhoCerteza = false;
+
                     }
                 }
             });
             builderCerteza.show();
         }
-        return tenhoCerteza;
     }
 
     @Override
@@ -330,49 +365,24 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
         String universidadeSP = sharedPref.getString("universidade_pet", null);
         String localizacaoSP = sharedPref.getString("localizacao_pet", null);
         final String anoSP = sharedPref.getString("ano_pet", null);
-        if(nomeSP == null || update) {
-            mDatabase.child("PETs").child(nomePet).child("nome").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    nome.setText(dataSnapshot.getValue(String.class));
-                    editor.putString("nome_pet", dataSnapshot.getValue(String.class));
-                    editor.commit();
-                }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.d("UNI", "Deu merda");
-                }
-            });
-        }
-        else {
-            nome.setText(nomeSP);
-        }
-        if(emailSP == null || update) {
-            mDatabase.child("PETs").child(nomePet).child("email").addValueEventListener(new ValueEventListener() {
+        if(nomeSP == null || emailSP == null || siteSP == null || cursoSP == null || universidadeSP == null || localizacaoSP == null || update) {
+            valueEventListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    email.setText(dataSnapshot.getValue(String.class));
-                    editor.putString("email_pet" , dataSnapshot.getValue(String.class));
-                    editor.commit();
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.d("UNI", "Deu merda");
-                }
-            });
-        }
-        else {
-            email.setText(emailSP);
-        }
-        if(cursoSP == null || update) {
-            mDatabase.child("PETs").child(nomePet).child("cursos").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
+                    nome.setText(dataSnapshot.child("nome").getValue(String.class));
+                    editor.putString("nome_pet", dataSnapshot.child("nome").getValue(String.class));
+                    email.setText(dataSnapshot.child("email").getValue(String.class));
+                    editor.putString("email_pet" , dataSnapshot.child("email").getValue(String.class));
+                    universidade.setText(dataSnapshot.child("universidade").getValue(String.class));
+                    editor.putString("universidade_pet", dataSnapshot.child("universidade").getValue(String.class));
+                    ano.setText(dataSnapshot.child("ano").getValue(String.class));
+                    editor.putString("ano_pet", dataSnapshot.child("ano").getValue(String.class));
+                    site.setText(dataSnapshot.child("site").getValue(String.class));
+                    editor.putString("site_pet", dataSnapshot.child("site").getValue(String.class));
                     String cursosConcat = "";
                     //String[] cursos;
-                    Map<String,Object> map = (Map<String,Object>)dataSnapshot.getValue();
+                    Map<String,Object> map = (Map<String,Object>)dataSnapshot.child("cursos").getValue();
                     String[] cursosArray = new String[10];
                     int i=0;
                     //cursos = Arrays.copyOf(map.values().toArray(), map.values().toArray().length, String[].class);
@@ -384,6 +394,12 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
                     cursosConcat = cursosConcat.replace((cursosArray[i-1]+", "), cursosArray[i-1]);
                     curso.setText(cursosConcat);
                     editor.putString("cursos_pet", cursosConcat);
+
+                    cidadeEstado = dataSnapshot.child("cidade").getValue(String.class);
+                    cidadeEstado = cidadeEstado.concat(" - ").concat(dataSnapshot.child("estado").getValue(String.class));
+                    localizacao.setText(cidadeEstado);
+                    editor.putString("localizacao_pet", cidadeEstado);
+
                     editor.commit();
                 }
 
@@ -391,98 +407,16 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
                 public void onCancelled(DatabaseError databaseError) {
                     Log.d("UNI", "Deu merda");
                 }
-            });
+            };
+            mDatabase.child("PETs").child(nomePet).addListenerForSingleValueEvent(valueEventListener);
         }
         else {
-            curso.setText(cursoSP);
-        }
-
-        if(universidadeSP == null || update) {
-            mDatabase.child("PETs").child(nomePet).child("universidade").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    universidade.setText(dataSnapshot.getValue(String.class));
-                    editor.putString("universidade_pet", dataSnapshot.getValue(String.class));
-                    editor.commit();
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.d("UNI", "Deu merda");
-                }
-            });
-        }
-        else {
+            nome.setText(nomeSP);
+            email.setText(emailSP);
             universidade.setText(universidadeSP);
-        }
-
-        if(anoSP == null || update) {
-            mDatabase.child("PETs").child(nomePet).child("ano").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    ano.setText(dataSnapshot.getValue(String.class));
-                    editor.putString("ano_pet", dataSnapshot.getValue(String.class));
-                    editor.commit();
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.d("UNI", "Deu merda");
-                }
-            });
-        }
-        else {
             ano.setText(anoSP);
-        }
-
-        if(siteSP == null || update) {
-            mDatabase.child("PETs").child(nomePet).child("site").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    site.setText(dataSnapshot.getValue(String.class));
-                    editor.putString("site_pet", dataSnapshot.getValue(String.class));
-                    editor.commit();
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.d("UNI", "Deu merda");
-                }
-            });
-        }
-        else {
             site.setText(siteSP);
-        }
-
-        if(localizacaoSP == null || update) {
-
-            mDatabase.child("PETs").child(nomePet).child("cidade").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    cidadeEstado = dataSnapshot.getValue(String.class);
-                    mDatabase.child("PETs").child(nomePet).child("estado").addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            cidadeEstado = cidadeEstado.concat(" - ").concat(dataSnapshot.getValue(String.class));
-                            localizacao.setText(cidadeEstado);
-                            editor.putString("localizacao_pet", cidadeEstado);
-                            editor.commit();
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            Log.d("UNI", "Deu merda");
-                        }
-                    });
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.d("UNI", "Deu merda");
-                }
-            });
-        }
-        else {
+            curso.setText(cursoSP);
             localizacao.setText(localizacaoSP);
         }
         try {
@@ -494,24 +428,31 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
         if(uriPet == null || update) {
             String nomePETFoto = nomePet.replace(" ", "_");
             StorageReference perfilRef = storageRef.child("imagensPET/" + nomePETFoto + ".jpg");
+            try {
+                perfilRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                    @Override
+                    public void onSuccess(byte[] bytes) {
+                        try {
+                            bitmapPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            uriPet = getImageUri(getActivity(), bitmapPerfil);
+                            editor.putString("uri_pet", uriPet.toString());
+                            editor.commit();
+                            imagemPerfil.setImageBitmap(bitmapPerfil);
+                        }
+                        catch (Exception e) {
 
-            final long ONE_MEGABYTE = 1024 * 1024;
-            perfilRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                @Override
-                public void onSuccess(byte[] bytes) {
-                    bitmapPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                    uriPet = getImageUri(getActivity(), bitmapPerfil);
-                    editor.putString("uri_pet", uriPet.toString());
-                    editor.commit();
-                    imagemPerfil.setImageBitmap(bitmapPerfil);
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle any errors
+                    }
+                });
+            }
+            catch (Exception e) {
 
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle any errors
-                }
-            });
+            }
         }
         else {
             Picasso.with(getActivity()).load(uriPet).into(imagemPerfil);
@@ -556,7 +497,7 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
             }
         });
 
-        velBolsistas = dbBolsistas.addValueEventListener(new ValueEventListener() {
+        velBolsistas = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //String[] cursos;
@@ -570,21 +511,26 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
                     perfilRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListenerString(usuarios) {
                         @Override
                         public void onSuccess(byte[] bytes) {
-                            bitmapPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                            Bitmap resizedBmp = Bitmap.createScaledBitmap(bitmapPerfil, toPx(100), toPx(100), false);
-                            bitmapDrawablePet = new BitmapDrawable(getResources(), resizedBmp);
-                            String[] nomes = variavel.split(" ");
-                            if(nomes.length > 1) {
-                                String nomeSobrenome = nomes[0] + " " + nomes[1];
-                                Log.d("NOME", nomeSobrenome);
-                                section.children.add(new Usuario(nomeSobrenome, bitmapDrawablePet));
+                            try {
+                                bitmapPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                Bitmap resizedBmp = Bitmap.createScaledBitmap(bitmapPerfil, toPx(100), toPx(100), false);
+                                bitmapDrawablePet = new BitmapDrawable(getResources(), resizedBmp);
+                                String[] nomes = ((String) variavel1).split(" ");
+                                if (nomes.length > 1) {
+                                    String nomeSobrenome = nomes[0] + " " + nomes[1];
+                                    Log.d("NOME", nomeSobrenome);
+                                    section.children.add(new Usuario(nomeSobrenome, bitmapDrawablePet));
+                                } else {
+                                    String nomeSobrenome = (String) variavel1;
+                                    Log.d("NOME", nomeSobrenome);
+                                    section.children.add(new Usuario(nomeSobrenome, bitmapDrawablePet));
+                                }
                             }
-                            else {
-                                String nomeSobrenome = variavel;
-                                Log.d("NOME", nomeSobrenome);
-                                section.children.add(new Usuario(nomeSobrenome, bitmapDrawablePet));
+                            catch (IllegalStateException e) {
+
                             }
                         }
+
 //                            uriPerfil = getImageUri(getActivity(), bitmapPerfil);
 //                            imagemPerfil.setImageBitmap(bitmapPerfil);
 //                            mModels.add(new Usuario(usuarios[contPetianos], bitmapDrawablePet));
@@ -594,7 +540,6 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
                             // Handle any errors
                         }
                     });
-
                 }
                 velOficiais = dbOficiais.addValueEventListener(new ValueEventListener() {
                     @Override
@@ -610,16 +555,21 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
                             perfilRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListenerString(usuarios) {
                                 @Override
                                 public void onSuccess(byte[] bytes) {
-                                    bitmapPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                    Bitmap resizedBmp = Bitmap.createScaledBitmap(bitmapPerfil, toPx(100), toPx(100), false);
-                                    bitmapDrawablePet = new BitmapDrawable(getResources(), resizedBmp);
+                                    try {
+                                        bitmapPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                        Bitmap resizedBmp = Bitmap.createScaledBitmap(bitmapPerfil, toPx(100), toPx(100), false);
+                                        bitmapDrawablePet = new BitmapDrawable(getResources(), resizedBmp);
 //                            uriPerfil = getImageUri(getActivity(), bitmapPerfil);
 //                            imagemPerfil.setImageBitmap(bitmapPerfil);
 //                                    mModels.add(new Usuario(usuarios[contPetianos], bitmapDrawablePet));
-                                    String[] nomes = variavel.split(" ");
-                                    String nomeSobrenome = nomes[0]+" "+nomes[1];
-                                    Log.d("NOME", nomeSobrenome);
-                                    section.children.add(new Usuario(nomeSobrenome, bitmapDrawablePet));
+                                        String[] nomes = ((String) variavel1).split(" ");
+                                        String nomeSobrenome = nomes[0] + " " + nomes[1];
+                                        Log.d("NOME", nomeSobrenome);
+                                        section.children.add(new Usuario(nomeSobrenome, bitmapDrawablePet));
+                                    }
+                                    catch (IllegalStateException e) {
+
+                                    }
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -642,16 +592,21 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
                                     perfilRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListenerString(usuarios) {
                                         @Override
                                         public void onSuccess(byte[] bytes) {
-                                            bitmapPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                            Bitmap resizedBmp = Bitmap.createScaledBitmap(bitmapPerfil, toPx(100), toPx(100), false);
-                                            bitmapDrawablePet = new BitmapDrawable(getResources(), resizedBmp);
+                                            try {
+                                                bitmapPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                                Bitmap resizedBmp = Bitmap.createScaledBitmap(bitmapPerfil, toPx(100), toPx(100), false);
+                                                bitmapDrawablePet = new BitmapDrawable(getResources(), resizedBmp);
 //                            uriPerfil = getImageUri(getActivity(), bitmapPerfil);
 //                            imagemPerfil.setImageBitmap(bitmapPerfil);
 //                                            mModels.add(new Usuario(usuarios[contPetianos], bitmapDrawablePet));
-                                            String[] nomes = variavel.split(" ");
-                                            String nomeSobrenome = nomes[0]+" "+nomes[1];
-                                            Log.d("NOME", nomeSobrenome);
-                                            section.children.add(new Usuario(nomeSobrenome, bitmapDrawablePet));
+                                                String[] nomes = ((String) variavel1).split(" ");
+                                                String nomeSobrenome = nomes[0] + " " + nomes[1];
+                                                Log.d("NOME", nomeSobrenome);
+                                                section.children.add(new Usuario(nomeSobrenome, bitmapDrawablePet));
+                                            }
+                                            catch (IllegalStateException e) {
+
+                                            }
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
                                         @Override
@@ -683,11 +638,13 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
             public void onCancelled(DatabaseError databaseError) {
                 Log.d("UNI", "Deu merda");
             }
-        });
+        };
+
+        dbBolsistas.addListenerForSingleValueEvent(velBolsistas);
 
 //        mAdapter.add(mModels);
 
-        section.parent = "Petianos";
+        section.parent = "time";
         expandableLayout.addSection(section);
 
         expandableLayout.setExpandListener(new ExpandCollapseListener.ExpandListener<String>() {
@@ -703,6 +660,13 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
                 view.findViewById(R.id.arrow).setBackgroundResource(R.drawable.arrow_down);
             }
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        dbBolsistas.removeEventListener(velBolsistas);
+        getView().findViewById(R.id.edit_button).setOnClickListener(null);
     }
 
     private void setupRecycler() {
@@ -726,5 +690,52 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
     public int toPx(float dp){
         int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
         return px;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        mDatabase.child("PETs").child(nomePet).removeEventListener(valueEventListener);
+
+        follow.setOnClickListener(null);
+        imagemPerfil.setOnClickListener(null);
+        mRecyclerView = null;
+        mAdapter = null;
+        dbUsuario = null;
+        dbBolsistas = null;
+        dbOficiais = null;
+        dbVoluntarios = null;
+        velBolsistas = null;
+        velOficiais = null;
+        velVoluntarios = null;
+        user = null;
+        mAuth = null;
+        imagemPerfil = null;
+        site = null;
+        nome = null;
+        email = null;
+        curso = null;
+        universidade = null;
+        localizacao = null;
+        ano = null;
+        storage = null;
+        storageRef = null;
+        bitmapPerfil = null;
+        editButton = null;
+        uriPet = null;
+        sharedPref = null;
+        editor = null;
+        nomePet = null;
+        cidadeEstado = null;
+        follow = null;
+        expandableLayout = null;
+        usuarios = null;
+        mModels = null;
+        bitmapDrawablePet = null;
+        section = null;
+        nomeOldPET = null;
+        situacaoPET = null;
+        valueEventListener = null;
     }
 }

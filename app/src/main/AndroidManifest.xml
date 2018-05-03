@@ -16,13 +16,15 @@
         <activity android:screenOrientation="portrait" android:name=".MainActivity">
         </activity>
         <activity
-            android:name=".EmailPasswordActivity"
-            android:label="PET Projetos">
+            android:name=".SplashScreen"
+            android:label="PET Projetos"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:screenOrientation="portrait" android:name=".EmailPasswordActivity"></activity>
         <activity android:screenOrientation="portrait" android:name=".NewUser"></activity>
         <activity android:screenOrientation="portrait" android:name=".NovaUniversidade"></activity>
         <activity android:screenOrientation="portrait" android:name=".NovoCurso"></activity>

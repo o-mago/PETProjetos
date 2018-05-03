@@ -66,6 +66,8 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
     public SharedPreferences sharedPref;
     public SharedPreferences.Editor editor;
     String nomePET;
+    private Picasso.Listener builderListener;
+    private Picasso.Builder builder;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -166,7 +168,7 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
         String petSP = sharedPref.getString(getString(R.string.pet_perfil), null);
         String nascimentoSP = sharedPref.getString(getString(R.string.nascimento_perfil), null);
         if(nomeSP == null || update) {
-            mDatabase.child("Usuarios").child(codigo).child("nome").addValueEventListener(new ValueEventListener() {
+            mDatabase.child("Usuarios").child(codigo).child("nome").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     nome.setText(dataSnapshot.getValue(String.class));
@@ -183,7 +185,7 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
             nome.setText(nomeSP);
         }
         if(emailSP == null || update) {
-            mDatabase.child("Usuarios").child(codigo).child("email").addValueEventListener(new ValueEventListener() {
+            mDatabase.child("Usuarios").child(codigo).child("email").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     email.setText(dataSnapshot.getValue(String.class));
@@ -200,7 +202,7 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
             email.setText(emailSP);
         }
         if(cursoSP == null || update) {
-            mDatabase.child("Usuarios").child(codigo).child("curso").addValueEventListener(new ValueEventListener() {
+            mDatabase.child("Usuarios").child(codigo).child("curso").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     curso.setText(dataSnapshot.getValue(String.class));
@@ -218,7 +220,7 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
         }
 
         if(universidadeSP == null || update) {
-            mDatabase.child("Usuarios").child(codigo).child("universidade").addValueEventListener(new ValueEventListener() {
+            mDatabase.child("Usuarios").child(codigo).child("universidade").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     universidade.setText(dataSnapshot.getValue(String.class));
@@ -236,7 +238,7 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
         }
 
         if(nascimentoSP == null || update) {
-            mDatabase.child("Usuarios").child(codigo).child("nascimento").addValueEventListener(new ValueEventListener() {
+            mDatabase.child("Usuarios").child(codigo).child("nascimento").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     nascimento.setText(dataSnapshot.getValue(String.class));
@@ -254,7 +256,7 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
         }
 
         if(nickSP == null || update) {
-            mDatabase.child("Usuarios").child(codigo).child("nick").addValueEventListener(new ValueEventListener() {
+            mDatabase.child("Usuarios").child(codigo).child("nick").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     nick.setText(dataSnapshot.getValue(String.class));
@@ -272,10 +274,10 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
         }
 
         if(petSP == null || update) {
-            mDatabase.child("Usuarios").child(codigo).child("pet").child(nomePET).addValueEventListener(new ValueEventListener() {
+            mDatabase.child("Usuarios").child(codigo).child("pet").child(nomePET).child("situacao").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                        if(!dataSnapshot.child("situacao").getValue(String.class).equals("aguardando")) {
+                        if(!dataSnapshot.getValue(String.class).equals("aguardando")) {
                             pet.setText(nomePET);
                         }
                 }
@@ -289,8 +291,8 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
         else {
             pet.setText(petSP);
         }
-        Picasso.Builder builder = new Picasso.Builder(getActivity());
-        builder.listener(new Picasso.Listener()
+        builder = new Picasso.Builder(getActivity());
+        builderListener = new Picasso.Listener()
         {
             @Override
             public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception)
@@ -316,7 +318,8 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
                     }
                 });
             }
-        });
+        };
+        builder.listener(builderListener);
         try {
             uriPerfil = Uri.parse(sharedPref.getString("uri_perfil", null));
             builder.build().load(uriPerfil).into(imagemPerfil);
@@ -325,6 +328,12 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
             Log.d("DEV/PERFIL", "Deu merda aqui");
         }
     }
+
+//    @Override
+//    public void onDetach() {
+//        super.onDetach();
+//        builder.remove
+//    }
 
 
     public Uri getImageUri(Context inContext, Bitmap inImage) {

@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -26,30 +27,35 @@ import com.google.firebase.database.ValueEventListener;
 import com.pchmn.materialchips.ChipsInput;
 import com.pchmn.materialchips.model.Chip;
 
+import java.sql.Time;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class ReunioesEditActivity extends BaseActivity implements View.OnClickListener{
 
-    private Button certo;
-    private Button cancela;
+    private ImageButton certo;
+    private ImageButton cancela;
     private EditText titulo;
     private TextView dataText;
     private EditText anotacoes;
     private DatePickerDialog calendario;
     private LinearLayout linearLayout;
     private String dataSelecionada;
-    private String projetoPath;
-    private DatabaseReference dbProjeto;
+    private String reunioesPath;
+    private DatabaseReference dbReuniao;
     private String tituloReuniao = "NADA9232CMXC3";
     private List<String> petianos;
-    RecyclerView mRecyclerView;
+    private RecyclerView mRecyclerView;
     private LineAdapterPresenca mAdapter;
     private List<Presenca> mModels;
     private boolean primeiro = true;
     private DatePickerDialog datePickerDialog;
+    private DatabaseReference dbAtualizaReuniao;
+    private String node = "";
 
     @Override
     public void onCreate(Bundle savedInstantState) {
@@ -67,11 +73,12 @@ public class ReunioesEditActivity extends BaseActivity implements View.OnClickLi
         titulo = findViewById(R.id.titulo);
         anotacoes = findViewById(R.id.anotacoes);
         Intent intent = getIntent();
-        projetoPath = intent.getStringExtra("projeto_path");
-        dbProjeto = mDatabase.child(projetoPath);
+        reunioesPath = intent.getStringExtra("reunioes_path");
+        node = intent.getStringExtra("node");
+        dbReuniao = mDatabase.child(reunioesPath);
 //        getPetianos(chipsPetianos);
         try {
-            tituloReuniao = intent.getStringExtra("titulo_reuniao");
+            dbAtualizaReuniao = dbReuniao.child("reunioes").child("historico").child(node);
             getInfoTarefa();
         } catch (NullPointerException e) {
 
@@ -80,7 +87,7 @@ public class ReunioesEditActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void getInfoTarefa() {
-        dbProjeto.child("reunioes").child("historico").child(tituloReuniao).addValueEventListener(new ValueEventListener() {
+        dbAtualizaReuniao.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 titulo.setText(dataSnapshot.child("titulo").getValue(String.class));
@@ -128,24 +135,33 @@ public class ReunioesEditActivity extends BaseActivity implements View.OnClickLi
         datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                dataSelecionada = dayOfMonth + "/" + (month+1) + "/" + year;
+//                dataSelecionada = dayOfMonth + "/" + (month+1) + "/" + year;
+                dataSelecionada = formatoData(year, month, dayOfMonth, "dd/MM/yyyy");
                 dataText.setText(dataSelecionada);
             }
         }, 2018, 3, 1);
 
     }
 
+    public String formatoData(int year, int month, int date, String pattern) {
+        DateFormat format = new SimpleDateFormat(pattern);
+        Date data = new Date(year-1900, month, date);
+        return format.format(data);
+    }
+
     @Override
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.certo) {
-            String tarefa = titulo.getText().toString();
-            dbProjeto.child("reunioes").child("historico").child(tituloReuniao).child("titulo").setValue(titulo.getText().toString());
-            dbProjeto.child("reunioes").child("historico").child(tituloReuniao).child("data").setValue(dataText.getText().toString());
-            dbProjeto.child("reunioes").child("historico").child(tituloReuniao).child("anotacoes").setValue(anotacoes.getText().toString());
+            if(node.equals("NADA9232CMXC3")) {
+                dbAtualizaReuniao = dbReuniao.child("reunioes").child("historico").push();
+            }
+            dbAtualizaReuniao.child("titulo").setValue(titulo.getText().toString());
+            dbAtualizaReuniao.child("data").setValue(dataText.getText().toString());
+            dbAtualizaReuniao.child("anotacoes").setValue(anotacoes.getText().toString());
             try {
                 for (Presenca presenca : mModels) {
-                    dbProjeto.child("reunioes").child("historico").child(tituloReuniao).child("lista_presenca").child(presenca.getNome()).setValue(presenca.getSituacao());
+                    dbAtualizaReuniao.child("lista_presenca").child(presenca.getNome()).setValue(presenca.getSituacao());
                 }
             }
             catch (NullPointerException e) {
@@ -198,14 +214,14 @@ public class ReunioesEditActivity extends BaseActivity implements View.OnClickLi
         }
         mAdapter = new LineAdapterPresenca();
         mRecyclerView.setAdapter(mAdapter);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
-                layoutManager.getOrientation());
-        mRecyclerView.addItemDecoration(dividerItemDecoration);
+//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
+//                layoutManager.getOrientation());
+//        mRecyclerView.addItemDecoration(dividerItemDecoration);
 
         if(primeiro) {
             if (tituloReuniao.equals("NADA9232CMXC3")) {
                 mModels = new ArrayList<>();
-                dbProjeto.child("time").addListenerForSingleValueEvent(new ValueEventListener() {
+                dbReuniao.child("time").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot listSnapshoot : dataSnapshot.getChildren()) {
@@ -222,7 +238,7 @@ public class ReunioesEditActivity extends BaseActivity implements View.OnClickLi
                 });
             } else {
                 mModels = new ArrayList<>();
-                dbProjeto.child("reunioes").child("historico").child(tituloReuniao).child("lista_presenca").addListenerForSingleValueEvent(new ValueEventListener() {
+                dbReuniao.child("reunioes").child("historico").child(tituloReuniao).child("lista_presenca").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot listSnapshoot : dataSnapshot.getChildren()) {

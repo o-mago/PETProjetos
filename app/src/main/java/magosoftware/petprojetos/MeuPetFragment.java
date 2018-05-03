@@ -20,6 +20,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -29,6 +31,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -61,9 +64,13 @@ public class MeuPetFragment extends BaseFragment implements View.OnClickListener
     TextView menuProjetos;
     FrameLayout menuTarefasClick;
     TextView menuTarefas;
-    FrameLayout menuEventosClick;
-    TextView menuEventos;
+    FrameLayout menuMembrosClick;
+    TextView menuMembros;
     ColorStateList corPadrao;
+    DatabaseReference dbSituacaoPET;
+    ValueEventListener valueEventListener;
+    private RelativeLayout perfilPet;
+    private LinearLayout menu;
 
     public static MeuPetFragment newInstance() {
         MeuPetFragment meuPetFragment = new MeuPetFragment();
@@ -86,24 +93,25 @@ public class MeuPetFragment extends BaseFragment implements View.OnClickListener
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        perfilPet = getView().findViewById(R.id.perfil_pet);
+        menu = getView().findViewById(R.id.menu);
+        perfilPet.setVisibility(View.GONE);
+        menu.setVisibility(View.GONE);
         imagemMeuPet = getView().findViewById(R.id.logo_pet);
         meuPET = getView().findViewById(R.id.meu_pet);
         nomeMeuPet = getView().findViewById(R.id.nome_pet);
         menuProjetosClick = getView().findViewById(R.id.menu_projetos_click);
         menuTarefasClick = getView().findViewById(R.id.menu_tarefas_click);
-        menuEventosClick = getView().findViewById(R.id.menu_eventos_click);
+        menuMembrosClick = getView().findViewById(R.id.menu_membros_click);
         menuProjetosClick.setOnClickListener(this);
         menuTarefasClick.setOnClickListener(this);
-        menuEventosClick.setOnClickListener(this);
+        menuMembrosClick.setOnClickListener(this);
         menuProjetos = getView().findViewById(R.id.menu_projetos);
         menuTarefas = getView().findViewById(R.id.menu_tarefas);
         corPadrao = menuTarefas.getTextColors();
-        menuEventos = getView().findViewById(R.id.menu_eventos);
+        menuMembros = getView().findViewById(R.id.menu_membros);
+        dbSituacaoPET = mDatabase.child("Usuarios").child(user.getUid()).child("pet");
         getPET();
-        FragmentManager manager = getChildFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.add(R.id.fragment_container_meu_pet, ProjetosFragment.newInstance());
-        transaction.commit();
 //        if(nomePET.equals("nada")) {
 //            semPet();
 //        }
@@ -118,28 +126,37 @@ public class MeuPetFragment extends BaseFragment implements View.OnClickListener
         if(id == R.id.menu_projetos_click) {
             menuProjetos.setTextColor(Color.parseColor("#03A9F4"));
             menuTarefas.setTextColor(corPadrao);
-            menuEventos.setTextColor(corPadrao);
+            menuMembros.setTextColor(corPadrao);
             FragmentManager manager = getChildFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
-            transaction.add(R.id.fragment_container_meu_pet, ProjetosFragment.newInstance());
+            transaction.replace(R.id.fragment_container_child, ProjetosFragment.newInstance());
             transaction.commit();
         }
         else if (id == R.id.menu_tarefas_click) {
             menuProjetos.setTextColor(corPadrao);
             menuTarefas.setTextColor(Color.parseColor("#03A9F4"));
-            menuEventos.setTextColor(corPadrao);
+            menuMembros.setTextColor(corPadrao);
             FragmentManager manager = getChildFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
-            transaction.add(R.id.fragment_container_meu_pet, TarefasFragment.newInstance());
+            Bundle bundle = new Bundle();
+            bundle.putString("tarefa_path", "PETs/"+nomePET);
+            Fragment fragment = TarefasConcentradas.newInstance();
+            fragment.setArguments(bundle);
+            transaction.replace(R.id.fragment_container_child, fragment);
             transaction.commit();
         }
-        else if (id == R.id.menu_eventos_click) {
+        else if (id == R.id.menu_membros_click) {
             menuProjetos.setTextColor(corPadrao);
             menuTarefas.setTextColor(corPadrao);
-            menuEventos.setTextColor(Color.parseColor("#03A9F4"));
+            menuMembros.setTextColor(Color.parseColor("#03A9F4"));
             FragmentManager manager = getChildFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
-            transaction.add(R.id.fragment_container_meu_pet, EventosFragment.newInstance());
+            Bundle bundle = new Bundle();
+            bundle.putString("membros_path", "PETs/"+nomePET+"/time");
+            bundle.putString("origem", "meupet");
+            Fragment fragment = MembrosFragment.newInstance();
+            fragment.setArguments(bundle);
+            transaction.replace(R.id.fragment_container_child, fragment);
             transaction.commit();
         }
     }
@@ -156,53 +173,77 @@ public class MeuPetFragment extends BaseFragment implements View.OnClickListener
     }
 
     private void getPET() {
-        nomePET = sharedPref.getString("nome_meu_pet", "nada");
-        condicaoPET = sharedPref.getString("condicao_meu_pet", "nada");
-        Log.d("nomePET", nomePET);
-        if(nomePET.equals("nada") || condicaoPET.equals("aguardando")) {
-            semPet();
-        }
-        else {
-            nomeMeuPet.setText(nomePET);
-            setImagemPet();
-        }
+        valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot listSnapshot : dataSnapshot.getChildren()) {
+                    try {
+                        nomePET = listSnapshot.getKey();
+                        condicaoPET = listSnapshot.child("situacao").getValue(String.class);
+                        Log.d("nomePET", condicaoPET);
+                        if (condicaoPET.equals("aguardando")) {
+                            semPet();
+                        } else {
+                            nomeMeuPet.setText(nomePET);
+                            setImagemPet();
+                            FragmentManager manager = getChildFragmentManager();
+                            FragmentTransaction transaction = manager.beginTransaction();
+                            transaction.replace(R.id.fragment_container_child, ProjetosFragment.newInstance());
+                            transaction.commit();
+                        }
+                    } catch (IllegalStateException e) {
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        dbSituacaoPET.addValueEventListener(valueEventListener);
     }
 
     public void setImagemPet() {
-        try {
-            uriPet = Uri.parse(sharedPref.getString("uri_pet", null));
-        }
-        catch (NullPointerException e) {
-            uriPet = null;
-        }
-        if(uriPet == null) {
-            String nomePETFoto = nomePET.replace(" ", "_");
-            Log.d("ENTROU", nomePETFoto);
-            StorageReference perfilRef = storageRef.child("imagensPET/" + nomePETFoto + ".jpg");
+//        try {
+//            uriPet = Uri.parse(sharedPref.getString("uri_pet", null));
+//        }
+//        catch (NullPointerException e) {
+//            uriPet = null;
+//        }
+//        if(uriPet == null) {
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 8;
+        String nomePETFoto = nomePET.replace(" ", "_");
+        Log.d("ENTROU", nomePETFoto);
+        StorageReference perfilRef = storageRef.child("imagensPET/" + nomePETFoto + ".jpg");
 
-            final long ONE_MEGABYTE = 1024 * 1024;
-            perfilRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                @Override
-                public void onSuccess(byte[] bytes) {
-                    Log.d("ENTROU", "foi");
-                    bitmapPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                    uriPet = getImageUri(getActivity(), bitmapPerfil);
-                    editor.putString("uri_pet", uriPet.toString());
-                    editor.commit();
-                    imagemMeuPet.setImageBitmap(bitmapPerfil);
+        final long ONE_MEGABYTE = 1024 * 1024;
+        perfilRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Log.d("ENTROU", "foi");
+                bitmapPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
+//                uriPet = getImageUri(getActivity(), bitmapPerfil);
+//                editor.putString("uri_pet", uriPet.toString());
+//                editor.commit();
+                imagemMeuPet.setImageBitmap(bitmapPerfil);
+                perfilPet.setVisibility(View.VISIBLE);
+                menu.setVisibility(View.VISIBLE);
 
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle any errors
-                }
-            });
-        }
-        else {
-            Log.d("ENTROU", "Picasso");
-            Picasso.with(getActivity()).load(uriPet).into(imagemMeuPet);
-        }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
+//        }
+//        else {
+//            Log.d("ENTROU", "Picasso");
+//            Picasso.with(getActivity()).load(uriPet).into(imagemMeuPet);
+//        }
     }
 
     public Uri getImageUri(Context inContext, Bitmap inImage) {
@@ -212,5 +253,35 @@ public class MeuPetFragment extends BaseFragment implements View.OnClickListener
         return Uri.parse(path);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
 
+        user = null;
+        mAuth = null;
+        storage = null;
+        storageRef = null;
+        nomePET = null;
+        condicaoPET = null;
+        sharedPref = null;
+        editor = null;
+        uriPet = null;
+        bitmapPerfil = null;
+        imagemMeuPet = null;
+        meuPET = null;
+        aviso = null;
+        menuMembrosClick.setOnClickListener(null);
+        menuProjetosClick.setOnClickListener(null);
+        menuTarefasClick.setOnClickListener(null);
+        dbSituacaoPET.removeEventListener(valueEventListener);
+        nomeMeuPet = null;
+        menuProjetosClick = null;
+        menuProjetos = null;
+        menuTarefasClick = null;
+        menuTarefas = null;
+        menuMembrosClick = null;
+        menuMembros = null;
+        corPadrao = null;
+        dbSituacaoPET = null;
+    }
 }
