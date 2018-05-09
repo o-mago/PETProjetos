@@ -277,9 +277,14 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
             mDatabase.child("Usuarios").child(codigo).child("pet").child(nomePET).child("situacao").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                        if(!dataSnapshot.getValue(String.class).equals("aguardando")) {
+                    try {
+                        if (!dataSnapshot.getValue(String.class).equals("aguardando")) {
                             pet.setText(nomePET);
                         }
+                    }
+                    catch (NullPointerException e) {
+
+                    }
                 }
 
                 @Override

@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -16,6 +17,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -50,6 +53,11 @@ public class ReunioesFragment extends BaseFragment implements LineAdapterReuniao
     DatabaseReference dbReuniao;
     String reunioesPath;
     String nomeProjeto;
+    private FloatingActionButton fabMais;
+    private FloatingActionButton fabAdd;
+    private FloatingActionButton fabEdit;
+    private boolean isFabOpen = false;
+    private Animation fab_open,fab_close,rotate_forward,rotate_backward;
 
     public static ReunioesFragment newInstance() {
         ReunioesFragment reunioesFragment = new ReunioesFragment();
@@ -65,6 +73,10 @@ public class ReunioesFragment extends BaseFragment implements LineAdapterReuniao
         reunioesPath = getArguments().getString("reunioes_path");
         nomeProjeto = getArguments().getString("node_projeto");
         dbReuniao = mDatabase.child(reunioesPath);
+        fab_open = AnimationUtils.loadAnimation(getActivity(), R.anim.fab_open);
+        fab_close = AnimationUtils.loadAnimation(getActivity(),R.anim.fab_close);
+        rotate_forward = AnimationUtils.loadAnimation(getActivity(),R.anim.rotate_forward);
+        rotate_backward = AnimationUtils.loadAnimation(getActivity(),R.anim.rotate_backward);
         Log.d("TAREFASFRAGMENT", reunioesPath);
 
         return inflater.inflate(R.layout.reunioes_layout, container, false);
@@ -73,8 +85,12 @@ public class ReunioesFragment extends BaseFragment implements LineAdapterReuniao
     @Override
     public void onActivityCreated(Bundle savedIntanceState) {
         super.onActivityCreated(savedIntanceState);
-        getView().findViewById(R.id.add_reuniao).setOnClickListener(this);
-        getView().findViewById(R.id.setup_reuniao).setOnClickListener(this);
+        fabMais = getView().findViewById(R.id.opcoes_reuniao);
+        fabAdd = getView().findViewById(R.id.nova_reuniao);
+        fabEdit = getView().findViewById(R.id.horario_reuniao);
+        fabMais.setOnClickListener(this);
+        fabAdd.setOnClickListener(this);
+        fabEdit.setOnClickListener(this);
         setupRecycler();
         setupLista();
         Log.d("ENTROU4", "PASSOU");
@@ -84,17 +100,44 @@ public class ReunioesFragment extends BaseFragment implements LineAdapterReuniao
     @Override
     public void onClick(View view) {
         int id = view.getId();
-        if(id == R.id.add_reuniao) {
+        if(id == R.id.nova_reuniao) {
             Intent intent = new Intent(getActivity(), ReunioesEditActivity.class);
             intent.putExtra("node", "NADA9232CMXC3");
             intent.putExtra("reunioes_path", reunioesPath);
             startActivity(intent);
         }
-        if(id == R.id.setup_reuniao) {
+        if(id == R.id.horario_reuniao) {
             Intent intent = new Intent(getActivity(), MarcarReuniaoActivity.class);
             intent.putExtra("reunioes_path", reunioesPath);
             intent.putExtra("node_projeto", nomeProjeto);
             startActivity(intent);
+        }
+        if(id == R.id.opcoes_reuniao) {
+            animateFAB();
+        }
+    }
+
+    private void animateFAB() {
+        if(isFabOpen){
+
+            fabMais.startAnimation(rotate_backward);
+            fabAdd.startAnimation(fab_close);
+            fabEdit.startAnimation(fab_close);
+            fabAdd.setClickable(false);
+            fabEdit.setClickable(false);
+            isFabOpen = false;
+            Log.d("Raj", "close");
+
+        } else {
+
+            fabMais.startAnimation(rotate_forward);
+            fabAdd.startAnimation(fab_open);
+            fabEdit.startAnimation(fab_open);
+            fabAdd.setClickable(true);
+            fabEdit.setClickable(true);
+            isFabOpen = true;
+            Log.d("Raj","open");
+
         }
     }
 

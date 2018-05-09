@@ -127,6 +127,7 @@ public class EncontreSeuPet extends BaseFragment implements SearchView.OnQueryTe
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot listSnapshots : dataSnapshot.getChildren()) {
                     String nome = listSnapshots.child("nome").getValue(String.class);
+                    String codigo = listSnapshots.getKey();
 //                    String universidade = listSnapshots.child("universidade").getValue(String.class);
 //                    String siglaUniversidade = universidade.split("-")[0];
                     cont++;
@@ -135,18 +136,18 @@ public class EncontreSeuPet extends BaseFragment implements SearchView.OnQueryTe
                         try {
                             perfilRef = storageRef.child("imagensPET/" + nome.replace(" ", "_") + ".jpg");
                             Log.d("LOGO", perfilRef.getPath());
-                            OnSuccessListener onSuccessListener = new OnSuccessListenerString(perfilRef) {
+                            OnSuccessListener onSuccessListener = new OnSuccessListenerString(codigo, perfilRef) {
                                 @Override
                                 public void onSuccess(byte[] bytes) {
                                     try {
                                         Bitmap bitmapPet = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                                         Bitmap resizedBmp = Bitmap.createScaledBitmap(bitmapPet, toPx(100), toPx(100), false);
                                         bitmapDrawablePet = new BitmapDrawable(getResources(), resizedBmp);
-                                        nomePet = ((StorageReference) variavel1).getName();
+                                        nomePet = ((StorageReference) variavel2).getName();
                                         nomePet = nomePet.split(".jpg")[0];
                                         nomePet = nomePet.replace("_", " ");
                                         Log.d("LOGO", bitmapPet.toString());
-                                        mModels.add(new Pet(nomePet, bitmapDrawablePet));
+                                        mModels.add(new Pet((String) variavel1, nomePet, bitmapDrawablePet));
                                         i++;
                                         if (i == cont) {
                                             progressBar.setVisibility(View.GONE);
@@ -184,7 +185,7 @@ public class EncontreSeuPet extends BaseFragment implements SearchView.OnQueryTe
     }
 
     @Override
-    public void onItemClick(int position, String nome) {
+    public void onItemClick(int position, String nome, String codigo) {
         final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
         if(nome.equals("Não encontrou seu PET?")) {
@@ -194,6 +195,7 @@ public class EncontreSeuPet extends BaseFragment implements SearchView.OnQueryTe
         else {
             Bundle bundle = new Bundle();
             bundle.putString("nome", nome);
+            bundle.putString("node", codigo);
             ft = getFragmentManager().beginTransaction();
             Fragment fragment = PerfilPetFragment.newInstance();
             fragment.setArguments(bundle);

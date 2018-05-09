@@ -28,7 +28,7 @@ public class LineAdapterPet extends RecyclerView.Adapter<LineHolderPet> {
 
     //make interface like this
     public interface OnItemClicked {
-        void onItemClick(int position, String nome);
+        void onItemClick(int position, String nome, String codigo);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class LineAdapterPet extends RecyclerView.Adapter<LineHolderPet> {
         holder.cardPET.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onClick.onItemClick(position, mSortedList.get(position).getNome());
+                onClick.onItemClick(position, mSortedList.get(position).getNome(), mSortedList.get(position).getCodigo());
             }
         });
     }
@@ -117,7 +117,7 @@ private final SortedList<Pet> mSortedList = new SortedList<>(Pet.class, new Sort
         }
         mSortedList.addAll(models);
         if(mSortedList.size() == 0) {
-            Pet naoEncontrou = new Pet("Não encontrou seu PET?", padrao);
+            Pet naoEncontrou = new Pet("","Não encontrou seu PET?", padrao);
             mSortedList.add(naoEncontrou);
         }
         mSortedList.endBatchedUpdates();

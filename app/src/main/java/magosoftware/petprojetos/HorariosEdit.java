@@ -60,7 +60,7 @@ public class HorariosEdit extends BaseActivity implements View.OnClickListener{
                     }
                 }
                 Log.d("DEV/HORARIOSEDIT", horariosDoDia);
-                horariosMap.put(adaptador.getGroup(i).toString(),horariosDoDia);
+                horariosMap.put(adaptador.getGroup(i).toString(), horariosDoDia);
             }
             Intent intent = new Intent();
             intent.putExtra("map", horariosMap);

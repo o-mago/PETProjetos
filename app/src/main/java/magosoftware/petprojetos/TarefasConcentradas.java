@@ -296,17 +296,18 @@ public class TarefasConcentradas extends BaseFragment implements LineAdapterTare
                     String node = listSnapshot.getKey();
                     String titulo = listSnapshot.child("titulo").getValue(String.class);
                     String descricao = listSnapshot.child("descricao").getValue(String.class);
+                    Log.d("DEV/TAREFASCONCE", "Entrou no setupEventListener: "+listSnapshot.getKey());
 //                    long data = (listSnapshot.child("prazo").getValue(String.class));
                     String situacaoPrazo;
-                    if(dataSnapshot.hasChild("prazo")) {
+                    if(listSnapshot.hasChild("prazo")) {
                         String data = listSnapshot.child("prazo").getValue(String.class);
                         long dataLong = dateToMillis(data);
                         long dataAtual = System.currentTimeMillis() - 1000;
                         Log.d("DEV/DATAS", getDate(dataLong, "dd/MM/yyyy"));
                         Log.d("DEV/DATAS", getDate(dataAtual, "dd/MM/yyyy"));
                         Log.d("DEV/TAREFASFRAGMENT", titulo);
-
                         Log.d("DEV/DATAS", Long.toString(dataLong - dataAtual));
+                        Log.d("DEV/TAREFASCONCE", "data: "+(dataLong - dataAtual));
                         if (situacaoTarefas.equals("feito")) {
                             situacaoPrazo = "concluido";
                         } else if (dataLong - dataAtual < 259200000) {

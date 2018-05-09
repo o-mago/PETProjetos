@@ -19,6 +19,7 @@ public class Pet {
     private String ano;
     private String nPetianos;
     private Drawable logo;
+    private String codigo;
 
     public Pet(String nome, String nPetianos, String email, String universidade,
                String ano, String site, String cidade, String estado) {
@@ -32,9 +33,10 @@ public class Pet {
         this.estado = estado;
     }
 
-    public Pet(String nome, Drawable logo) {
+    public Pet(String codigo, String nome, Drawable logo) {
         this.nome = nome;
         this.logo = logo;
+        this.codigo = codigo;
     }
 
     public String getNome() {
@@ -64,4 +66,8 @@ public class Pet {
     public String getEstado() { return estado; }
 
     public Drawable getLogo() { return logo; }
+
+    public String getCodigo() {
+        return codigo;
+    }
 }

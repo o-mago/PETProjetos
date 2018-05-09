@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -39,6 +40,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -60,6 +62,7 @@ public class MarcarReuniaoActivity  extends BaseActivity implements View.OnClick
     private TextView horarioSemanal;
     private TextView horarioFinalSemanal;
     private Switch semanalSwitch;
+    private RelativeLayout relativeLayout;
     private LinearLayout linearLayout;
     private TextView tvTodos;
     private TextView tvMelhores;
@@ -76,6 +79,7 @@ public class MarcarReuniaoActivity  extends BaseActivity implements View.OnClick
     DatabaseReference dbReuniao;
     private String nomeProjeto;
     private DateFormat format;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -305,7 +309,7 @@ public class MarcarReuniaoActivity  extends BaseActivity implements View.OnClick
         }
 
         if(id == R.id.click_horarios_equipe) {
-            linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.compara_horarios, null, false);
+            linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.compara_horario_dialog, null, false);
             new AlertDialog.Builder(this)
                     .setView(linearLayout)
                     .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -399,8 +403,23 @@ public class MarcarReuniaoActivity  extends BaseActivity implements View.OnClick
                 @Override
                 public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                     DateFormat format = new SimpleDateFormat("HH:mm");
-                    Time date = new Time(selectedHour, selectedMinute, 0);
+                    Date date = new Time(selectedHour, selectedMinute, 0);
                     String horario = format.format(date);
+                    try {
+                        Date date2 = format.parse(horarioFinalSemanal.getText().toString());
+                        if(date2.compareTo(date)<0) {
+                            if(date2.getHours() > 0) {
+                                date = new Time(date2.getHours() - 1, date2.getMinutes(), 0);
+                            }
+                            else {
+                                date = date2;
+                            }
+                            horario = format.format(date);
+                        }
+                    }
+                    catch (ParseException e) {
+
+                    }
                     horarioSemanal.setText(horario);
                 }
             }, hour, minute, true);
@@ -416,8 +435,23 @@ public class MarcarReuniaoActivity  extends BaseActivity implements View.OnClick
                 @Override
                 public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                     DateFormat format = new SimpleDateFormat("HH:mm");
-                    Time date = new Time(selectedHour, selectedMinute, 0);
+                    Date date = new Time(selectedHour, selectedMinute, 0);
                     String horario = format.format(date);
+                    try {
+                        Date date2 = format.parse(horarioSemanal.getText().toString());
+                        if(date2.compareTo(date)>0) {
+                            if(date2.getHours() < 23) {
+                                date = new Time(date2.getHours() + 1, date2.getMinutes(), 0);
+                            }
+                            else {
+                                date = date2;
+                            }
+                            horario = format.format(date);
+                        }
+                    }
+                    catch (ParseException e) {
+
+                    }
                     horarioFinalSemanal.setText(horario);
                 }
             }, hour, minute, true);
@@ -575,6 +609,8 @@ public class MarcarReuniaoActivity  extends BaseActivity implements View.OnClick
         // cria os grupos
         lstItensGrupo = new LinkedHashMap<>();
         lstGrupo = new ArrayList<>();
+//        progressBar = relativeLayout.findViewById(R.id.progress_bar);
+//        progressBar.setVisibility(View.GONE);
         int quantidade = 0;
         int maiorQuantidade = 0;
 
@@ -620,7 +656,7 @@ public class MarcarReuniaoActivity  extends BaseActivity implements View.OnClick
         @Override
         public int compare(String s1, String s2) {
             try{
-                SimpleDateFormat format = new SimpleDateFormat("EEE");
+                SimpleDateFormat format = new SimpleDateFormat("EEE", new Locale("pt", "BR"));
                 Date d1 = format.parse(s1);
                 Date d2 = format.parse(s2);
                 if(d1.equals(d2)){

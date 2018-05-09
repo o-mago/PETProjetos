@@ -97,6 +97,8 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
     Boolean tenhoCerteza = true;
     private String nomeUsuario;
     private ValueEventListener valueEventListener;
+    private String nodePet;
+    private DatabaseReference dbTime;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -106,9 +108,10 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
         nomePet = getArguments().getString("nome");
-        dbBolsistas = mDatabase.child("PETs").child(nomePet).child("time").child("bolsistas");
-        dbOficiais = mDatabase.child("PETs").child(nomePet).child("time").child("oficiais");
-        dbVoluntarios = mDatabase.child("PETs").child(nomePet).child("time").child("voluntarios");
+        nodePet = getArguments().getString("node");
+        dbBolsistas = mDatabase.child("PETs").child(nodePet).child("time").child("bolsistas");
+        dbOficiais = mDatabase.child("PETs").child(nodePet).child("time").child("oficiais");
+        dbVoluntarios = mDatabase.child("PETs").child(nodePet).child("time").child("voluntarios");
 //        File cacheDir = getDiskCacheDir(this, DISK_CACHE_SUBDIR);
 
 
@@ -130,10 +133,12 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
         setupEdit();
         follow = getView().findViewById(R.id.follow);
         follow.setOnClickListener(this);
-        setupFollow("aguardando", "AGUARDANDO","#FFFF00", getResources().getDrawable(R.drawable.background_contorno_aguardando));
-        setupFollow("bolsistas", "PETIANO","#00E676", getResources().getDrawable(R.drawable.background_contorno_ok));
-        setupFollow("oficiais", "PETIANO","#00E676", getResources().getDrawable(R.drawable.background_contorno_ok));
-        setupFollow("voluntarios", "PETIANO","#00E676", getResources().getDrawable(R.drawable.background_contorno_ok));
+        setupFollow("bolsistas", "AGUARDANDO","#FFFF00", getResources().getDrawable(R.drawable.background_contorno_aguardando), true);
+        setupFollow("oficiais", "AGUARDANDO","#FFFF00", getResources().getDrawable(R.drawable.background_contorno_aguardando), true);
+        setupFollow("voluntarios", "AGUARDANDO","#FFFF00", getResources().getDrawable(R.drawable.background_contorno_aguardando), true);
+        setupFollow("bolsistas", "PETIANO","#00E676", getResources().getDrawable(R.drawable.background_contorno_ok), false);
+        setupFollow("oficiais", "PETIANO","#00E676", getResources().getDrawable(R.drawable.background_contorno_ok), false);
+        setupFollow("voluntarios", "PETIANO","#00E676", getResources().getDrawable(R.drawable.background_contorno_ok), false);
         getView().findViewById(R.id.edit_button).setOnClickListener(this);
         ano = getView().findViewById(R.id.ano);
         expandableLayout = getView().findViewById(R.id.petianos);
@@ -161,12 +166,14 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
         dbUsuario.child(user.getUid()).child("pet").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String codigo;
-                for (DataSnapshot listSnapshots : dataSnapshot.getChildren()) {
-                    String condicao = listSnapshots.child("situacao").getValue(String.class);
-                    if (condicao.equals("bolsistas") || condicao.equals("oficiais") || condicao.equals("voluntarios")) {
-                        editButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_edit_black_24dp));
-                        break;
+                if(dataSnapshot.hasChildren()) {
+                    String codigo;
+                    for (DataSnapshot listSnapshots : dataSnapshot.getChildren()) {
+                        String condicao = listSnapshots.child("situacao").getValue(String.class);
+                        if (condicao.equals("bolsistas") || condicao.equals("oficiais") || condicao.equals("voluntarios")) {
+                            editButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_edit_black_24dp));
+                            break;
+                        }
                     }
                 }
             }
@@ -179,18 +186,27 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
 
     }
 
-    public void setupFollow(String categoria, final String mensagem, final String cor, final Drawable fundo) {
-        mDatabase.child("PETs").child(nomePet).child("time/"+categoria).addValueEventListener(new ValueEventListener() {
+    public void setupFollow(String categoria, final String mensagem, final String cor, final Drawable fundo, boolean aguardando) {
+        dbTime = mDatabase.child("PETs").child(nodePet).child("time");
+        if(aguardando) {
+            dbTime = dbTime.child("aguardando");
+        }
+        dbTime.child(categoria).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String codigo;
                 for (DataSnapshot listSnapshots : dataSnapshot.getChildren()) {
-                    codigo = listSnapshots.getKey();
-                    if(codigo.equals(user.getUid())) {
-                        follow.setText(mensagem);
-                        follow.setTextColor(Color.parseColor(cor));
-                        follow.setBackgroundDrawable(fundo);
-                        break;
+                    try {
+                        codigo = listSnapshots.getKey();
+                        Log.d("DEV/PERFILPET", "codigo: " + codigo);
+                        if (codigo.equals(user.getUid())) {
+                            follow.setText(mensagem);
+                            follow.setTextColor(Color.parseColor(cor));
+                            follow.setBackgroundDrawable(fundo);
+                            break;
+                        }
+                    } catch (NullPointerException e) {
+
                     }
                 }
             }
@@ -217,17 +233,19 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
             startActivity(intent);
         }
         if(i == R.id.follow) {
-            dbUsuario.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+            dbUsuario.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if(dataSnapshot.hasChild("pet")) {
+                        Log.d("DEV/PERFILPET", "temPET");
                         temPET = true;
                         for (DataSnapshot listSnapshots : dataSnapshot.child("pet").getChildren()) {
                             nomeOldPET = listSnapshots.getKey();
-                            situacaoPET = listSnapshots.getValue(String.class);
+                            situacaoPET = listSnapshots.child("situacao").getValue(String.class);
                         }
                     }
                     else {
+                        Log.d("DEV/PERFILPET", "Não temPET");
                         temPET = false;
                     }
                 }
@@ -250,6 +268,7 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
     }
 
     public void temCerteza(final int escolha) {
+        Log.d("DEV/PERFILPET", "temCerteza");
         if(temPET) {
             final AlertDialog.Builder builderCerteza = new AlertDialog.Builder(getActivity());
             builderCerteza.setTitle("Você tem certeza que deseja sair de "+nomeOldPET+"?");
@@ -260,9 +279,7 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
                     if (which == 0) {
                         tenhoCerteza = true;
                         Map<String, String> pet = new HashMap<>();
-                        pet.put(nomePet, "aguardando");
-                        dbUsuario.child(user.getUid()).child("pet").setValue(pet);
-                        setupFollow("aguardando", "AGUARDANDO", "#FFFF00", getResources().getDrawable(R.drawable.background_contorno_aguardando));
+                        dbUsuario.child(user.getUid()).child("pet").child(nodePet).child("situacao").setValue(pet);
                         if(temPET) {
                             Map<String, String> novoPetiano = new HashMap<>();
                             novoPetiano.put(user.getUid(), "bolsistas");
@@ -270,11 +287,12 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
                         }
                         Log.d("WHICH", Integer.toString(which));
                         if (escolha == 0) {
-                            dbUsuario.addListenerForSingleValueEvent(new ValueEventListener() {
+                            setupFollow("bolsistas", "AGUARDANDO", "#FFFF00", getResources().getDrawable(R.drawable.background_contorno_aguardando), true);
+                            dbUsuario.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     nomeUsuario = dataSnapshot.child("nome").getValue(String.class);
-                                    mDatabase.child("PETs").child(nomePet).child("time")
+                                    mDatabase.child("PETs").child(nodePet).child("time")
                                             .child("aguardando")
                                             .child("bolsistas")
                                             .child(user.getUid())
@@ -288,11 +306,12 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
                             });
                         }
                         if (escolha == 1) {
-                            dbUsuario.addListenerForSingleValueEvent(new ValueEventListener() {
+                            setupFollow("oficiais", "AGUARDANDO", "#FFFF00", getResources().getDrawable(R.drawable.background_contorno_aguardando), true);
+                            dbUsuario.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     nomeUsuario = dataSnapshot.child("nome").getValue(String.class);
-                                    mDatabase.child("PETs").child(nomePet).child("time")
+                                    mDatabase.child("PETs").child(nodePet).child("time")
                                             .child("aguardando")
                                             .child("oficiais")
                                             .child(user.getUid())
@@ -306,13 +325,14 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
                             });
                         }
                         if (escolha == 2) {
-                            dbUsuario.addListenerForSingleValueEvent(new ValueEventListener() {
+                            setupFollow("voluntários", "AGUARDANDO", "#FFFF00", getResources().getDrawable(R.drawable.background_contorno_aguardando), true);
+                            dbUsuario.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     nomeUsuario = dataSnapshot.child("nome").getValue(String.class);
-                                    mDatabase.child("PETs").child(nomePet).child("time")
+                                    mDatabase.child("PETs").child(nodePet).child("time")
                                             .child("aguardando")
-                                            .child("voluntatios")
+                                            .child("voluntarios")
                                             .child(user.getUid())
                                             .setValue(nomeUsuario);
                                 }
@@ -330,6 +350,70 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
                 }
             });
             builderCerteza.show();
+        }
+        else {
+            Log.d("DEV/PERFILPET", "else temCerteza");
+            dbUsuario.child(user.getUid()).child("pet").child(nodePet).child("situacao").setValue("aguardando");
+            if (escolha == 0) {
+                setupFollow("bolsistas", "AGUARDANDO", "#FFFF00", getResources().getDrawable(R.drawable.background_contorno_aguardando), true);
+                Log.d("DEV/PERFILPET", "escolha == 0");
+                dbUsuario.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.d("DEV/PERFILPET", "datasnapshoot");
+                        nomeUsuario = dataSnapshot.child("nome").getValue(String.class);
+                        Log.d("DEV/PERFILPET", "nomeUsuario: "+nomeUsuario);
+                        mDatabase.child("PETs").child(nodePet).child("time")
+                                .child("aguardando")
+                                .child("bolsistas")
+                                .child(user.getUid())
+                                .setValue(nomeUsuario);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+            if (escolha == 1) {
+                setupFollow("oficiais", "AGUARDANDO", "#FFFF00", getResources().getDrawable(R.drawable.background_contorno_aguardando), true);
+                dbUsuario.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        nomeUsuario = dataSnapshot.child("nome").getValue(String.class);
+                        mDatabase.child("PETs").child(nodePet).child("time")
+                                .child("aguardando")
+                                .child("oficiais")
+                                .child(user.getUid())
+                                .setValue(nomeUsuario);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+            if (escolha == 2) {
+                setupFollow("voluntarios", "AGUARDANDO", "#FFFF00", getResources().getDrawable(R.drawable.background_contorno_aguardando), true);
+                dbUsuario.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        nomeUsuario = dataSnapshot.child("nome").getValue(String.class);
+                        mDatabase.child("PETs").child(nodePet).child("time")
+                                .child("aguardando")
+                                .child("voluntarios")
+                                .child(user.getUid())
+                                .setValue(nomeUsuario);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
         }
     }
 
@@ -408,7 +492,7 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
                     Log.d("UNI", "Deu merda");
                 }
             };
-            mDatabase.child("PETs").child(nomePet).addListenerForSingleValueEvent(valueEventListener);
+            mDatabase.child("PETs").child(nodePet).addListenerForSingleValueEvent(valueEventListener);
         }
         else {
             nome.setText(nomeSP);
@@ -426,8 +510,8 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
             uriPet = null;
         }
         if(uriPet == null || update) {
-            String nomePETFoto = nomePet.replace(" ", "_");
-            StorageReference perfilRef = storageRef.child("imagensPET/" + nomePETFoto + ".jpg");
+            String nodePETFoto = nodePet.replace(" ", "_");
+            StorageReference perfilRef = storageRef.child("imagensPET/" + nodePETFoto + ".jpg");
             try {
                 perfilRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                     @Override
@@ -696,7 +780,7 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
     public void onDestroy() {
         super.onDestroy();
 
-        mDatabase.child("PETs").child(nomePet).removeEventListener(valueEventListener);
+        mDatabase.child("PETs").child(nodePet).removeEventListener(valueEventListener);
 
         follow.setOnClickListener(null);
         imagemPerfil.setOnClickListener(null);

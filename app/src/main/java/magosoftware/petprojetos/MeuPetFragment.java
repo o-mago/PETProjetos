@@ -173,26 +173,34 @@ public class MeuPetFragment extends BaseFragment implements View.OnClickListener
     }
 
     private void getPET() {
+        Log.d("DEV/MEUPET", "getPET");
         valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot listSnapshot : dataSnapshot.getChildren()) {
-                    try {
-                        nomePET = listSnapshot.getKey();
-                        condicaoPET = listSnapshot.child("situacao").getValue(String.class);
-                        Log.d("nomePET", condicaoPET);
-                        if (condicaoPET.equals("aguardando")) {
-                            semPet();
-                        } else {
-                            nomeMeuPet.setText(nomePET);
-                            setImagemPet();
-                            FragmentManager manager = getChildFragmentManager();
-                            FragmentTransaction transaction = manager.beginTransaction();
-                            transaction.replace(R.id.fragment_container_child, ProjetosFragment.newInstance());
-                            transaction.commit();
+                Log.d("DEV/MEUPET", "Listener");
+                if(!dataSnapshot.hasChildren()) {
+                    semPet();
+                }
+                else {
+                    for (DataSnapshot listSnapshot : dataSnapshot.getChildren()) {
+                        Log.d("DEV/MEUPET", "datasnapshoot");
+                        try {
+                            Log.d("DEV/MEUPET", "try");
+                            nomePET = listSnapshot.getKey();
+                            condicaoPET = listSnapshot.child("situacao").getValue(String.class);
+                            if (condicaoPET.equals("aguardando")) {
+                                semPet();
+                            } else {
+                                nomeMeuPet.setText(nomePET);
+                                setImagemPet();
+                                FragmentManager manager = getChildFragmentManager();
+                                FragmentTransaction transaction = manager.beginTransaction();
+                                transaction.replace(R.id.fragment_container_child, ProjetosFragment.newInstance());
+                                transaction.commit();
+                            }
+                        } catch (IllegalStateException e) {
+                            Log.d("DEV/MEUPET", "catch");
                         }
-                    } catch (IllegalStateException e) {
-
                     }
                 }
             }
@@ -223,15 +231,18 @@ public class MeuPetFragment extends BaseFragment implements View.OnClickListener
         perfilRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
-                Log.d("ENTROU", "foi");
-                bitmapPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
+                try {
+                    Log.d("ENTROU", "foi");
+                    bitmapPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
 //                uriPet = getImageUri(getActivity(), bitmapPerfil);
 //                editor.putString("uri_pet", uriPet.toString());
 //                editor.commit();
-                imagemMeuPet.setImageBitmap(bitmapPerfil);
-                perfilPet.setVisibility(View.VISIBLE);
-                menu.setVisibility(View.VISIBLE);
+                    imagemMeuPet.setImageBitmap(bitmapPerfil);
+                    perfilPet.setVisibility(View.VISIBLE);
+                    menu.setVisibility(View.VISIBLE);
+                } catch (NullPointerException e) {
 
+                }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
