@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -38,8 +39,8 @@ import java.util.List;
 
 public class TarefasEditActivity extends BaseActivity implements View.OnClickListener, ChipsInput.ChipsListener {
 
-    private Button certo;
-    private Button cancela;
+    private ImageButton certo;
+    private ImageButton cancela;
     private EditText titulo;
     private ChipsInput chipsPetianos;
     private TextView dataText;
@@ -55,8 +56,15 @@ public class TarefasEditActivity extends BaseActivity implements View.OnClickLis
     private String situacaoTarefa;
     private List<String> petianoRetirado;
     private List<String> petianoSelecionado;
+    private List<String> petianoAnterior;
     private String nomePET;
     private SharedPreferences sharedPref;
+    private String nodePET;
+    private boolean nova = false;
+    private String nomeProjeto;
+    int dia;
+    int mes;
+    int ano;
 
     @Override
     public void onCreate(Bundle savedInstantState) {
@@ -65,6 +73,7 @@ public class TarefasEditActivity extends BaseActivity implements View.OnClickLis
 
         sharedPref = this.getSharedPreferences("todoApp", 0);
         nomePET = sharedPref.getString( "nome_meu_pet", "nada");
+        nodePET = sharedPref.getString( "node_meu_pet", "nada");
         certo = findViewById(R.id.certo);
         cancela = findViewById(R.id.cancela);
         dataText = findViewById(R.id.data_text);
@@ -76,13 +85,17 @@ public class TarefasEditActivity extends BaseActivity implements View.OnClickLis
         chipsPetianos.addChipsListener(this);
         descricao = findViewById(R.id.descricao);
         Intent intent = getIntent();
+        nomeProjeto = intent.getStringExtra("nome_projeto");
+        TextView projeto = findViewById(R.id.projeto);
+        projeto.setText(nomeProjeto);
         tarefaPath = intent.getStringExtra("tarefa_path");
         situacaoTarefa = intent.getStringExtra("situacao_tarefa");
         dbTarefa = mDatabase.child(tarefaPath);
         petianoRetirado = new ArrayList<>();
         petianoSelecionado = new ArrayList<>();
+        petianoAnterior = new ArrayList<>();
         getPetianos(chipsPetianos);
-        setupCalendar();
+//        setupCalendar();
         try {
             node = intent.getStringExtra("node");
             dbAtualizaTarefa = dbTarefa.child("tarefas").child(situacaoTarefa).child(node);
@@ -127,12 +140,13 @@ public class TarefasEditActivity extends BaseActivity implements View.OnClickLis
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d("DEV/TAREFASEDIT", "getInfo");
                 titulo.setText(dataSnapshot.child("titulo").getValue(String.class));
-                descricao.setText(dataSnapshot.child("titulo").getValue(String.class));
+                descricao.setText(dataSnapshot.child("descricao").getValue(String.class));
                 dataText.setText(dataSnapshot.child("prazo").getValue(String.class));
 
                 for(DataSnapshot listSnapshot : dataSnapshot.child("time").getChildren()) {
                     Log.d("DEV/TAREFASEDIT", "getInfo: "+listSnapshot.getValue(String.class));
                     Chip chip = new Chip(listSnapshot.getKey(), listSnapshot.getValue(String.class), "");
+                    petianoAnterior.add(chip.getLabel());
                     chipsPetianos.addChip(chip);
                 }
             }
@@ -175,7 +189,7 @@ public class TarefasEditActivity extends BaseActivity implements View.OnClickLis
                 dataSelecionada = formatoData(year, month, dayOfMonth, "dd/MM/yyyy");
                 dataText.setText(dataSelecionada);
             }
-        }, 2018, 3, 1);
+        }, ano, mes-1, dia);
     }
 
     public String formatoData(int year, int month, int date, String pattern) {
@@ -190,6 +204,8 @@ public class TarefasEditActivity extends BaseActivity implements View.OnClickLis
         if(id == R.id.certo) {
             if(node.equals("NADAIEJ993R8JFN")) {
                 dbAtualizaTarefa = dbTarefa.child("tarefas").child("fazer").push();
+                node = dbAtualizaTarefa.getKey();
+                nova = true;
             }
             String tarefa = titulo.getText().toString();
             dbAtualizaTarefa.child("titulo").setValue(titulo.getText().toString());
@@ -201,16 +217,26 @@ public class TarefasEditActivity extends BaseActivity implements View.OnClickLis
                 Log.d("DEV/TAREFASEDIT", "Entrou");
                 dbAtualizaTarefa.child("time").child(removePetiano).removeValue();
                 mDatabase.child("Usuarios").child(removePetiano)
-                        .child("pet").child(nomePET).child("tarefas")
+                        .child("pet").child(nodePET).child("tarefas")
                         .child(node).removeValue();
             }
 
             for (Chip c : contactsSelected) {
                 Log.d("DEV/TAREFASEDIT", (String) c.getId());
                 dbAtualizaTarefa.child("time").child((String) c.getId()).setValue(c.getLabel());
+//                mDatabase.child("Usuarios").child((String) c.getId())
+//                        .child("pet").child(nodePET).child("tarefas")
+//                        .child(node).child("caminho").setValue(tarefaPath + "/tarefas/fazer/" + node);
                 mDatabase.child("Usuarios").child((String) c.getId())
-                        .child("pet").child(nomePET).child("tarefas")
-                        .child(node).setValue(tarefaPath + "/" + node);
+                        .child("pet").child(nodePET).child("tarefas")
+                        .child(node).child("caminho").setValue(dbAtualizaTarefa.getRef().toString().split("\\.firebaseio\\.com/")[1]);
+                if(nova || !petianoAnterior.contains(c.getLabel())) {
+                    mDatabase.child("Usuarios").child((String) c.getId())
+                            .child("pet").child(nodePET).child("tarefas")
+                            .child(node).child("nova").setValue(true);
+                    mDatabase.child("Usuarios").child((String) c.getId())
+                            .child("update").setValue(true);
+                }
             }
             finish();
         }
@@ -218,13 +244,38 @@ public class TarefasEditActivity extends BaseActivity implements View.OnClickLis
             finish();
         }
         if(id == R.id.data_text) {
+            try {
+                Log.d("DEV/TAREFASEDIT", "data: "+dataText.getText().toString());
+                Log.d("DEV/TAREFASEDIT", "dia: "+dataText.getText().toString().split("/")[0]);
+                Log.d("DEV/TAREFASEDIT", "mes: "+dataText.getText().toString().split("/")[1]);
+                Log.d("DEV/TAREFASEDIT", "ano: "+dataText.getText().toString().split("/")[2]);
+                dia = Integer.parseInt(dataText.getText().toString().split("/")[0]);
+                mes = Integer.parseInt(dataText.getText().toString().split("/")[1]);
+                ano = Integer.parseInt(dataText.getText().toString().split("/")[2]);
+                Log.d("DEV/TAREFASEDIT", "diaInt: "+dia);
+                Log.d("DEV/TAREFASEDIT", "mesInt: "+mes);
+                Log.d("DEV/TAREFASEDIT", "anoInt: "+ano);
+            } catch (Exception e) {
+                long dataAtual = System.currentTimeMillis() - 1000;
+                String dataString = getDate(dataAtual, "dd/MM/yyyy");
+                dia = Integer.parseInt(dataString.split("/")[0]);
+                mes = Integer.parseInt(dataString.split("/")[1]);
+                ano = Integer.parseInt(dataString.split("/")[2]);
+            }
+            setupCalendar();
             datePickerDialog.show();
         }
     }
 
     private void getPetianos(final ChipsInput chipsPetianos) {
         String[] caminhos = tarefaPath.split("/");
-        DatabaseReference timeProjeto = mDatabase.child(tarefaPath).child("time");
+        DatabaseReference timeProjeto;
+        try {
+            tarefaPath = tarefaPath.split("/equipes/")[0];
+            timeProjeto = mDatabase.child(tarefaPath).child("time");
+        } catch (Exception e) {
+            timeProjeto = mDatabase.child(tarefaPath).child("time");
+        }
 //        DatabaseReference timeProjeto = mDatabase;
 //        for(int i =0; i < 4; i++) {
 //            timeProjeto = timeProjeto.child(caminhos[i]);
@@ -259,5 +310,16 @@ public class TarefasEditActivity extends BaseActivity implements View.OnClickLis
                 Log.d("UNI", "Deu merda");
             }
         });
+    }
+
+    public static String getDate(long milliSeconds, String dateFormat)
+    {
+        // Create a DateFormatter object for displaying date in specified format.
+        SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
+
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(milliSeconds);
+        return formatter.format(calendar.getTime());
     }
 }

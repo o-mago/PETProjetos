@@ -10,11 +10,15 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.Layout;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -196,42 +200,56 @@ public class TarefasFragment extends BaseFragment implements LineAdapterTarefa.O
         dbEquipe.child("tarefas").child(situacaoTarefas).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot listSnapshot : dataSnapshot.getChildren()) {
-                    String node = listSnapshot.getKey();
-                    String titulo = listSnapshot.child("titulo").getValue(String.class);
-                    String descricao = listSnapshot.child("descricao").getValue(String.class);
+                if(dataSnapshot.hasChildren()) {
+                    for (DataSnapshot listSnapshot : dataSnapshot.getChildren()) {
+                        String node = listSnapshot.getKey();
+                        String titulo = listSnapshot.child("titulo").getValue(String.class);
+                        String descricao = listSnapshot.child("descricao").getValue(String.class);
 //                    long data = (listSnapshot.child("prazo").getValue(String.class));
-                    String data = listSnapshot.child("prazo").getValue(String.class);
-                    long dataLong = dateToMillis(data);
-                    long dataAtual = System.currentTimeMillis()-1000;
-                    Log.d("DEV/DATAS", getDate(dataLong, "dd/MM/yyyy"));
-                    Log.d("DEV/DATAS",getDate(dataAtual, "dd/MM/yyyy"));
-                    Log.d("DEV/TAREFASFRAGMENT", titulo);
-                    String situacaoPrazo;
-                    Log.d("DEV/DATAS", Long.toString(dataLong - dataAtual));
-                    if(situacaoTarefas.equals("concluidas")) {
-                        situacaoPrazo = "concluido";
+                        String data = listSnapshot.child("prazo").getValue(String.class);
+                        long dataLong = dateToMillis(data);
+                        long dataAtual = System.currentTimeMillis() - 1000;
+                        Log.d("DEV/DATAS", getDate(dataLong, "dd/MM/yyyy"));
+                        Log.d("DEV/DATAS", getDate(dataAtual, "dd/MM/yyyy"));
+                        Log.d("DEV/TAREFASFRAGMENT", titulo);
+                        String situacaoPrazo;
+                        Log.d("DEV/DATAS", Long.toString(dataLong - dataAtual));
+                        if (situacaoTarefas.equals("concluidas")) {
+                            situacaoPrazo = "concluido";
+                        } else if (dataLong - dataAtual < 259200000) {
+                            situacaoPrazo = "proximo";
+                        } else {
+                            situacaoPrazo = "ok";
+                        }
+                        mModels.add(new Tarefa(titulo, descricao, false, situacaoPrazo, node));
                     }
-                    else if(dataLong - dataAtual < 259200000) {
-                        situacaoPrazo = "proximo";
-                    }
-                    else {
-                        situacaoPrazo = "ok";
-                    }
-                    mModels.add(new Tarefa(titulo, descricao, false, situacaoPrazo, node));
-                }
-                Log.d("DEV/TAREFASFRAGMENT", Integer.toString(mModels.size()));
-                mAdapter.replaceAll(mModels);
-                mAdapter.notifyDataSetChanged();
-                mModels.clear();
+                    Log.d("DEV/TAREFASFRAGMENT", Integer.toString(mModels.size()));
+                    mAdapter.replaceAll(mModels);
+                    mAdapter.notifyDataSetChanged();
+                    mModels.clear();
 //                mAdapter.add(mModels);
-                mRecyclerView.scrollToPosition(0);
+                    mRecyclerView.scrollToPosition(0);
+                }
+                else {
+                    nenhumaTarefa(containerTarefas);
+                }
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
         });
+    }
+
+    private void nenhumaTarefa(ViewGroup viewGroup) {
+        viewGroup.removeAllViews();
+        TextView aviso = new TextView(getActivity());
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        aviso.setLayoutParams(params);
+        aviso.setText("Não há tarefas");
+        aviso.setGravity(Gravity.CENTER);
+        aviso.setTextSize(20);
+        viewGroup.addView(aviso);
     }
 
     public static String getDate(long milliSeconds, String dateFormat)

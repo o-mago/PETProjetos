@@ -32,7 +32,7 @@
             android:text="PET Elétrica UFJF"
             android:textSize="20sp"/>
         <ImageView
-            android:id="@+id/eventos"
+            android:id="@+id/config"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerVertical="true"
@@ -46,8 +46,8 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/eventos"
-            android:layout_toStartOf="@id/eventos"
+            android:layout_toLeftOf="@id/config"
+            android:layout_toStartOf="@id/config"
             android:layout_marginRight="10dp"
             android:layout_marginEnd="10dp"
             android:src="@drawable/drive_button"/>
@@ -112,4 +112,9 @@
         android:layout_alignParentBottom="true">
 
     </FrameLayout>
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerInParent="true"/>
 </RelativeLayout>

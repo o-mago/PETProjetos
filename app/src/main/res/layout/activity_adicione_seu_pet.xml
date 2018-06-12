@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/grey_300">
+    android:layout_height="match_parent"
+    android:background="@color/grey_300"
+    android:fillViewport="true">
 
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -87,12 +88,13 @@
                 android:hint="@string/hint_ano"
                 android:inputType= "number" />
 
-            <EditText
-                android:id="@+id/numero_petianos"
+            <Spinner
+                android:id="@+id/condicao_spinner"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/hint_integrantes"
-                android:inputType="number" />
+                android:layout_height="40dp"
+                android:spinnerMode="dialog"
+                android:hint="@string/hint_universidade"/>
+
             <Button
                 android:id="@+id/adicionar_pet"
                 android:layout_width="fill_parent"

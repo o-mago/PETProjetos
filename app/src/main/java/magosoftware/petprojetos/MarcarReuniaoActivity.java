@@ -5,9 +5,11 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +22,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -80,6 +84,8 @@ public class MarcarReuniaoActivity  extends BaseActivity implements View.OnClick
     private String nomeProjeto;
     private DateFormat format;
     private ProgressBar progressBar;
+    private String nodePET;
+    private SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +105,8 @@ public class MarcarReuniaoActivity  extends BaseActivity implements View.OnClick
         horarioSemanal = findViewById(R.id.horario_text);
         horarioFinalSemanal = findViewById(R.id.horario_final_text);
         semanalSwitch = findViewById(R.id.semanal_switch);
+        sharedPref = this.getSharedPreferences("todoApp", 0);
+        nodePET = sharedPref.getString("node_meu_pet", "nada");
         format = new SimpleDateFormat("HH:mm");
         clickHorariosEquipe.setOnClickListener(this);
         okButton.setOnClickListener(this);
@@ -108,10 +116,12 @@ public class MarcarReuniaoActivity  extends BaseActivity implements View.OnClick
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.hasChild("coordenador")) {
-                    if (dataSnapshot.child("coordenador").getValue(String.class).equals(user.getUid())) {
-                        dataSemanal.setOnClickListener((View.OnClickListener) variavel);
-                        horarioSemanal.setOnClickListener((View.OnClickListener) variavel);
-                        horarioFinalSemanal.setOnClickListener((View.OnClickListener) variavel);
+                    for(DataSnapshot coordenadorSnap : dataSnapshot.child("coordenador").getChildren()) {
+                        if (coordenadorSnap.getKey().equals(user.getUid())) {
+                            dataSemanal.setOnClickListener((View.OnClickListener) variavel);
+                            horarioSemanal.setOnClickListener((View.OnClickListener) variavel);
+                            horarioFinalSemanal.setOnClickListener((View.OnClickListener) variavel);
+                        }
                     }
                 }
                 else {
@@ -245,9 +255,19 @@ public class MarcarReuniaoActivity  extends BaseActivity implements View.OnClick
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for(DataSnapshot listSnapshot : dataSnapshot.getChildren()) {
-                        mDatabase.child("Usuarios").child(listSnapshot.getKey()).child("reunioes")
+                        mDatabase.child("Usuarios").child(listSnapshot.getKey()).child("pet").child(nodePET).child("reunioes")
                                 .child("Projeto "+nomeProjeto)
+                                .child("caminho")
+                                .setValue(reunioesPath);
+                        mDatabase.child("Usuarios").child(listSnapshot.getKey()).child("pet").child(nodePET).child("reunioes")
+                                .child("Projeto "+nomeProjeto)
+                                .child("data")
                                 .setValue(diaDaSemana+" "+horarioDaSemana);
+                        mDatabase.child("Usuarios").child(listSnapshot.getKey()).child("pet").child(nodePET).child("reunioes")
+                                .child("Projeto "+nomeProjeto)
+                                .child("nova")
+                                .setValue(true);
+                        mDatabase.child("Usuarios").child(listSnapshot.getKey()).child("update").setValue(true);
                         mDatabase.child("Usuarios").child(listSnapshot.getKey()).child("horarios")
                                 .addListenerForSingleValueEvent(new ValueEventListenerSend(listSnapshot.getKey()) {
                                     @Override

@@ -41,6 +41,11 @@
     <string name="localizacao_pet"></string>
     <string name="email_pet"></string>
 
+    <string name="proximo">Próximo</string>
+    <string name="error_weak_password">Senha fraca</string>
+    <string name="error_invalid_email">Email inválido</string>
+    <string name="error_user_exists">Email já cadastrado</string>
+
     <string-array name="opcoes_petiano">
         <item>Bolsista</item>
         <item>Voluntario Oficial</item>
@@ -55,6 +60,12 @@
     <string-array name="tem_certeza">
         <item>Sim</item>
         <item>Não</item>
+    </string-array>
+
+    <string-array name="opcoes_tarefa">
+        <item>Fazer</item>
+        <item>Fazendo</item>
+        <item>Feito</item>
     </string-array>
 
     <string name="sim">Sim</string>
@@ -91,6 +102,13 @@
         <item name="tocantins">Tocantins</item>
     </string-array>
 
+    <string-array name="condicao">
+        <item name="condicao">Sua condição no PET</item>
+        <item name="bolsista">Bolsista</item>
+        <item name="oficial">Voluntário Oficial</item>
+        <item name="voluntario">Voluntário Extraoficial</item>
+    </string-array>
+
     <string-array name="horarios">
         <item name="horario1">08:00&#8211;09:00</item>
         <item name="horario2">09:00&#8211;10:00</item>
@@ -121,6 +139,7 @@
 
     <string name="crop">Salvar</string>
     <string name="voltar">Voltar</string>
+    <string name="ok">OK</string>
 
     <string name="get_custom_token">Get Token</string>
     <string name="sign_in">Entrar</string>
@@ -148,6 +167,7 @@
     <string name="hint_nome">Nome</string>
     <string name="hint_pesquisa">Pesquisar</string>
     <string name="hint_universidade">Universidade</string>
+    <string name="hint_condicao">Sua condição no PET</string>
     <string name="hint_estado">Estado</string>
     <string name="hint_curso">Curso</string>
     <string name="hint_nick">Apelido</string>

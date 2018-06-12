@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +23,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -54,7 +58,8 @@ public class NewUser extends BaseActivity implements
     int tamanhoTexto = 0;
     int tamanhoTextoAntes = 0;
     boolean senhaVisivel = false;
-    Intent intentFoto;
+//    Intent intentFoto;
+    private Intent intentHorario;
 
 
     @Override
@@ -69,7 +74,8 @@ public class NewUser extends BaseActivity implements
         nascimento = findViewById(R.id.field_nascimento);
         mostra_senha = findViewById(R.id.mostra_senha);
         findViewById(R.id.mostra_senha).setOnClickListener(this);
-        intentFoto = new Intent(this, AdicionaImagem.class);
+//        intentFoto = new Intent(this, AdicionaImagem.class);
+        intentHorario = new Intent(this, HorariosEdit.class);
 
         nascimento.addTextChangedListener(new TextWatcher() {
             @Override
@@ -162,6 +168,9 @@ public class NewUser extends BaseActivity implements
     public void onClick(View v) {
         int i = v.getId();
         if(i == R.id.criar_conta) {
+            if (!validateForm()) {
+                return;
+            }
             mAuth.createUserWithEmailAndPassword(email.getText().toString(), senha.getText().toString())
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
@@ -178,7 +187,15 @@ public class NewUser extends BaseActivity implements
                                 String postId = user.getUid();
 //                                DatabaseReference newChild = dbUsuario.
                                 Map<String, String> users = new HashMap<>();
-                                users.put("nome", nome.getText().toString());
+                                users.put("nome_completo", nome.getText().toString());
+                                String doisNomes;
+                                if(nome.getText().toString().split(" ").length>=2) {
+                                    doisNomes = nome.getText().toString().split(" ")[0] + " " + nome.getText().toString().split(" ")[1];
+                                }
+                                else {
+                                    doisNomes = nome.getText().toString();
+                                }
+                                users.put("nome", doisNomes);
                                 users.put("nick", nick.getText().toString());
                                 users.put("email", email.getText().toString());
                                 users.put("universidade", spinner_universidade.getSelectedItem().toString());
@@ -187,14 +204,28 @@ public class NewUser extends BaseActivity implements
                                 dbUsuario.child(user.getUid()).setValue(users);
                                 dbUsuario.child(user.getUid()).orderByPriority();
                                 String caminho = "imagensPerfil/"+postId+".jpg";
-                                intentFoto.putExtra("caminho", caminho);
-                                intentFoto.putExtra("tipo", "novo usuario");
-                                startActivity(intentFoto);
-
+                                intentHorario.putExtra("caminho", caminho);
+                                intentHorario.putExtra("tipo", "novo usuario");
+                                startActivity(intentHorario);
+                                finish();
                             } else {
                                 // If sign in fails, display a message to the user.
+                                try {
+                                    throw task.getException();
+                                } catch(FirebaseAuthWeakPasswordException e) {
+                                    senha.setError(getString(R.string.error_weak_password));
+                                    senha.requestFocus();
+                                } catch(FirebaseAuthInvalidCredentialsException e) {
+                                    email.setError(getString(R.string.error_invalid_email));
+                                    email.requestFocus();
+                                } catch(FirebaseAuthUserCollisionException e) {
+                                    email.setError(getString(R.string.error_user_exists));
+                                    email.requestFocus();
+                                } catch(Exception e) {
+                                    Log.e("DEV/USUARIO", e.getMessage());
+                                }
                                 Log.w("USUARIO", "createUserWithEmail:failure", task.getException());
-                                Toast.makeText(NewUser.this, "Authentication failed.",
+                                Toast.makeText(NewUser.this, "Erro ao criar conta",
                                         Toast.LENGTH_SHORT).show();
                             }
 
@@ -209,12 +240,12 @@ public class NewUser extends BaseActivity implements
             if(senhaVisivel == false) {
                 senha.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                 senha.setSelection(senha.getText().length());
-                mostra_senha.setImageResource(R.drawable.ic_no_visibility);
+                mostra_senha.setImageResource(R.drawable.ic_visibility);
             }
             else {
                 senha.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                 senha.setSelection(senha.getText().length());
-                mostra_senha.setImageResource(R.drawable.ic_visibility);
+                mostra_senha.setImageResource(R.drawable.ic_no_visibility);
             }
             senhaVisivel = !senhaVisivel;
         }
@@ -291,5 +322,69 @@ public class NewUser extends BaseActivity implements
             startActivity(i);
             finish();
         }
+    }
+
+    private boolean validateForm() {
+        boolean valid = true;
+
+        String nome = this.nome.getText().toString();
+        if (TextUtils.isEmpty(nome)) {
+            this.nome.setError("Preencha");
+            valid = false;
+        } else {
+            this.nome.setError(null);
+        }
+
+        String nick = this.nick.getText().toString();
+        if (TextUtils.isEmpty(nick)) {
+            this.nick.setError("Preencha");
+            valid = false;
+        } else {
+            this.nick.setError(null);
+        }
+
+        String email = this.email.getText().toString();
+        if (TextUtils.isEmpty(email)) {
+            this.email.setError("Preencha");
+            valid = false;
+        } else {
+            this.email.setError(null);
+        }
+
+        String senha = this.senha.getText().toString();
+        if (TextUtils.isEmpty(senha)) {
+            this.senha.setError("Preencha");
+            valid = false;
+        } else {
+            this.senha.setError(null);
+        }
+
+        String nascimento = this.nascimento.getText().toString();
+        if (TextUtils.isEmpty(nascimento)) {
+            this.nascimento.setError("Preencha");
+            valid = false;
+        } else {
+            this.nascimento.setError(null);
+        }
+
+        String universidade = spinner_universidade.getSelectedItem().toString();
+        if (TextUtils.isEmpty(universidade) || universidade.equals("Universidade")) {
+            TextView errorText = (TextView) spinner_universidade.getSelectedView();
+            errorText.setError("");
+            errorText.setTextColor(Color.RED);//just to highlight that this is an error
+            errorText.setText("Universidade");
+            valid = false;
+        }
+
+        String curso = spinner_curso.getSelectedItem().toString();
+        if (TextUtils.isEmpty(curso) || curso.equals("Curso")) {
+            TextView errorText = (TextView) spinner_curso.getSelectedView();
+            errorText.setError("");
+            errorText.setTextColor(Color.RED);//just to highlight that this is an error
+            errorText.setText("Curso");
+            valid = false;
+        }
+
+        return valid;
     }
 }

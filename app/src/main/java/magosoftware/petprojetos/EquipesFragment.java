@@ -10,6 +10,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -18,10 +20,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -55,6 +60,11 @@ public class EquipesFragment extends BaseFragment implements LineAdapterEquipe.O
     private String nodeProjeto;
     ValueEventListener valueEventListener;
     private ProgressBar progressBar;
+    private String nodePET;
+    private TextView aviso;
+    private CoordinatorLayout coordinator;
+    private FloatingActionButton addEquipe;
+    private String nomeProjeto;
 
     public static EquipesFragment newInstance() {
         EquipesFragment equipesFragment = new EquipesFragment();
@@ -69,10 +79,12 @@ public class EquipesFragment extends BaseFragment implements LineAdapterEquipe.O
         storageRef = storage.getReference();
         sharedPref = getActivity().getSharedPreferences("todoApp", 0);
         nomePET = sharedPref.getString("nome_meu_pet", "nada");
+        nodePET = sharedPref.getString("node_meu_pet", "nada");
         Log.d("DEV/EQUIPESFRAG", "nomePET: "+nomePET);
         nodeProjeto = getArguments().getString("node_projeto");
+        nomeProjeto = getArguments().getString("nome_projeto");
         Log.d("DEV/EQUIPESFRAG", "nodeProjeto: "+nodeProjeto);
-        dbEquipes = mDatabase.child("PETs").child(nomePET).child("projetos").child(nodeProjeto).child("equipes");
+        dbEquipes = mDatabase.child("PETs").child(nodePET).child("projetos").child(nodeProjeto).child("equipes");
         Log.d("nomePETWOW", nomePET);
 
         return inflater.inflate(R.layout.equipes, container, false);
@@ -84,6 +96,10 @@ public class EquipesFragment extends BaseFragment implements LineAdapterEquipe.O
 
         getView().findViewById(R.id.add_equipe).setOnClickListener(this);
         progressBar = getView().findViewById(R.id.progress_bar);
+        coordinator = (CoordinatorLayout) getView().findViewById(R.id.coordinator);
+        addEquipe = getView().findViewById(R.id.add_equipe);
+        addEquipe.setVisibility(View.GONE);
+        aviso = getView().findViewById(R.id.aviso);
         setupRecycler();
         setupLista();
         Log.d("ENTROU3", "PASSOU");
@@ -97,22 +113,30 @@ public class EquipesFragment extends BaseFragment implements LineAdapterEquipe.O
         valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot listSnapshot : dataSnapshot.getChildren()) {
-                    String nodeEquipe = listSnapshot.getKey();
-                    try {
-                        String nome = listSnapshot.child("nome").getValue(String.class);
-                        int cor = listSnapshot.child("cor").getValue(Integer.class);
-                        mModels.add(new Equipe(nome, cor, nodeEquipe));
+                if(dataSnapshot.hasChildren()) {
+                    for (DataSnapshot listSnapshot : dataSnapshot.getChildren()) {
+                        String nodeEquipe = listSnapshot.getKey();
+                        try {
+                            String nome = listSnapshot.child("nome").getValue(String.class);
+                            int cor = listSnapshot.child("cor").getValue(Integer.class);
+                            mModels.add(new Equipe(nome, cor, nodeEquipe));
+                        } catch (NullPointerException e) {
+                            dbEquipes.removeEventListener(valueEventListener);
+                            setupLista();
+                        }
                     }
-                    catch (NullPointerException e) {
-                        dbEquipes.removeEventListener(valueEventListener);
-                        setupLista();
-                    }
+                    aviso.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
+                    addEquipe.setVisibility(View.VISIBLE);
+                    mAdapter.replaceAll(mModels);
+                    mAdapter.notifyDataSetChanged();
+                    mModels.clear();
                 }
-                progressBar.setVisibility(View.GONE);
-                mAdapter.replaceAll(mModels);
-                mAdapter.notifyDataSetChanged();
-                mModels.clear();
+                else {
+                    aviso.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.GONE);
+                    addEquipe.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -124,11 +148,18 @@ public class EquipesFragment extends BaseFragment implements LineAdapterEquipe.O
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        dbEquipes.removeEventListener(valueEventListener);
+    }
+
+    @Override
     public void onClick(View view) {
         int id = view.getId();
         if(id == R.id.add_equipe) {
             Intent intent = new Intent(getActivity(), AdicioneEquipe.class);
             intent.putExtra("nome_pet", nomePET);
+            intent.putExtra("node_pet", nodePET);
             intent.putExtra("node_projeto", nodeProjeto);
             startActivity(intent);
         }
@@ -139,7 +170,9 @@ public class EquipesFragment extends BaseFragment implements LineAdapterEquipe.O
         Bundle bundle = new Bundle();
         bundle.putString("node_equipe", node);
         bundle.putString("node_projeto", nodeProjeto);
+        bundle.putString("nome_projeto", nomeProjeto);
         bundle.putString("nome_equipe", nome);
+        bundle.putString("node_pet", nodePET);
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.remove(this);
         fragmentTransaction.commit();

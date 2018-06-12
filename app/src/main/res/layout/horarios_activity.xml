@@ -24,10 +24,11 @@
             android:id="@+id/certo"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_toLeftOf="@id/cancela"
-            android:layout_toStartOf="@id/cancela"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_marginRight="10dp"
             android:layout_marginEnd="10dp"
+            android:foregroundGravity="right"
             android:layout_centerVertical="true"
             android:src="@drawable/check"
             android:background="@drawable/background_contorno_ok"/>
@@ -35,8 +36,8 @@
             android:id="@+id/cancela"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
+            android:layout_toLeftOf="@id/certo"
+            android:layout_toStartOf="@id/certo"
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
             android:layout_centerVertical="true"
@@ -47,7 +48,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Marque os horários disponíveis"
+        android:text="Marque seus horários disponíveis"
         android:layout_gravity="center_horizontal"
         android:textSize="20sp"/>
 

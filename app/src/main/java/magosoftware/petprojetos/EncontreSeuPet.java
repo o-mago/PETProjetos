@@ -61,6 +61,8 @@ public class EncontreSeuPet extends BaseFragment implements SearchView.OnQueryTe
     final long ONE_MEGABYTE = 1024 * 1024;
     private ValueEventListener valueEventListener;
     ProgressBar progressBar;
+    private boolean loading = true;
+    int pastVisiblesItems, visibleItemCount, totalItemCount;
 
     private static List<Pet> filter(List<Pet> models, String query) {
         final String lowerCaseQuery = query.toLowerCase();
@@ -95,7 +97,6 @@ public class EncontreSeuPet extends BaseFragment implements SearchView.OnQueryTe
         return inflater.inflate(R.layout.activity_encontre_seu_pet, container, false);
     }
 
-
     @Override
     public void onActivityCreated(Bundle savedIntanceState) {
         super.onActivityCreated(savedIntanceState);
@@ -126,28 +127,28 @@ public class EncontreSeuPet extends BaseFragment implements SearchView.OnQueryTe
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot listSnapshots : dataSnapshot.getChildren()) {
-                    String nome = listSnapshots.child("nome").getValue(String.class);
+                    String nomePet = listSnapshots.child("nome").getValue(String.class);
                     String codigo = listSnapshots.getKey();
 //                    String universidade = listSnapshots.child("universidade").getValue(String.class);
 //                    String siglaUniversidade = universidade.split("-")[0];
                     cont++;
-                    Log.d("PETS", nome);
-                    if (nome != null) {
+                    Log.d("PETS", nomePet);
+                    if (nomePet != null) {
                         try {
-                            perfilRef = storageRef.child("imagensPET/" + nome.replace(" ", "_") + ".jpg");
+                            perfilRef = storageRef.child("imagensPET/" + codigo + ".jpg");
                             Log.d("LOGO", perfilRef.getPath());
-                            OnSuccessListener onSuccessListener = new OnSuccessListenerString(codigo, perfilRef) {
+                            OnSuccessListener onSuccessListener = new OnSuccessListenerString(codigo, perfilRef, nomePet) {
                                 @Override
                                 public void onSuccess(byte[] bytes) {
                                     try {
                                         Bitmap bitmapPet = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                                         Bitmap resizedBmp = Bitmap.createScaledBitmap(bitmapPet, toPx(100), toPx(100), false);
                                         bitmapDrawablePet = new BitmapDrawable(getResources(), resizedBmp);
-                                        nomePet = ((StorageReference) variavel2).getName();
-                                        nomePet = nomePet.split(".jpg")[0];
-                                        nomePet = nomePet.replace("_", " ");
+//                                        nomePet = ((StorageReference) variavel2).getName();
+//                                        nomePet = nomePet.split(".jpg")[0];
+//                                        nomePet = nomePet.replace("_", " ");
                                         Log.d("LOGO", bitmapPet.toString());
-                                        mModels.add(new Pet((String) variavel1, nomePet, bitmapDrawablePet));
+                                        mModels.add(new Pet((String) variavel1, (String) variavel3, bitmapDrawablePet));
                                         i++;
                                         if (i == cont) {
                                             progressBar.setVisibility(View.GONE);
@@ -209,7 +210,7 @@ public class EncontreSeuPet extends BaseFragment implements SearchView.OnQueryTe
 
         // Configurando o gerenciador de layout para ser uma lista.
         mRecyclerView = getView().findViewById(R.id.lista_pet);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(layoutManager);
 
         // Adiciona o adapter que irá anexar os objetos à lista.
@@ -217,6 +218,30 @@ public class EncontreSeuPet extends BaseFragment implements SearchView.OnQueryTe
         mAdapter = new LineAdapterPet(ALPHABETICAL_COMPARATOR);
         //mAdapter = new LineAdapterPet(new ArrayList<>(0));
         mRecyclerView.setAdapter(mAdapter);
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
+        {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            {
+                if(dy > 0) //check for scroll down
+                {
+                    visibleItemCount = layoutManager.getChildCount();
+                    totalItemCount = layoutManager.getItemCount();
+                    pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
+
+                    if (loading)
+                    {
+                        if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount)
+                        {
+                            loading = false;
+                            Log.v("...", "Last Item Wow !");
+                            //Do pagination.. i.e. fetch new data
+                        }
+                    }
+                }
+            }
+        });
 
 //        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
 //                layoutManager.getOrientation());

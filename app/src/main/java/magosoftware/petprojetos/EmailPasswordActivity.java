@@ -40,8 +40,8 @@ public class EmailPasswordActivity extends BaseActivity implements
 
     private static final String TAG = "EmailPassword";
 
-    private TextView mStatusTextView;
-    private TextView mDetailTextView;
+//    private TextView mStatusTextView;
+//    private TextView mDetailTextView;
     private EditText mEmailField;
     private EditText mPasswordField;
 
@@ -64,8 +64,8 @@ public class EmailPasswordActivity extends BaseActivity implements
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         // Views
-        mStatusTextView = (TextView) findViewById(R.id.status);
-        mDetailTextView = (TextView) findViewById(R.id.detail);
+//        mStatusTextView = (TextView) findViewById(R.id.status);
+//        mDetailTextView = (TextView) findViewById(R.id.detail);
         mEmailField = (EditText) findViewById(R.id.field_email);
         mPasswordField = (EditText) findViewById(R.id.field_password);
 
@@ -102,7 +102,7 @@ public class EmailPasswordActivity extends BaseActivity implements
         FirebaseUser oldUser = currentUser;
         currentUser = mAuth.getCurrentUser();
 
-        if(oldUser==null && currentUser!=null) {
+        if(oldUser==null && currentUser!=null && currentUser.isEmailVerified()) {
             updateUI(currentUser);
         }
     }
@@ -185,7 +185,14 @@ public class EmailPasswordActivity extends BaseActivity implements
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
+                            if(user!=null && !user.isEmailVerified()) {
+                                Toast.makeText(EmailPasswordActivity.this,
+                                        "Por favor, verifique seu email através do link enviado ",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                updateUI(user);
+                            }
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -196,7 +203,7 @@ public class EmailPasswordActivity extends BaseActivity implements
 
                         // [START_EXCLUDE]
                         if (!task.isSuccessful()) {
-                            mStatusTextView.setText(R.string.auth_failed);
+//                            mStatusTextView.setText(R.string.auth_failed);
                         }
                         hideProgressDialog();
                         // [END_EXCLUDE]
@@ -315,6 +322,7 @@ public class EmailPasswordActivity extends BaseActivity implements
             findViewById(R.id.signed_in_buttons).setVisibility(View.GONE);
         }*/
         if(user != null) {
+            Log.d("DEV/EMAILPASSACT", "updateUI && user!=null");
             Intent i = new Intent(this, MainActivity.class);
             //i.putExtra("auth",mAuth.getCurrentUser());
             startActivity(i);

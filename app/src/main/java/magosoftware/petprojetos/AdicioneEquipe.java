@@ -34,6 +34,7 @@ public class AdicioneEquipe extends BaseActivity implements View.OnClickListener
     private AlertDialog alert;
     int corEscolhida;
     FrameLayout frameCor;
+    private String nodePET;
 
     @Override
     public void onCreate(Bundle savedInstantState) {
@@ -45,8 +46,9 @@ public class AdicioneEquipe extends BaseActivity implements View.OnClickListener
         user = mAuth.getCurrentUser();
         Intent intent = getIntent();
         nomePET = intent.getStringExtra("nome_pet");
+        nodePET = intent.getStringExtra("node_pet");
         nomeProjeto = intent.getStringExtra("node_projeto");
-        dbEquipes = mDatabase.child("PETs").child(nomePET).child("projetos").child(nomeProjeto).child("equipes");
+        dbEquipes = mDatabase.child("PETs").child(nodePET).child("projetos").child(nomeProjeto).child("equipes");
         nomeEquipe = findViewById(R.id.field_nome);
         frameCor = findViewById(R.id.corEscolhida);
         findViewById(R.id.adicionar_equipe).setOnClickListener(this);

@@ -26,13 +26,6 @@
                 android:layout_marginBottom="30dp"/>
 
             <EditText
-                android:id="@+id/field_nome"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/hint_nome"
-                android:inputType="textPersonName" />
-
-            <EditText
                 android:id="@+id/field_nick"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -60,14 +53,32 @@
                 android:hint="@string/hint_nascimento"
                 android:inputType="date" />
 
-            <ImageButton
+            <RelativeLayout
                 android:id="@+id/horarios"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/calendar"
+                android:layout_height="40dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/background_borda_cinza"/>
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:text="Editar Horários Disponíveis"
+                    android:textSize="18sp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="10dp"
+                    android:background="@drawable/background_borda_cinza"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/calendar"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"/>
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

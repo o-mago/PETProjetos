@@ -23,6 +23,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -99,6 +101,8 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
     private ValueEventListener valueEventListener;
     private String nodePet;
     private DatabaseReference dbTime;
+    private ScrollView mainPerfil;
+    private ProgressBar progressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -130,7 +134,11 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
         universidade = getView().findViewById(R.id.universidade);
         localizacao = getView().findViewById(R.id.localizacao);
         editButton = getView().findViewById(R.id.edit_button);
-        setupEdit();
+        mainPerfil = getView().findViewById(R.id.main_perfil);
+        progressBar = getView().findViewById(R.id.progress_bar);
+        mainPerfil.setVisibility(View.GONE);
+        editButton.setVisibility(View.GONE);
+//        setupEdit();
         follow = getView().findViewById(R.id.follow);
         follow.setOnClickListener(this);
         setupFollow("bolsistas", "AGUARDANDO","#FFFF00", getResources().getDrawable(R.drawable.background_contorno_aguardando), true);
@@ -140,6 +148,7 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
         setupFollow("oficiais", "PETIANO","#00E676", getResources().getDrawable(R.drawable.background_contorno_ok), false);
         setupFollow("voluntarios", "PETIANO","#00E676", getResources().getDrawable(R.drawable.background_contorno_ok), false);
         getView().findViewById(R.id.edit_button).setOnClickListener(this);
+        editButton.setVisibility(View.GONE);
         ano = getView().findViewById(R.id.ano);
         expandableLayout = getView().findViewById(R.id.petianos);
 //        setupRecycler();
@@ -162,36 +171,36 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
         return perfilPetFragment;
     }
 
-    public void setupEdit() {
-        dbUsuario.child(user.getUid()).child("pet").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.hasChildren()) {
-                    String codigo;
-                    for (DataSnapshot listSnapshots : dataSnapshot.getChildren()) {
-                        String condicao = listSnapshots.child("situacao").getValue(String.class);
-                        if (condicao.equals("bolsistas") || condicao.equals("oficiais") || condicao.equals("voluntarios")) {
-                            editButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_edit_black_24dp));
-                            break;
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d("UNI", "Deu merda");
-            }
-        });
-
-    }
+//    public void setupEdit() {
+//        dbUsuario.child(user.getUid()).child("pet").addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                if(dataSnapshot.hasChildren()) {
+//                    String codigo;
+//                    for (DataSnapshot listSnapshots : dataSnapshot.getChildren()) {
+//                        String condicao = listSnapshots.child("situacao").getValue(String.class);
+//                        if (condicao.equals("bolsistas") || condicao.equals("oficiais") || condicao.equals("voluntarios")) {
+//                            editButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_edit_black_24dp));
+//                            break;
+//                        }
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                Log.d("UNI", "Deu merda");
+//            }
+//        });
+//
+//    }
 
     public void setupFollow(String categoria, final String mensagem, final String cor, final Drawable fundo, boolean aguardando) {
         dbTime = mDatabase.child("PETs").child(nodePet).child("time");
         if(aguardando) {
             dbTime = dbTime.child("aguardando");
         }
-        dbTime.child(categoria).addListenerForSingleValueEvent(new ValueEventListener() {
+        dbTime.child(categoria).addListenerForSingleValueEvent(new ValueEventListenerSend(mensagem) {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String codigo;
@@ -200,6 +209,9 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
                         codigo = listSnapshots.getKey();
                         Log.d("DEV/PERFILPET", "codigo: " + codigo);
                         if (codigo.equals(user.getUid())) {
+                            if(variavel.equals("PETIANO")) {
+                                editButton.setVisibility(View.VISIBLE);
+                            }
                             follow.setText(mensagem);
                             follow.setTextColor(Color.parseColor(cor));
                             follow.setBackgroundDrawable(fundo);
@@ -223,13 +235,19 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
         int i = v.getId();
         if(i == R.id.foto_pet) {
             Log.d("UNI", "CLICOU");
-            Intent intent = new Intent();
-            intent.setType("image/*");
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+//            Uri selectedImage = data.getData();
+            Intent intent = new Intent(getActivity(), AdicionaImagem.class);
+            intent.putExtra("caminho", "/imagensPET/" + nodePet +".jpg");
+            intent.putExtra("tipo", "pet");
+            startActivity(intent);
+//            Intent intent = new Intent();
+//            intent.setType("image/*");
+//            intent.setAction(Intent.ACTION_GET_CONTENT);
+//            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
         }
         if(i == R.id.edit_button) {
-            Intent intent = new Intent(getActivity(), AdicionaImagem.class);
+            Intent intent = new Intent(getActivity(), AdicioneSeuPetActivity.class);
+            intent.putExtra("node", nodePet);
             startActivity(intent);
         }
         if(i == R.id.follow) {
@@ -279,7 +297,8 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
                     if (which == 0) {
                         tenhoCerteza = true;
                         Map<String, String> pet = new HashMap<>();
-                        dbUsuario.child(user.getUid()).child("pet").child(nodePet).child("situacao").setValue(pet);
+                        dbUsuario.child(user.getUid()).child("pet").child(nodePet).child("situacao").setValue("aguardando");
+                        dbUsuario.child(user.getUid()).child("pet").child(nodePet).child("nome").setValue(nomePet);
                         if(temPET) {
                             Map<String, String> novoPetiano = new HashMap<>();
                             novoPetiano.put(user.getUid(), "bolsistas");
@@ -354,6 +373,7 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
         else {
             Log.d("DEV/PERFILPET", "else temCerteza");
             dbUsuario.child(user.getUid()).child("pet").child(nodePet).child("situacao").setValue("aguardando");
+            dbUsuario.child(user.getUid()).child("pet").child(nodePet).child("nome").setValue(nomePet);
             if (escolha == 0) {
                 setupFollow("bolsistas", "AGUARDANDO", "#FFFF00", getResources().getDrawable(R.drawable.background_contorno_aguardando), true);
                 Log.d("DEV/PERFILPET", "escolha == 0");
@@ -509,19 +529,21 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
         catch (NullPointerException e) {
             uriPet = null;
         }
-        if(uriPet == null || update) {
-            String nodePETFoto = nodePet.replace(" ", "_");
-            StorageReference perfilRef = storageRef.child("imagensPET/" + nodePETFoto + ".jpg");
+//        if(uriPet == null || update) {
+            StorageReference perfilRef = storageRef.child("imagensPET/" + nodePet + ".jpg");
             try {
                 perfilRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                     @Override
                     public void onSuccess(byte[] bytes) {
                         try {
                             bitmapPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                            uriPet = getImageUri(getActivity(), bitmapPerfil);
-                            editor.putString("uri_pet", uriPet.toString());
-                            editor.commit();
+//                            uriPet = getImageUri(getActivity(), bitmapPerfil);
+//                            editor.putString("uri_pet", uriPet.toString());
+//                            editor.commit();
                             imagemPerfil.setImageBitmap(bitmapPerfil);
+                            editButton.setVisibility(View.VISIBLE);
+                            mainPerfil.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.GONE);
                         }
                         catch (Exception e) {
 
@@ -537,10 +559,10 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
             catch (Exception e) {
 
             }
-        }
-        else {
-            Picasso.with(getActivity()).load(uriPet).into(imagemPerfil);
-        }
+//        }
+//        else {
+//            Picasso.with(getActivity()).load(uriPet).into(imagemPerfil);
+//        }
     }
 
 
@@ -549,6 +571,10 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
         return Uri.parse(path);
+    }
+
+    private void setDados() {
+
     }
 
     public void setupExpandable() {
@@ -597,7 +623,7 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
                         public void onSuccess(byte[] bytes) {
                             try {
                                 bitmapPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                Bitmap resizedBmp = Bitmap.createScaledBitmap(bitmapPerfil, toPx(100), toPx(100), false);
+                                Bitmap resizedBmp = Bitmap.createScaledBitmap(bitmapPerfil, toPx(70), toPx(70), false);
                                 bitmapDrawablePet = new BitmapDrawable(getResources(), resizedBmp);
                                 String[] nomes = ((String) variavel1).split(" ");
                                 if (nomes.length > 1) {
@@ -641,7 +667,7 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
                                 public void onSuccess(byte[] bytes) {
                                     try {
                                         bitmapPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                        Bitmap resizedBmp = Bitmap.createScaledBitmap(bitmapPerfil, toPx(100), toPx(100), false);
+                                        Bitmap resizedBmp = Bitmap.createScaledBitmap(bitmapPerfil, toPx(70), toPx(70), false);
                                         bitmapDrawablePet = new BitmapDrawable(getResources(), resizedBmp);
 //                            uriPerfil = getImageUri(getActivity(), bitmapPerfil);
 //                            imagemPerfil.setImageBitmap(bitmapPerfil);
@@ -678,7 +704,7 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
                                         public void onSuccess(byte[] bytes) {
                                             try {
                                                 bitmapPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                                Bitmap resizedBmp = Bitmap.createScaledBitmap(bitmapPerfil, toPx(100), toPx(100), false);
+                                                Bitmap resizedBmp = Bitmap.createScaledBitmap(bitmapPerfil, toPx(70), toPx(70), false);
                                                 bitmapDrawablePet = new BitmapDrawable(getResources(), resizedBmp);
 //                            uriPerfil = getImageUri(getActivity(), bitmapPerfil);
 //                            imagemPerfil.setImageBitmap(bitmapPerfil);
@@ -728,7 +754,7 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
 
 //        mAdapter.add(mModels);
 
-        section.parent = "time";
+        section.parent = "Equipe";
         expandableLayout.addSection(section);
 
         expandableLayout.setExpandListener(new ExpandCollapseListener.ExpandListener<String>() {

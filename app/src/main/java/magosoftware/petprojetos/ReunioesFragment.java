@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -58,6 +59,7 @@ public class ReunioesFragment extends BaseFragment implements LineAdapterReuniao
     private FloatingActionButton fabEdit;
     private boolean isFabOpen = false;
     private Animation fab_open,fab_close,rotate_forward,rotate_backward;
+    private TextView aviso;
 
     public static ReunioesFragment newInstance() {
         ReunioesFragment reunioesFragment = new ReunioesFragment();
@@ -88,6 +90,7 @@ public class ReunioesFragment extends BaseFragment implements LineAdapterReuniao
         fabMais = getView().findViewById(R.id.opcoes_reuniao);
         fabAdd = getView().findViewById(R.id.nova_reuniao);
         fabEdit = getView().findViewById(R.id.horario_reuniao);
+        aviso = getView().findViewById(R.id.aviso);
         fabMais.setOnClickListener(this);
         fabAdd.setOnClickListener(this);
         fabEdit.setOnClickListener(this);
@@ -101,12 +104,14 @@ public class ReunioesFragment extends BaseFragment implements LineAdapterReuniao
     public void onClick(View view) {
         int id = view.getId();
         if(id == R.id.nova_reuniao) {
+            animateFAB();
             Intent intent = new Intent(getActivity(), ReunioesEditActivity.class);
             intent.putExtra("node", "NADA9232CMXC3");
             intent.putExtra("reunioes_path", reunioesPath);
             startActivity(intent);
         }
         if(id == R.id.horario_reuniao) {
+            animateFAB();
             Intent intent = new Intent(getActivity(), MarcarReuniaoActivity.class);
             intent.putExtra("reunioes_path", reunioesPath);
             intent.putExtra("node_projeto", nomeProjeto);
@@ -175,18 +180,23 @@ public class ReunioesFragment extends BaseFragment implements LineAdapterReuniao
         dbReuniao.child("reunioes").child("historico").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot listSnapshot : dataSnapshot.getChildren()) {
-                    String titulo = listSnapshot.child("titulo").getValue(String.class);
-                    String node = listSnapshot.getKey();
-                    String data = listSnapshot.child("data").getValue(String.class);
-                    mModels.add(new Reuniao(titulo, data, node));
-                }
-                Log.d("DEV/REUNIOESFRAGMENT", Integer.toString(mModels.size()));
-                mAdapter.replaceAll(mModels);
-                mAdapter.notifyDataSetChanged();
-                mModels.clear();
+                if(dataSnapshot.hasChildren()) {
+                    aviso.setVisibility(View.GONE);
+                    for (DataSnapshot listSnapshot : dataSnapshot.getChildren()) {
+                        String titulo = listSnapshot.child("titulo").getValue(String.class);
+                        String node = listSnapshot.getKey();
+                        String data = listSnapshot.child("data").getValue(String.class);
+                        mModels.add(new Reuniao(titulo, data, node));
+                    }
+                    Log.d("DEV/REUNIOESFRAGMENT", Integer.toString(mModels.size()));
+                    mAdapter.replaceAll(mModels);
+                    mAdapter.notifyDataSetChanged();
+                    mModels.clear();
 //                mAdapter.add(mModels);
-                mRecyclerView.scrollToPosition(0);
+                    mRecyclerView.scrollToPosition(0);
+                } else {
+                    aviso.setVisibility(View.VISIBLE);
+                }
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {

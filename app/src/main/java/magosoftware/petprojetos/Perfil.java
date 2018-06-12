@@ -12,9 +12,12 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -59,15 +62,18 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
     FirebaseStorage storage;
     StorageReference storageRef;
     Bitmap bitmapPerfil;
-    ImageButton editButton;
     Uri uriPerfil;
     String codigo;
     boolean update = false;
     public SharedPreferences sharedPref;
     public SharedPreferences.Editor editor;
-    String nomePET;
+    private String nomePET;
     private Picasso.Listener builderListener;
     private Picasso.Builder builder;
+    private String nodePET;
+    private ScrollView mainPerfil;
+    private ProgressBar progressBar;
+    private ImageButton editButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -78,6 +84,7 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
         storageRef = storage.getReference();
         sharedPref = getActivity().getSharedPreferences("todoApp", 0);
         nomePET = sharedPref.getString("nome_meu_pet", null);
+        nodePET = sharedPref.getString("node_meu_pet", null);
         try {
             codigo = getArguments().getString("codigo");
         }
@@ -105,6 +112,11 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
         nascimento = getView().findViewById(R.id.nascimento);
         imagemPerfil = getView().findViewById(R.id.foto_perfil);
         imagemPerfil.setOnClickListener(this);
+        mainPerfil = getView().findViewById(R.id.main_perfil);
+        progressBar = getView().findViewById(R.id.progress_bar);
+        editButton = getView().findViewById(R.id.edit_button);
+        mainPerfil.setVisibility(View.GONE);
+        editButton.setVisibility(View.GONE);
         sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         editor = sharedPref.edit();
 
@@ -124,11 +136,16 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
     public void onClick(View v) {
         int i = v.getId();
         if(i == R.id.foto_perfil) {
-            Log.d("UNI", "CLICOU");
-            Intent intent = new Intent();
-            intent.setType("image/*");
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+            Intent intent = new Intent(getActivity(), AdicionaImagem.class);
+//                intent.putExtra("imagem", selectedImage.toString());
+            intent.putExtra("caminho", "imagensPerfil/"+user.getUid()+".jpg");
+            intent.putExtra("tipo", "usuario");
+            startActivity(intent);
+//            Log.d("UNI", "CLICOU");
+//            Intent intent = new Intent();
+//            intent.setType("image/*");
+//            intent.setAction(Intent.ACTION_GET_CONTENT);
+//            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
         }
         if(i == R.id.edit_button) {
             Intent intent = new Intent(getActivity(), PerfilEdit.class);
@@ -142,8 +159,10 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
         if (requestCode == PICK_IMAGE) {
             try {
                 Uri selectedImage = data.getData();
-                Intent intent = new Intent(getActivity(), AjustaImagem.class);
-                intent.putExtra("imagem", selectedImage.toString());
+                Intent intent = new Intent(getActivity(), AdicionaImagem.class);
+//                intent.putExtra("imagem", selectedImage.toString());
+                intent.putExtra("caminho", "imagensPerfil/"+user.getUid()+".jpg");
+                intent.putExtra("tipo", "usuario");
                 startActivity(intent);
             }
             catch (NullPointerException e) {
@@ -167,12 +186,29 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
         String universidadeSP = sharedPref.getString(getString(R.string.universidade_perfil), null);
         String petSP = sharedPref.getString(getString(R.string.pet_perfil), null);
         String nascimentoSP = sharedPref.getString(getString(R.string.nascimento_perfil), null);
-        if(nomeSP == null || update) {
-            mDatabase.child("Usuarios").child(codigo).child("nome").addListenerForSingleValueEvent(new ValueEventListener() {
+        if(nomeSP == null || emailSP == null || cursoSP == null || universidadeSP == null || nascimentoSP == null || nickSP == null || update) {
+            mDatabase.child("Usuarios").child(codigo).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    nome.setText(dataSnapshot.getValue(String.class));
-                    editor.putString("nome_perfil", dataSnapshot.getValue(String.class));
+                    nome.setText(dataSnapshot.child("nome").getValue(String.class));
+                    editor.putString("nome_perfil", dataSnapshot.child("nome").getValue(String.class));
+                    email.setText(dataSnapshot.child("email").getValue(String.class));
+                    editor.putString("email_perfil", dataSnapshot.child("email").getValue(String.class));
+                    curso.setText(dataSnapshot.child("curso").getValue(String.class));
+                    editor.putString("curso_perfil", dataSnapshot.child("curso").getValue(String.class));
+                    universidade.setText(dataSnapshot.child("universidade").getValue(String.class));
+                    editor.putString("universidade_perfil", dataSnapshot.child("universidade").getValue(String.class));
+                    nascimento.setText(dataSnapshot.child("nascimento").getValue(String.class));
+                    editor.putString("nascimento_perfil", dataSnapshot.child("nascimento").getValue(String.class));
+                    nick.setText(dataSnapshot.child("nick").getValue(String.class));
+                    editor.putString("nick_perfil", dataSnapshot.child("nick").getValue(String.class));
+                    if(dataSnapshot.hasChild("update")) {
+                        if(dataSnapshot.child("update").getValue(Boolean.class).equals(true)) {
+                            update = true;
+                            setImagemPerfil(update);
+                            mDatabase.child("Usuarios").child(codigo).child("update").setValue(false);
+                        }
+                    }
                 }
 
                 @Override
@@ -183,98 +219,103 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
         }
         else {
             nome.setText(nomeSP);
-        }
-        if(emailSP == null || update) {
-            mDatabase.child("Usuarios").child(codigo).child("email").addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    email.setText(dataSnapshot.getValue(String.class));
-                    editor.putString("email_perfil", dataSnapshot.getValue(String.class));
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.d("UNI", "Deu merda");
-                }
-            });
-        }
-        else {
             email.setText(emailSP);
-        }
-        if(cursoSP == null || update) {
-            mDatabase.child("Usuarios").child(codigo).child("curso").addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    curso.setText(dataSnapshot.getValue(String.class));
-                    editor.putString("curso_perfil", dataSnapshot.getValue(String.class));
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.d("UNI", "Deu merda");
-                }
-            });
-        }
-        else {
             curso.setText(cursoSP);
-        }
-
-        if(universidadeSP == null || update) {
-            mDatabase.child("Usuarios").child(codigo).child("universidade").addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    universidade.setText(dataSnapshot.getValue(String.class));
-                    editor.putString("universidade_perfil", dataSnapshot.getValue(String.class));
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.d("UNI", "Deu merda");
-                }
-            });
-        }
-        else {
             universidade.setText(universidadeSP);
-        }
-
-        if(nascimentoSP == null || update) {
-            mDatabase.child("Usuarios").child(codigo).child("nascimento").addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    nascimento.setText(dataSnapshot.getValue(String.class));
-                    editor.putString("nascimento_perfil", dataSnapshot.getValue(String.class));
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.d("UNI", "Deu merda");
-                }
-            });
-        }
-        else {
             nascimento.setText(nascimentoSP);
-        }
-
-        if(nickSP == null || update) {
-            mDatabase.child("Usuarios").child(codigo).child("nick").addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    nick.setText(dataSnapshot.getValue(String.class));
-                    editor.putString("nick_perfil", dataSnapshot.getValue(String.class));
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.d("UNI", "Deu merda");
-                }
-            });
-        }
-        else {
             nick.setText(nickSP);
         }
+//        if(emailSP == null || update) {
+//            mDatabase.child("Usuarios").child(codigo).child("email").addListenerForSingleValueEvent(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(DataSnapshot dataSnapshot) {
+//                    email.setText(dataSnapshot.getValue(String.class));
+//                    editor.putString("email_perfil", dataSnapshot.getValue(String.class));
+//                }
+//
+//                @Override
+//                public void onCancelled(DatabaseError databaseError) {
+//                    Log.d("UNI", "Deu merda");
+//                }
+//            });
+//        }
+//        else {
+//            email.setText(emailSP);
+//        }
+//        if(cursoSP == null || update) {
+//            mDatabase.child("Usuarios").child(codigo).child("curso").addListenerForSingleValueEvent(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(DataSnapshot dataSnapshot) {
+//                    curso.setText(dataSnapshot.getValue(String.class));
+//                    editor.putString("curso_perfil", dataSnapshot.getValue(String.class));
+//                }
+//
+//                @Override
+//                public void onCancelled(DatabaseError databaseError) {
+//                    Log.d("UNI", "Deu merda");
+//                }
+//            });
+//        }
+//        else {
+//            curso.setText(cursoSP);
+//        }
+
+//        if(universidadeSP == null || update) {
+//            mDatabase.child("Usuarios").child(codigo).child("universidade").addListenerForSingleValueEvent(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(DataSnapshot dataSnapshot) {
+//                    universidade.setText(dataSnapshot.getValue(String.class));
+//                    editor.putString("universidade_perfil", dataSnapshot.getValue(String.class));
+//                }
+//
+//                @Override
+//                public void onCancelled(DatabaseError databaseError) {
+//                    Log.d("UNI", "Deu merda");
+//                }
+//            });
+//        }
+//        else {
+//            universidade.setText(universidadeSP);
+//        }
+
+//        if(nascimentoSP == null || update) {
+//            mDatabase.child("Usuarios").child(codigo).child("nascimento").addListenerForSingleValueEvent(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(DataSnapshot dataSnapshot) {
+//                    nascimento.setText(dataSnapshot.getValue(String.class));
+//                    editor.putString("nascimento_perfil", dataSnapshot.getValue(String.class));
+//                }
+//
+//                @Override
+//                public void onCancelled(DatabaseError databaseError) {
+//                    Log.d("UNI", "Deu merda");
+//                }
+//            });
+//        }
+//        else {
+//            nascimento.setText(nascimentoSP);
+//        }
+
+//        if(nickSP == null || update) {
+//            mDatabase.child("Usuarios").child(codigo).child("nick").addListenerForSingleValueEvent(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(DataSnapshot dataSnapshot) {
+//                    nick.setText(dataSnapshot.getValue(String.class));
+//                    editor.putString("nick_perfil", dataSnapshot.getValue(String.class));
+//                }
+//
+//                @Override
+//                public void onCancelled(DatabaseError databaseError) {
+//                    Log.d("UNI", "Deu merda");
+//                }
+//            });
+//        }
+//        else {
+//            nick.setText(nickSP);
+//        }
 
         if(petSP == null || update) {
-            mDatabase.child("Usuarios").child(codigo).child("pet").child(nomePET).child("situacao").addListenerForSingleValueEvent(new ValueEventListener() {
+            mDatabase.child("Usuarios").child(codigo).child("pet").child(nodePET).child("situacao").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     try {
@@ -296,43 +337,76 @@ public class Perfil extends BaseFragment implements View.OnClickListener {
         else {
             pet.setText(petSP);
         }
-        builder = new Picasso.Builder(getActivity());
-        builderListener = new Picasso.Listener()
-        {
-            @Override
-            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception)
-            {
-                uriPerfil = null;
-                StorageReference perfilRef = storageRef.child("imagensPerfil/" + codigo + ".jpg");
-
-                final long ONE_MEGABYTE = 1024 * 1024;
-                perfilRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                    @Override
-                    public void onSuccess(byte[] bytes) {
-                        bitmapPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                        uriPerfil = getImageUri(getActivity(), bitmapPerfil);
-                        editor.putString("uri_perfil", uriPerfil.toString());
-                        editor.commit();
-                        imagemPerfil.setImageBitmap(bitmapPerfil);
-
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle any errors
-                    }
-                });
-            }
-        };
-        builder.listener(builderListener);
-        try {
-            uriPerfil = Uri.parse(sharedPref.getString("uri_perfil", null));
-            builder.build().load(uriPerfil).into(imagemPerfil);
-        }
-        catch (NullPointerException e) {
-            Log.d("DEV/PERFIL", "Deu merda aqui");
-        }
+        setImagemPerfil(update);
     }
+
+    private void setImagemPerfil(boolean atualiza) {
+//        if(!atualiza) {
+//            builder = new Picasso.Builder(getActivity());
+//            builderListener = new Picasso.Listener() {
+//                @Override
+//                public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
+//                    uriPerfil = null;
+//                    StorageReference perfilRef = storageRef.child("imagensPerfil/" + codigo + ".jpg");
+//
+//                    final long ONE_MEGABYTE = 1024 * 1024;
+//                    perfilRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+//                        @Override
+//                        public void onSuccess(byte[] bytes) {
+//                            bitmapPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+//                            uriPerfil = getImageUri(getActivity(), bitmapPerfil);
+//                            editor.putString("uri_perfil", uriPerfil.toString());
+//                            editor.commit();
+//                            imagemPerfil.setImageBitmap(bitmapPerfil);
+//                            editButton.setVisibility(View.VISIBLE);
+//                            mainPerfil.setVisibility(View.VISIBLE);
+//                            progressBar.setVisibility(View.GONE);
+//                        }
+//                    }).addOnFailureListener(new OnFailureListener() {
+//                        @Override
+//                        public void onFailure(@NonNull Exception exception) {
+//                            // Handle any errors
+//                        }
+//                    });
+//                }
+//            };
+//            builder.listener(builderListener);
+//            try {
+//                uriPerfil = Uri.parse(sharedPref.getString("uri_perfil", null));
+//                builder.build().load(uriPerfil).into(imagemPerfil);
+//                editButton.setVisibility(View.VISIBLE);
+//                mainPerfil.setVisibility(View.VISIBLE);
+//                progressBar.setVisibility(View.GONE);
+//            } catch (NullPointerException e) {
+//                Log.d("DEV/PERFIL", "Deu merda aqui");
+//            }
+//        }
+//        else {
+        update = false;
+        uriPerfil = null;
+        StorageReference perfilRef = storageRef.child("imagensPerfil/" + codigo + ".jpg");
+
+        final long ONE_MEGABYTE = 1024 * 1024;
+        perfilRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                bitmapPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                uriPerfil = getImageUri(getActivity(), bitmapPerfil);
+                editor.putString("uri_perfil", uriPerfil.toString());
+                editor.commit();
+                imagemPerfil.setImageBitmap(bitmapPerfil);
+                editButton.setVisibility(View.VISIBLE);
+                mainPerfil.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
+    }
+//    }
 
 //    @Override
 //    public void onDetach() {

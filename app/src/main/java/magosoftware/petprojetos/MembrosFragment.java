@@ -57,7 +57,8 @@ public class MembrosFragment extends BaseFragment implements LineAdapterMembros.
     RecyclerView mRecyclerView;
     RecyclerView mRecyclerViewRequisicao;
     public SharedPreferences sharedPref;
-    String nomePET;
+    private String nomePET;
+    private String nodePET;
     Drawable bitmapDrawableUsuario;
     FragmentTransaction ft;
     String situacao = "fora";
@@ -87,6 +88,7 @@ public class MembrosFragment extends BaseFragment implements LineAdapterMembros.
         storageRef = storage.getReference();
         sharedPref = getActivity().getSharedPreferences("todoApp", 0);
         nomePET = sharedPref.getString("nome_meu_pet", "nada");
+        nodePET = sharedPref.getString("node_meu_pet", "nada");
         membrosPath = getArguments().getString("membros_path");
         origem = getArguments().getString("origem");
         dbMembros = mDatabase.child(membrosPath);
@@ -226,7 +228,9 @@ public class MembrosFragment extends BaseFragment implements LineAdapterMembros.
                 cont2 = 0;
                 i2 = 0;
                 if(origem.equals("projetos")) {
-                    coordenador = dataSnapshot.child("coordenador").getValue(String.class);
+                    for(DataSnapshot coordenadorSnap : dataSnapshot.child("coordenador").getChildren()) {
+                        coordenador = coordenadorSnap.getValue(String.class);
+                    }
                     for (DataSnapshot listSnapshots : dataSnapshot.child("time").getChildren()) {
                         cont2++;
                         String nomeUsuario = listSnapshots.getValue(String.class);
@@ -386,7 +390,7 @@ public class MembrosFragment extends BaseFragment implements LineAdapterMembros.
             else if(origem.equals("meupet")) {
                 dbMembros.child(situacao).child(codigo).setValue(nome);
                 dbMembros.child("aguardando").child(situacao).child(codigo).removeValue();
-                mDatabase.child("Usuarios").child(codigo).child("pet").child(nomePET).child("situacao").setValue(situacao);
+                mDatabase.child("Usuarios").child(codigo).child("pet").child(nodePET).child("situacao").setValue(situacao);
                 dbMembros.removeEventListener(velTime);
                 dbMembros.addListenerForSingleValueEvent(velTime);
             }
@@ -401,7 +405,7 @@ public class MembrosFragment extends BaseFragment implements LineAdapterMembros.
             }
             else if(origem.equals("meupet")) {
                 dbMembros.child("aguardando").child(situacao).child(codigo).removeValue();
-                mDatabase.child("Usuarios").child(codigo).child("pet").child(nomePET).child("situacao").setValue("rejeitado");
+                mDatabase.child("Usuarios").child(codigo).child("pet").child(nodePET).child("situacao").setValue("rejeitado");
                 dbMembros.removeEventListener(velTime);
                 dbMembros.addListenerForSingleValueEvent(velTime);
             }

@@ -3,6 +3,7 @@
     package="magosoftware.petprojetos">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -12,7 +13,7 @@
         android:supportsRtl="true"
         android:largeHeap="true"
         android:theme="@style/TemaNoActionBar"
-        android:versionCode="3">
+        android:versionCode="6">
         <activity android:screenOrientation="portrait" android:name=".MainActivity">
         </activity>
         <activity
@@ -39,6 +40,7 @@
         <activity android:screenOrientation="portrait" android:name=".PerfilEdit"></activity>
         <activity android:screenOrientation="portrait" android:name=".HorariosEdit"></activity>
         <activity android:screenOrientation="portrait" android:name=".MarcarReuniaoActivity"></activity>
+        <activity android:screenOrientation="portrait" android:name=".ConfigActivity"></activity>
     </application>
 
 </manifest>

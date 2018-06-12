@@ -1,6 +1,8 @@
 package magosoftware.petprojetos;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
@@ -19,16 +21,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.mikhaellopez.circularimageview.CircularImageView;
@@ -66,6 +73,9 @@ public class ProjetoPageFragment extends BaseFragment implements View.OnClickLis
     private RelativeLayout perfilProjeto;
     private LinearLayout menu;
     private String nomeProjeto;
+    private String nodePET;
+    private ImageView drive;
+    private ImageView config;
 
     public static ProjetoPageFragment newInstance() {
         ProjetoPageFragment projetoPageFragment = new ProjetoPageFragment();
@@ -83,7 +93,8 @@ public class ProjetoPageFragment extends BaseFragment implements View.OnClickLis
         nomeProjeto = getArguments().getString("nome_projeto");
         sharedPref = getActivity().getSharedPreferences("todoApp", 0);
         nomePET = sharedPref.getString("nome_meu_pet", "nada");
-        dbProjeto = mDatabase.child("PETs").child(nomePET).child("projetos").child(nodeProjeto);
+        nodePET = sharedPref.getString("node_meu_pet", "nada");
+        dbProjeto = mDatabase.child("PETs").child(nodePET).child("projetos").child(nodeProjeto);
         Log.d("nomePETWOW", nomePET);
 
         return inflater.inflate(R.layout.projeto_page, container, false);
@@ -104,6 +115,10 @@ public class ProjetoPageFragment extends BaseFragment implements View.OnClickLis
         menuEquipesClick = getView().findViewById(R.id.menu_equipes_click);
         menuReunioesClick = getView().findViewById(R.id.menu_reunioes_click);
         menuMembrosClick = getView().findViewById(R.id.menu_membros_click);
+        drive = getView().findViewById(R.id.drive);
+        drive.setOnClickListener(this);
+        config = getView().findViewById(R.id.config);
+        config.setOnClickListener(this);
         menuEquipesClick.setOnClickListener(this);
         menuReunioesClick.setOnClickListener(this);
         menuMembrosClick.setOnClickListener(this);
@@ -128,6 +143,7 @@ public class ProjetoPageFragment extends BaseFragment implements View.OnClickLis
             FragmentTransaction transaction = manager.beginTransaction();
             Bundle bundle = new Bundle();
             bundle.putString("node_projeto", nodeProjeto);
+            bundle.putString("nome_projeto", nomeProjeto);
             Fragment fragment= EquipesFragment.newInstance();
             fragment.setArguments(bundle);
             transaction.replace(R.id.fragment_container_child, fragment);
@@ -141,7 +157,7 @@ public class ProjetoPageFragment extends BaseFragment implements View.OnClickLis
             FragmentManager manager = getChildFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             Bundle bundle = new Bundle();
-            bundle.putString("reunioes_path", "PETs/"+nomePET+"/projetos/"+nodeProjeto);
+            bundle.putString("reunioes_path", "PETs/"+nodePET+"/projetos/"+nodeProjeto);
             bundle.putString("node_projeto", nodeProjeto);
             Fragment fragment= ReunioesFragment.newInstance();
             fragment.setArguments(bundle);
@@ -156,18 +172,65 @@ public class ProjetoPageFragment extends BaseFragment implements View.OnClickLis
             FragmentManager manager = getChildFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             Bundle bundle = new Bundle();
-            bundle.putString("membros_path", "PETs/"+nomePET+"/projetos/"+nodeProjeto);
+            bundle.putString("membros_path", "PETs/"+nodePET+"/projetos/"+nodeProjeto);
             bundle.putString("origem", "projetos");
             Fragment fragment= MembrosFragment.newInstance();
             fragment.setArguments(bundle);
             transaction.replace(R.id.fragment_container_child, fragment);
             transaction.commit();
         }
+        else if (id == R.id.drive) {
+            mDatabase.child("PETs").child(nodePET).child("projetos").child(nodeProjeto).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.hasChild("drive")) {
+                        String link = dataSnapshot.child("drive").getValue(String.class);
+                        try {
+                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+                            startActivity(browserIntent);
+                        }
+                        catch (ActivityNotFoundException e) {
+                            Toast.makeText(getActivity(), "Link inválido",
+                                    Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getActivity(), ConfigActivity.class);
+                            intent.putExtra("node", "PETs/"+nodePET+"/projetos/"+nodeProjeto);
+                            startActivity(intent);
+                        }
+                    }
+                    else {
+                        Intent intent = new Intent(getActivity(), ConfigActivity.class);
+                        intent.putExtra("node", "PETs/"+nodePET+"/projetos/"+nodeProjeto);
+                        startActivity(intent);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+        else if (id == R.id.config) {
+            Intent intent = new Intent(getActivity(), ConfigActivity.class);
+            intent.putExtra("node", "PETs/"+nodePET+"/projetos/"+nodeProjeto);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d("DEV/MEUPETFRAGMENT", "onPause()");
+//        dbSituacaoPET.removeEventListener(valueEventListener);
+        if (getChildFragmentManager().getBackStackEntryCount() > 0){
+            // Get the fragment fragment manager - and pop the backstack
+            getChildFragmentManager().popBackStack();
+        }
     }
 
     public void setImagemProjeto() {
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 8;
+//        final BitmapFactory.Options options = new BitmapFactory.Options();
+//        options.inSampleSize = 8;
         String nodeProjetoFoto = nodeProjeto;
         try {
             nodeProjetoFoto = nodeProjeto.replace(" ", "_");
@@ -184,7 +247,7 @@ public class ProjetoPageFragment extends BaseFragment implements View.OnClickLis
             public void onSuccess(byte[] bytes) {
                 try {
                     Log.d("ENTROU", "foi");
-                    Bitmap bitmapPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
+                    Bitmap bitmapPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 //                    uriProjeto = getImageUri(getActivity(), bitmapPerfil);
                     imagemProjeto.setImageBitmap(bitmapPerfil);
                     progressBar.setVisibility(View.GONE);
@@ -194,6 +257,7 @@ public class ProjetoPageFragment extends BaseFragment implements View.OnClickLis
                     FragmentTransaction transaction = manager.beginTransaction();
                     Bundle bundle = new Bundle();
                     bundle.putString("node_projeto", nodeProjeto);
+                    bundle.putString("nome_projeto", nomeProjeto);
                     Fragment fragment = EquipesFragment.newInstance();
                     fragment.setArguments(bundle);
                     transaction.replace(R.id.fragment_container_child, fragment);

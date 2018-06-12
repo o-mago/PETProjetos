@@ -26,6 +26,7 @@ public class AdicioneSeuProjeto extends BaseActivity implements View.OnClickList
     private String nomeUsuario;
     private DatabaseReference dbProjetos;
     public SharedPreferences sharedPref;
+    private String nodePET;
 
     @Override
     public void onCreate(Bundle savedInstantState) {
@@ -37,8 +38,9 @@ public class AdicioneSeuProjeto extends BaseActivity implements View.OnClickList
         user = mAuth.getCurrentUser();
         Intent intent = getIntent();
         nomePET = intent.getStringExtra("nome");
+        nodePET = intent.getStringExtra("node");
         nomeUsuario = intent.getStringExtra("nomeUsuario");
-        dbProjetos = mDatabase.child("PETs").child(nomePET).child("projetos");
+        dbProjetos = mDatabase.child("PETs").child(nodePET).child("projetos");
         nomeProjeto = findViewById(R.id.field_nome);
         nomeUsuario = sharedPref.getString("nome_usuario", "Cumpadi");
         findViewById(R.id.adicionar_projeto).setOnClickListener(this);
@@ -56,6 +58,7 @@ public class AdicioneSeuProjeto extends BaseActivity implements View.OnClickList
             situacao.put(user.getUid(), nomeUsuario);
             DatabaseReference dbNovoProjeto = dbProjetos.push();
 //            dbNovoProjeto.setValue(projeto);
+            dbNovoProjeto.child("nome").setValue(nomeProjeto.getText().toString());
             dbNovoProjeto.child("time").setValue(situacao);
             dbNovoProjeto.orderByPriority();
             dbNovoProjeto.child("coordenador").child(user.getUid()).setValue(nomeUsuario);

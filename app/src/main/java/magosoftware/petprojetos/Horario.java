@@ -1,6 +1,8 @@
 package magosoftware.petprojetos;
 
-public class Horario {
+import java.io.Serializable;
+
+public class Horario implements Serializable{
     private String hora;
     public boolean disponivel;
     private String quantidade;

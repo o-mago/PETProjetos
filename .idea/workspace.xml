@@ -8,73 +8,130 @@
     </shared>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="DEV/TAREFASCONC" />
+    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="TAREFASCONCEN" />
     <option name="TOOL_WINDOW_LOG_LEVEL" value="verbose" />
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
+  <component name="BookmarkManager">
+    <bookmark url="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/HorariosEdit.java" line="81" mnemonic="0" />
+    <bookmark url="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/MainActivity.java" line="189" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="4f46c149-d732-4143-aa09-e2d6a587fb49" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/ic_launcher_2-web.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/CalendarioFragment.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/anim/fab_close.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/anim/fab_open.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/anim/rotate_backward.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/anim/rotate_forward.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/calendar_branco.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/create.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/pessoas_branco.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-mdpi/calendar_branco.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-mdpi/create.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-mdpi/pessoas_branco.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/calendar_branco.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/create.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/pessoas_branco.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/calendar_branco.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/create.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/pessoas_branco.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/pet_logo_app.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/layout/calendario_fragment.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/layout/compara_horario_dialog.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-anydpi-v26/ic_launcher_2.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-anydpi-v26/ic_launcher_2_round.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/ic_launcher_2.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/ic_launcher_2_round.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/ic_launcher_2.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/ic_launcher_2_round.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/ic_launcher_2.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/ic_launcher_2_round.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xxhdpi/ic_launcher_2.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xxhdpi/ic_launcher_2_round.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xxxhdpi/ic_launcher_2.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xxxhdpi/ic_launcher_2_round.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/values/ic_launcher_background.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/evento_notificacao-web.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/ChildEventListenerSend.java" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/ConfigActivity.java" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/CustomDrawer.java" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/LineAdapterNotificacao.java" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/LineHolderNotificacao.java" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/Notificacao.java" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/NotificacaoFragment.java" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/OnPageChangeListenerSend.java" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/anim/slide_left.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/anim/slide_right.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/exit.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/menu_icon.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/sino.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-hdpi/sino_new.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-mdpi/exit.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-mdpi/menu_icon.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-mdpi/sino.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-mdpi/sino_new.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/exit.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/menu_icon.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/sino.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/sino_new.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/exit.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/menu_icon.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/sino.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/sino_new.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/exit_rotate.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/layout/config.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/layout/iv_refresh.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/layout/notificacao_layout.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/layout/notification_card.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-anydpi-v26/evento_notificacao.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-anydpi-v26/evento_notificacao_round.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/calendario.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/evento_notificacao.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/evento_notificacao_round.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/sino_new.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/tarefa_card.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/calendario.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/evento_notificacao.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/evento_notificacao_round.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/sino_new.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/tarefa_card.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/calendario.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/evento_notificacao.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/evento_notificacao_round.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/sino_new.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/tarefa_card.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xxhdpi/calendario.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xxhdpi/evento_notificacao.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xxhdpi/evento_notificacao_round.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xxhdpi/sino_new.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xxhdpi/tarefa_card.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xxxhdpi/calendario.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xxxhdpi/evento_notificacao.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xxxhdpi/evento_notificacao_round.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xxxhdpi/sino_new.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xxxhdpi/tarefa_card.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/sino_new-web.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/tarefa_card-web.png" />
       <change beforePath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" afterPath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/app/app.iml" afterPath="$PROJECT_DIR$/app/app.iml" />
       <change beforePath="$PROJECT_DIR$/app/build.gradle" afterPath="$PROJECT_DIR$/app/build.gradle" />
       <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/AdicionaImagem.java" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/AdicionaImagem.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/AdicioneEquipe.java" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/AdicioneEquipe.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/AdicioneSeuPetActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/AdicioneSeuPetActivity.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/AdicioneSeuProjeto.java" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/AdicioneSeuProjeto.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/EmailPasswordActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/EmailPasswordActivity.java" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/EncontreSeuPet.java" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/EncontreSeuPet.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/EventosFragment.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/EquipePageFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/EquipePageFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/EquipesFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/EquipesFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/Horario.java" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/Horario.java" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/HorariosEdit.java" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/HorariosEdit.java" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/HorariosFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/HorariosFragment.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/LineAdapterPet.java" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/LineAdapterPet.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/MainActivity.java" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/MarcarReuniaoActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/MarcarReuniaoActivity.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/MembrosFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/MembrosFragment.java" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/MeuPetFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/MeuPetFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/NewUser.java" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/NewUser.java" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/Perfil.java" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/Perfil.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/PerfilEdit.java" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/PerfilEdit.java" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/PerfilPetFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/PerfilPetFragment.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/Pet.java" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/Pet.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/Presenca.java" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/Presenca.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/ProjetoPageFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/ProjetoPageFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/ProjetosFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/ProjetosFragment.java" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/ReunioesFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/ReunioesFragment.java" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/TarefasConcentradas.java" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/TarefasConcentradas.java" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/TarefasEditActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/TarefasEditActivity.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/compara_horarios.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/compara_horarios.xml" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/TarefasFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/TarefasFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/ValueEventListenerSend.java" afterPath="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/ValueEventListenerSend.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_adicione_seu_pet.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_adicione_seu_pet.xml" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_emailpassword.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_emailpassword.xml" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_newuser.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_newuser.xml" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_perfil.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_perfil.xml" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_perfil_pet.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_perfil_pet.xml" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/equipes.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/equipes.xml" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/horarios_activity.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/horarios_activity.xml" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/layout_child.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/layout_child.xml" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/meu_pet.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/meu_pet.xml" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/perfil_edit.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/perfil_edit.xml" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/projetos.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/projetos.xml" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/reunioes_layout.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/reunioes_layout.xml" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/splash_screen.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/splash_screen.xml" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/tarefa_edit.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/tarefa_edit.xml" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/tarefas_concentradas.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/tarefas_concentradas.xml" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/tarefas_fazer.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/tarefas_fazer.xml" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/tarefas_feitas.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/tarefas_feitas.xml" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/tarefas_page.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/tarefas_page.xml" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/usuarios_card.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/usuarios_card.xml" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/menu/menu_main.xml" afterPath="$PROJECT_DIR$/app/src/main/res/menu/menu_main.xml" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/ic_launcher_background.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/ic_launcher_background.xml" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -115,34 +172,44 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="AndroidManifest.xml" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
-          <provider editor-type-id="android-manifest">
-            <state />
-          </provider>
+      <file leaf-file-name="TarefasConcentradas.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/TarefasConcentradas.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
-              <caret line="12" column="32" lean-forward="false" selection-start-line="12" selection-start-column="32" selection-end-line="12" selection-end-column="32" />
-              <folding />
+            <state relative-caret-position="231">
+              <caret line="529" column="30" lean-forward="false" selection-start-line="529" selection-start-column="30" selection-end-line="529" selection-end-column="30" />
+              <folding>
+                <element signature="e#12197#12209#0" expanded="true" />
+                <element signature="e#12211#12563#0" expanded="true" />
+                <element signature="e#12562#12563#0" expanded="true" />
+                <element signature="e#12604#12616#0" expanded="true" />
+                <element signature="e#12618#12866#0" expanded="true" />
+                <element signature="e#12865#12866#0" expanded="true" />
+                <element signature="e#15361#16102#0" expanded="true" />
+                <element signature="e#16101#16102#0" expanded="true" />
+                <element signature="e#19184#19728#0" expanded="true" />
+                <element signature="e#19727#19728#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/build.gradle">
+      <file leaf-file-name="ChildEventListenerSend.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/ChildEventListenerSend.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="9" column="21" lean-forward="false" selection-start-line="9" selection-start-column="21" selection-end-line="9" selection-end-column="21" />
-              <folding />
+            <state relative-caret-position="360">
+              <caret line="24" column="35" lean-forward="false" selection-start-line="24" selection-start-column="35" selection-end-line="24" selection-end-column="35" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ReunioesFragment.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/ReunioesFragment.java">
+      <file leaf-file-name="ValueEventListenerSend.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/ValueEventListenerSend.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="324">
-              <caret line="78" column="93" lean-forward="false" selection-start-line="78" selection-start-column="93" selection-end-line="78" selection-end-column="93" />
+            <state relative-caret-position="378">
+              <caret line="25" column="5" lean-forward="false" selection-start-line="8" selection-start-column="4" selection-end-line="25" selection-end-column="5" />
               <folding />
             </state>
           </provider>
@@ -151,67 +218,44 @@
       <file leaf-file-name="MeuPetFragment.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/MeuPetFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="159">
-              <caret line="141" column="53" lean-forward="false" selection-start-line="141" selection-start-column="53" selection-end-line="141" selection-end-column="53" />
+            <state relative-caret-position="7038">
+              <caret line="438" column="0" lean-forward="false" selection-start-line="438" selection-start-column="0" selection-end-line="438" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TarefasEditActivity.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/TarefasEditActivity.java">
+      <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="114">
-              <caret line="204" column="51" lean-forward="false" selection-start-line="204" selection-start-column="51" selection-end-line="204" selection-end-column="51" />
+            <state relative-caret-position="12096">
+              <caret line="742" column="51" lean-forward="false" selection-start-line="742" selection-start-column="51" selection-end-line="742" selection-end-column="51" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CustomDrawer.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/CustomDrawer.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="342">
+              <caret line="28" column="36" lean-forward="false" selection-start-line="28" selection-start-column="36" selection-end-line="28" selection-end-column="36" />
               <folding>
-                <element signature="e#6636#7030#0" expanded="true" />
-                <element signature="e#7029#7030#0" expanded="true" />
+                <element signature="imports" expanded="true" />
+                <element signature="e#328#329#0" expanded="true" />
+                <element signature="e#358#359#0" expanded="true" />
+                <element signature="e#422#423#0" expanded="true" />
+                <element signature="e#459#460#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="reunioes_layout.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/reunioes_layout.xml">
-          <provider editor-type-id="android-designer2">
-            <state />
-          </provider>
+      <file leaf-file-name="DrawerAdapter.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/DrawerAdapter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="288">
-              <caret line="38" column="38" lean-forward="false" selection-start-line="38" selection-start-column="38" selection-end-line="38" selection-end-column="38" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="rotate_forward.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/anim/rotate_forward.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="9" column="6" lean-forward="false" selection-start-line="9" selection-start-column="6" selection-end-line="9" selection-end-column="6" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="HorariosFragment.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/HorariosFragment.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="18">
-              <caret line="111" column="52" lean-forward="false" selection-start-line="111" selection-start-column="52" selection-end-line="111" selection-end-column="52" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="compara_horarios.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/compara_horarios.xml">
-          <provider editor-type-id="android-designer2">
-            <state />
-          </provider>
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1170">
-              <caret line="65" column="4" lean-forward="false" selection-start-line="65" selection-start-column="4" selection-end-line="76" selection-end-column="38" />
+            <state relative-caret-position="558">
+              <caret line="42" column="0" lean-forward="false" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -224,44 +268,44 @@
       <list>
         <option value="valueResourceFile" />
         <option value="layoutResourceFile_vertical" />
-        <option value="Class" />
         <option value="layoutResourceFile" />
         <option value="resourceFile" />
+        <option value="Class" />
       </list>
     </option>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>tarefaPath</find>
-      <find>setVal</find>
-      <find>Listener</find>
-      <find>getPET</find>
-      <find>setupEdit</find>
-      <find>nomePet</find>
-      <find>nomePET</find>
-      <find>membrosfragme</find>
-      <find>PerfilPet</find>
-      <find>requisicoes</find>
-      <find>dbUsuario</find>
-      <find>setupFollow</find>
-      <find>follow</find>
-      <find>dbTime</find>
-      <find>Perfil</find>
-      <find>name</find>
-      <find>app_name</find>
-      <find>dateComparator</find>
-      <find>locale</find>
-      <find>horariosCoor</find>
-      <find>horariosEqu</find>
-      <find>progra</find>
-      <find>setView</find>
-      <find>progress</find>
-      <find>time</find>
-      <find>dataSelecionada</find>
-      <find>chipsPetianos</find>
-      <find>valueEvent</find>
-      <find>TarefasConcen</find>
-      <find>valueEventListener</find>
+      <find>animateF</find>
+      <find>tarefas_feitas</find>
+      <find>setupEve</find>
+      <find>aviso.setVisibility(View.VISIBLE);</find>
+      <find>mModels</find>
+      <find>aviso.setvisi</find>
+      <find>MaDAPTER</find>
+      <find>tarefas_fazer</find>
+      <find>setoNclick</find>
+      <find>resume</find>
+      <find>drawer</find>
+      <find>relative</find>
+      <find>navnotificacoes</find>
+      <find>opendra</find>
+      <find>bringto</find>
+      <find>lock</find>
+      <find>mDrawerToggle</find>
+      <find>0x</find>
+      <find>onDrawer</find>
+      <find>onitemCLicked</find>
+      <find>onitemCLick</find>
+      <find>closeNot</find>
+      <find>close</find>
+      <find>open</find>
+      <find>toggle</find>
+      <find>mDrawerTOGGLE</find>
+      <find>singlevalue</find>
+      <find>onitemclick</find>
+      <find>ondatachange</find>
+      <find>inicio2</find>
     </findStrings>
     <replaceStrings>
       <replace>Pet</replace>
@@ -290,6 +334,7 @@
       <replace>dbTarefa</replace>
       <replace>&quot;time&quot;</replace>
       <replace>nodeEquipe</replace>
+      <replace>mNotificacao</replace>
     </replaceStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$</dir>
@@ -3318,65 +3363,99 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/equipe_page.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/tarefas_concentradas.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/projetos.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/splash_screen.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/ProjetosFragment.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/PesquisarPetiano.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/reuniao_card.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/usuarios_card.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/equipe_card.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout-v21/activity_main.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/ReunioesEditActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/MainActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/usuarios_card_com_opcao.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/requisicao_card.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/pet_card.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/projeto_card.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/reuniao_edit.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/drawable/background_cinza.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/equipes.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/AdicioneEquipe.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/EquipePageFragment.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/EquipesFragment.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/horarios_activity.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/HorariosEdit.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/Presenca.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/CalendarioFragment.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/calendario_fragment.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/AdicioneSeuPetActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/meu_pet.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/Perfil.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/Pet.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/EncontreSeuPet.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/LineAdapterPet.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/MembrosFragment.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/MeuPetFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_perfil_pet.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/PerfilPetFragment.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_perfil.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/AdicionaImagem.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/Perfil.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/HorariosFragment.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/MarcarReuniaoActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/compara_horario_dialog.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/compara_horarios.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/anim/rotate_forward.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/anim/rotate_backward.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/anim/fab_animation.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/anim/fab_close.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/ReunioesFragment.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/reunioes_layout.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/TarefasEditActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/TarefasConcentradas.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/ProjetosFragment.java" />
         <option value="$PROJECT_DIR$/app/build.gradle" />
         <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/config.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/ConfigActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/usuarios_card.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/EncontreSeuPet.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/drawable/exit_rotate.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/drawable/sino_notiicacao.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/LIneHolderNotificacao.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/Notificacao.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/LineHolderNotificacao.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/notification_card.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/notificacao_layout.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/ProjetoPageFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/EquipePageFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/tarefa_edit.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/TarefasEditActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/menu/menu_main.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/iv_refresh.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/anim/slide_up.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/anim/slide_left.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/anim/slide_right.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/ValueEventListenerSend.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/LineAdapterNotificacao.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/NotificacaoFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/MarcarReuniaoActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/ReunioesFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/reunioes_layout.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/equipes.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/EquipesFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/tarefas_feitas.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/tarefas_fazer.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/tarefas_page.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/tarefas_concentradas.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/OnPageChangeListenerSend.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/MeuPetFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/CustomDrawer.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/MainActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/ChildEventListenerSend.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/TarefasConcentradas.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="65" />
     <option name="y" value="24" />
-    <option name="width" value="1753" />
-    <option name="height" value="980" />
+    <option name="width" value="1694" />
+    <option name="height" value="970" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+          <State>
+            <id>Android</id>
+          </State>
+          <State>
+            <id>Java</id>
+          </State>
+          <State>
+            <id>Java 8Java language level migration aidsJava</id>
+          </State>
+          <State>
+            <id>Java language level migration aidsJava</id>
+          </State>
+          <State>
+            <id>LintAndroid</id>
+          </State>
+          <State>
+            <id>SecurityLintAndroid</id>
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>Android</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -3394,20 +3473,14 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="ProjectPane" />
       <pane id="Scratches" />
-      <pane id="PackagesPane" />
+      <pane id="ProjectPane" />
       <pane id="AndroidView">
         <subPane>
           <expand>
             <path>
               <item name="PETProjetos" type="1abcf292:AndroidViewProjectNode" />
               <item name="app" type="feadf853:AndroidModuleNode" />
-            </path>
-            <path>
-              <item name="PETProjetos" type="1abcf292:AndroidViewProjectNode" />
-              <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="manifests" type="f94875db:AndroidManifestsGroupNode" />
             </path>
             <path>
               <item name="PETProjetos" type="1abcf292:AndroidViewProjectNode" />
@@ -3422,11 +3495,6 @@
             </path>
             <path>
               <item name="PETProjetos" type="1abcf292:AndroidViewProjectNode" />
-              <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="res" type="d4f16f75:AndroidResFolderNode" />
-            </path>
-            <path>
-              <item name="PETProjetos" type="1abcf292:AndroidViewProjectNode" />
               <item name="Gradle Scripts" type="ae0cef3a:AndroidBuildScriptsGroupNode" />
             </path>
           </expand>
@@ -3434,16 +3502,17 @@
         </subPane>
       </pane>
       <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="android.sdk.path" value="$PROJECT_DIR$/../../Android/Sdk" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
-    <property name="android.project.structure.last.selected" value="Notifications" />
+    <property name="settings.editor.selected.configurable" value="reference.settings.project.statistic.project.settings" />
+    <property name="android.project.structure.last.selected" value="app" />
     <property name="android.project.structure.proportion" value="0.15" />
     <property name="device.picker.selection" value="HAAXB601K6723UZ" />
     <property name="last_directory_selection" value="$PROJECT_DIR$/app/src/main/res/drawable" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../Android/keys/android.jks" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../Desktop/sino_new.png" />
     <property name="VectorAssetImportPath" value="$PROJECT_DIR$/.." />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
@@ -3454,6 +3523,12 @@
     <property name="ExportApk.BuildType" value="release" />
     <property name="ExportApk.SignV1" value="true" />
     <property name="ExportApk.SignV2" value="true" />
+    <property name="lastFolderRoot" value="$PROJECT_DIR$/../../Desktop/sino_new.png" />
+    <property name="algorithm" value="Scalr" />
+    <property name="method" value="Automatic" />
+    <property name="sourceResolution" value="XXHDPI" />
+    <property name="resolutions" value="HDPI&#10;MDPI&#10;XHDPI&#10;XXHDPI" />
+    <property name="format" value="PNG" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -3799,16 +3874,15 @@
     </configuration>
     <configuration default="true" type="JetRunConfigurationType" factoryName="Kotlin">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <option name="MAIN_CLASS_NAME" />
       <option name="VM_PARAMETERS" />
       <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
       <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="WORKING_DIRECTORY" />
       <module name="PETProjetos" />
       <envs />
-      <method />
     </configuration>
     <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType" factoryName="Kotlin script">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
@@ -3840,7 +3914,7 @@
     <option name="remove_strategy" value="false" />
   </component>
   <component name="SvnConfiguration">
-    <configuration />
+    <configuration>$USER_HOME$/.subversion</configuration>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -3913,7 +3987,14 @@
       <option name="project" value="LOCAL" />
       <updated>1525380119627</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Correções na inserção de tarefas&#10;Botão para reuniões com animação&#10;Correções diversas">
+      <created>1525906526787</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1525906526787</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TodoView">
@@ -3934,18 +4015,17 @@
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29424083" sideWeight="0.5185185" order="13" side_tool="true" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18297403" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.42303663" sideWeight="0.5229409" order="13" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3277487" sideWeight="0.49806523" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32881" sideWeight="0.49585405" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.35497382" sideWeight="0.4814815" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32879582" sideWeight="0.48922056" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33507854" sideWeight="0.47705916" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25262576" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21614152" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Statistic" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32984293" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
-      <window_info id="Build" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.34554973" sideWeight="0.48977336" order="15" side_tool="false" content_ui="tabs" />
+      <window_info id="Build" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.35497382" sideWeight="0.4814815" order="15" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32946378" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2498618" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26931107" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -3961,6 +4041,7 @@
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22546972" sideWeight="0.46600333" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="StringPreview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22056384" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="12" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985386" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
@@ -3978,523 +4059,421 @@
     <MESSAGE value="Ubuntu formatado" />
     <MESSAGE value="-Adicionada a aba de reuniões&#10;-Criação de novas reuniões&#10;-Edição de reuniões&#10;-Marcação de reuniões semanais (em progresso)&#10;-Lista de Presença&#10;-Adição de horários livres no perfil" />
     <MESSAGE value="-Alterações na aba tarefas (pager view)&#10;-Novo menu horários petianos&#10;-Adicionada SplashScreen&#10;-Modificadas as entradas do banco de dados para geração de nós aleatórios" />
-    <option name="LAST_COMMIT_MESSAGE" value="-Alterações na aba tarefas (pager view)&#10;-Novo menu horários petianos&#10;-Adicionada SplashScreen&#10;-Modificadas as entradas do banco de dados para geração de nós aleatórios" />
+    <MESSAGE value="Correções na inserção de tarefas&#10;Botão para reuniões com animação&#10;Correções diversas" />
+    <option name="LAST_COMMIT_MESSAGE" value="Correções na inserção de tarefas&#10;Botão para reuniões com animação&#10;Correções diversas" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="51" />
+      <option name="time" value="54" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/EventosFragment.java" />
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/CalendarioFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="9" column="0" lean-forward="false" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/calendario_fragment.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="54">
-          <caret line="3" column="4" lean-forward="false" selection-start-line="3" selection-start-column="4" selection-end-line="3" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../AndroidSDK/sources/android-27/java/sql/Time.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="161">
-          <caret line="37" column="13" lean-forward="false" selection-start-line="37" selection-start-column="13" selection-end-line="37" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/ReunioesEditActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="180" column="36" lean-forward="false" selection-start-line="180" selection-start-column="36" selection-end-line="180" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../AndroidSDK/sources/android-27/java/util/List.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="215">
-          <caret line="144" column="12" lean-forward="false" selection-start-line="144" selection-start-column="12" selection-end-line="144" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/mipmap-anydpi-v26/ic_launcher_2_round.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/ic_launcher_2_round.png">
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/sino_new.png">
       <provider selected="true" editor-type-id="images">
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/ic_launcher_round.png">
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/sino.png">
       <provider selected="true" editor-type-id="images">
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/EquipePageFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1296">
-          <caret line="95" column="25" lean-forward="false" selection-start-line="95" selection-start-column="25" selection-end-line="95" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/play-services-tasks-11.8.0.aar/9c3219b1d0cfac2d5232902a40d490b1/jars/classes.jar!/com/google/android/gms/tasks/OnFailureListener.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="9" column="17" lean-forward="false" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/meu_pet.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="54">
-          <caret line="3" column="28" lean-forward="false" selection-start-line="3" selection-start-column="28" selection-end-line="3" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="186" column="52" lean-forward="false" selection-start-line="186" selection-start-column="52" selection-end-line="186" selection-end-column="52" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/Perfil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4068">
-          <caret line="272" column="33" lean-forward="false" selection-start-line="272" selection-start-column="33" selection-end-line="272" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/mipmap-xxxhdpi/ic_launcher_2_round.png">
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/sino.png">
       <provider selected="true" editor-type-id="images">
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/Pet.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="38" column="29" lean-forward="false" selection-start-line="38" selection-start-column="29" selection-end-line="38" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/LineAdapterPet.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="276">
-          <caret line="112" column="49" lean-forward="false" selection-start-line="112" selection-start-column="49" selection-end-line="112" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/EncontreSeuPet.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="266">
-          <caret line="197" column="43" lean-forward="false" selection-start-line="197" selection-start-column="43" selection-end-line="197" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable/background_contorno_ok.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/PerfilPetFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="296">
-          <caret line="208" column="0" lean-forward="false" selection-start-line="208" selection-start-column="0" selection-end-line="208" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/MembrosFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="177">
-          <caret line="177" column="99" lean-forward="false" selection-start-line="177" selection-start-column="93" selection-end-line="177" selection-end-column="99" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_perfil_pet.xml">
-      <provider editor-type-id="android-designer2">
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/sino_new.png">
+      <provider selected="true" editor-type-id="images">
         <state />
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable-hdpi/sino.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.support/support-fragment/27.0.2/659085cb974e7ec1f25451d23f11578332ea0d7e/support-fragment-27.0.2-sources.jar!/android/support/v4/app/FragmentTransaction.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="918">
-          <caret line="51" column="38" lean-forward="false" selection-start-line="51" selection-start-column="38" selection-end-line="51" selection-end-column="38" />
-          <folding />
+        <state relative-caret-position="-20">
+          <caret line="73" column="40" lean-forward="false" selection-start-line="73" selection-start-column="40" selection-end-line="73" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$ANDROID_SDK_HOME$/sources/android-27/java/lang/Class.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="202">
+          <caret line="504" column="20" lean-forward="false" selection-start-line="504" selection-start-column="20" selection-end-line="504" selection-end-column="20" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="36">
-          <caret line="2" column="35" lean-forward="false" selection-start-line="2" selection-start-column="35" selection-end-line="2" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/dia_semana_picker.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="4" column="27" lean-forward="false" selection-start-line="4" selection-start-column="27" selection-end-line="4" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../AndroidSDK/sources/android-27/java/text/DateFormat.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="448">
-          <caret line="418" column="50" lean-forward="false" selection-start-line="418" selection-start-column="50" selection-end-line="418" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../AndroidSDK/sources/android-27/java/text/ParsePosition.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-236">
-          <caret line="56" column="13" lean-forward="false" selection-start-line="56" selection-start-column="13" selection-end-line="56" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../AndroidSDK/sources/android-27/java/text/SimpleDateFormat.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2342">
-          <caret line="1522" column="16" lean-forward="false" selection-start-line="1522" selection-start-column="16" selection-end-line="1522" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../AndroidSDK/sources/android-27/java/util/Locale.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="196">
-          <caret line="756" column="11" lean-forward="false" selection-start-line="756" selection-start-column="11" selection-end-line="756" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../AndroidSDK/sources/android-27/android/app/AlertDialog.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="177">
-          <caret line="285" column="23" lean-forward="false" selection-start-line="285" selection-start-column="16" selection-end-line="285" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/marcar_reuniao_activity.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18">
-          <caret line="62" column="38" lean-forward="true" selection-start-line="62" selection-start-column="38" selection-end-line="62" selection-end-column="38" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/projeto_page.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/compara_horario_dialog.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="371">
-          <caret line="49" column="40" lean-forward="true" selection-start-line="49" selection-start-column="40" selection-end-line="49" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/MarcarReuniaoActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="81" column="36" lean-forward="true" selection-start-line="81" selection-start-column="36" selection-end-line="81" selection-end-column="36" />
-          <folding>
-            <element signature="e#15008#15228#0" expanded="false" />
-            <element signature="e#15227#15228#0" expanded="false" />
-            <element signature="e#30528#31411#0" expanded="false" />
-            <element signature="e#31410#31411#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="202">
+          <caret line="223" column="18" lean-forward="false" selection-start-line="223" selection-start-column="18" selection-end-line="223" selection-end-column="18" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/anim/rotate_backward.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="9" column="6" lean-forward="false" selection-start-line="9" selection-start-column="6" selection-end-line="9" selection-end-column="6" />
-          <folding />
+        <state relative-caret-position="36">
+          <caret line="2" column="10" lean-forward="false" selection-start-line="2" selection-start-column="4" selection-end-line="2" selection-end-column="28" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/anim/fab_open.xml">
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/iv_refresh.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="17" column="6" lean-forward="false" selection-start-line="17" selection-start-column="6" selection-end-line="17" selection-end-column="6" />
-          <folding />
+        <state relative-caret-position="126">
+          <caret line="7" column="35" lean-forward="false" selection-start-line="7" selection-start-column="35" selection-end-line="7" selection-end-column="35" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/anim/fab_close.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="16" column="6" lean-forward="false" selection-start-line="16" selection-start-column="6" selection-end-line="16" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/compara_horarios.xml">
       <provider editor-type-id="android-designer2">
         <state />
       </provider>
+    </entry>
+    <entry file="file://$ANDROID_SDK_HOME$/sources/android-27/android/view/View.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1170">
-          <caret line="65" column="4" lean-forward="false" selection-start-line="65" selection-start-column="4" selection-end-line="76" selection-end-column="38" />
-          <folding />
+        <state relative-caret-position="-8">
+          <caret line="15188" column="34" lean-forward="false" selection-start-line="15188" selection-start-column="34" selection-end-line="15188" selection-end-column="34" />
+          <folding>
+            <element signature="e#609257#609258#0" expanded="false" />
+            <element signature="e#609293#609294#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/HorariosFragment.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/ProjetoPageFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18">
-          <caret line="111" column="52" lean-forward="false" selection-start-line="111" selection-start-column="52" selection-end-line="111" selection-end-column="52" />
-          <folding />
+        <state relative-caret-position="198">
+          <caret line="157" column="14" lean-forward="true" selection-start-line="157" selection-start-column="14" selection-end-line="157" selection-end-column="14" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/anim/rotate_forward.xml">
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/menu/menu_main.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="9" column="6" lean-forward="false" selection-start-line="9" selection-start-column="6" selection-end-line="9" selection-end-column="6" />
-          <folding />
+        <state relative-caret-position="108">
+          <caret line="6" column="37" lean-forward="false" selection-start-line="6" selection-start-column="37" selection-end-line="6" selection-end-column="37" />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/anim/slide_left.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="54">
+          <caret line="3" column="25" lean-forward="false" selection-start-line="3" selection-start-column="25" selection-end-line="3" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$ANDROID_SDK_HOME$/sources/android-27/android/animation/ObjectAnimator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="194">
+          <caret line="441" column="33" lean-forward="false" selection-start-line="441" selection-start-column="33" selection-end-line="441" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.support/recyclerview-v7/27.0.2/76f4751bc97ce7fa2362dc5a38b39089066a2c99/recyclerview-v7-27.0.2-sources.jar!/android/support/v7/widget/RecyclerView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="183">
+          <caret line="6589" column="29" lean-forward="false" selection-start-line="6589" selection-start-column="20" selection-end-line="6589" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/mipmap-anydpi-v26/evento_notificacao.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/mipmap-anydpi-v26/evento_notificacao_round.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/evento_notificacao_round.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/NotificacaoFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="29" column="11" lean-forward="false" selection-start-line="29" selection-start-column="11" selection-end-line="29" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/MarcarReuniaoActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1799">
+          <caret line="265" column="70" lean-forward="false" selection-start-line="265" selection-start-column="70" selection-end-line="265" selection-end-column="70" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/LineAdapterNotificacao.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="42" column="89" lean-forward="false" selection-start-line="42" selection-start-column="89" selection-end-line="42" selection-end-column="89" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/notificacao_layout.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="342">
+          <caret line="19" column="47" lean-forward="false" selection-start-line="13" selection-start-column="4" selection-end-line="19" selection-end-column="47" />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/anim/slide_right.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="54">
+          <caret line="3" column="113" lean-forward="false" selection-start-line="3" selection-start-column="113" selection-end-line="3" selection-end-column="113" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/EquipesFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="137" column="58" lean-forward="false" selection-start-line="137" selection-start-column="58" selection-end-line="137" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/equipes.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="318">
+          <caret line="37" column="4" lean-forward="false" selection-start-line="37" selection-start-column="4" selection-end-line="43" selection-end-column="42" />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/ReunioesFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1296">
+          <caret line="195" column="54" lean-forward="false" selection-start-line="195" selection-start-column="54" selection-end-line="195" selection-end-column="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.support/support-fragment/27.0.2/659085cb974e7ec1f25451d23f11578332ea0d7e/support-fragment-27.0.2-sources.jar!/android/support/v4/app/Fragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="364">
+          <caret line="2269" column="0" lean-forward="false" selection-start-line="2269" selection-start-column="0" selection-end-line="2269" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/reunioes_layout.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="67" column="41" lean-forward="true" selection-start-line="67" selection-start-column="41" selection-end-line="67" selection-end-column="41" />
+        </state>
+      </provider>
       <provider editor-type-id="android-designer2">
         <state />
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/tarefas_fazer.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="38" column="38" lean-forward="false" selection-start-line="38" selection-start-column="38" selection-end-line="38" selection-end-column="38" />
+        <state relative-caret-position="414">
+          <caret line="23" column="17" lean-forward="false" selection-start-line="23" selection-start-column="17" selection-end-line="23" selection-end-column="17" />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/tarefas_page.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="426">
+          <caret line="37" column="17" lean-forward="false" selection-start-line="37" selection-start-column="17" selection-end-line="37" selection-end-column="17" />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/tarefas_concentradas.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="73" column="44" lean-forward="false" selection-start-line="73" selection-start-column="44" selection-end-line="73" selection-end-column="44" />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/LineAdapterTarefa.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="418">
+          <caret line="59" column="0" lean-forward="false" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.support/support-core-ui/27.0.2/304d1a77fad841db2ed31e95322d4efd5cbf6ffb/support-core-ui-27.0.2-sources.jar!/android/support/v4/view/ViewPager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="194">
+          <caret line="275" column="21" lean-forward="false" selection-start-line="275" selection-start-column="21" selection-end-line="275" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/OnSuccessListenerString.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="14" column="4" lean-forward="false" selection-start-line="14" selection-start-column="4" selection-end-line="16" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/OnPageChangeListenerSend.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="6" column="21" lean-forward="false" selection-start-line="6" selection-start-column="21" selection-end-line="6" selection-end-column="21" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/MaterialChipsInput-1.0.8.aar/f5b37dbd435bf005cd7d82428fda9ca2/jars/classes.jar!/com/pchmn/materialchips/model/ChipInterface.class">
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/tarefas_feitas.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="10" column="17" lean-forward="false" selection-start-line="10" selection-start-column="17" selection-end-line="10" selection-end-column="17" />
+        <state relative-caret-position="0">
+          <caret line="23" column="17" lean-forward="false" selection-start-line="23" selection-start-column="17" selection-end-line="23" selection-end-column="17" />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$ANDROID_SDK_HOME$/sources/android-27/android/view/MotionEvent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="309">
+          <caret line="2451" column="23" lean-forward="false" selection-start-line="2451" selection-start-column="23" selection-end-line="2451" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/DrawerAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="558">
+          <caret line="42" column="0" lean-forward="false" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/MaterialChipsInput-1.0.8.aar/f5b37dbd435bf005cd7d82428fda9ca2/jars/classes.jar!/com/pchmn/materialchips/model/Chip.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="12" column="13" lean-forward="false" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
-          <folding>
-            <marker date="1522332423270" expanded="false" signature="0:104" ph="/.../" />
-            <marker date="1522332423270" expanded="false" signature="153:299" ph="..." />
-            <marker date="1522332423270" expanded="true" signature="592:711" ph="{...}" />
-            <marker date="1522332423270" expanded="true" signature="830:959" ph="{...}" />
-            <marker date="1522332423270" expanded="true" signature="1048:1145" ph="{...}" />
-            <marker date="1522332423270" expanded="true" signature="1244:1351" ph="{...}" />
-            <marker date="1522332423270" expanded="true" signature="1435:1518" ph="{...}" />
-            <marker date="1522332423270" expanded="true" signature="1582:1643" ph="{...}" />
-            <marker date="1522332423270" expanded="false" signature="1670:1681" ph=" { " />
-            <marker date="1522332423270" expanded="false" signature="1696:1702" ph=" }" />
-            <marker date="1522332423270" expanded="false" signature="1733:1744" ph=" { " />
-            <marker date="1522332423270" expanded="false" signature="1766:1772" ph=" }" />
-            <marker date="1522332423270" expanded="false" signature="1813:1824" ph=" { " />
-            <marker date="1522332423270" expanded="false" signature="1851:1857" ph=" }" />
-            <marker date="1522332423270" expanded="false" signature="1887:1898" ph=" { " />
-            <marker date="1522332423270" expanded="false" signature="1916:1922" ph=" }" />
-            <marker date="1522332423270" expanded="false" signature="1951:1962" ph=" { " />
-            <marker date="1522332423270" expanded="false" signature="1979:1985" ph=" }" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/MaterialChipsInput-1.0.8.aar/f5b37dbd435bf005cd7d82428fda9ca2/jars/classes.jar!/com/pchmn/materialchips/ChipsInput.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="142" column="41" lean-forward="false" selection-start-line="142" selection-start-column="41" selection-end-line="142" selection-end-column="41" />
-          <folding>
-            <marker date="1522332423270" expanded="false" signature="0:104" ph="/.../" />
-            <marker date="1522332423270" expanded="false" signature="147:1403" ph="..." />
-            <marker date="1522332423270" expanded="true" signature="2754:2857" ph="{...}" />
-            <marker date="1522332423270" expanded="true" signature="2918:3015" ph="{...}" />
-            <marker date="1522332423270" expanded="true" signature="3059:6085" ph="{...}" />
-            <marker date="1522332423270" expanded="false" signature="6130:6141" ph=" { " />
-            <marker date="1522332423270" expanded="false" signature="6174:6180" ph=" }" />
-            <marker date="1522332423270" expanded="true" signature="6259:6361" ph="{...}" />
-            <marker date="1522332423270" expanded="true" signature="6429:6527" ph="{...}" />
-            <marker date="1522332423270" expanded="true" signature="6604:6709" ph="{...}" />
-            <marker date="1522332423270" expanded="true" signature="6775:6876" ph="{...}" />
-            <marker date="1522332423270" expanded="true" signature="6929:7030" ph="{...}" />
-            <marker date="1522332423270" expanded="false" signature="7078:7089" ph=" { " />
-            <marker date="1522332423270" expanded="false" signature="7125:7131" ph=" }" />
-            <marker date="1522332423270" expanded="false" signature="7174:7185" ph=" { " />
-            <marker date="1522332423270" expanded="false" signature="7223:7229" ph=" }" />
-            <marker date="1522332423270" expanded="false" signature="7278:7289" ph=" { " />
-            <marker date="1522332423270" expanded="false" signature="7333:7339" ph=" }" />
-            <marker date="1522332423270" expanded="false" signature="7386:7397" ph=" { " />
-            <marker date="1522332423270" expanded="false" signature="7439:7445" ph=" }" />
-            <marker date="1522332423270" expanded="true" signature="7481:7908" ph="{...}" />
-            <marker date="1522332423270" expanded="true" signature="7954:8271" ph="{...}" />
-            <marker date="1522332423270" expanded="true" signature="8341:8600" ph="{...}" />
-            <marker date="1522332423270" expanded="true" signature="8675:8779" ph="{...}" />
-            <marker date="1522332423270" expanded="true" signature="8839:9093" ph="{...}" />
-            <marker date="1522332423270" expanded="true" signature="9155:9411" ph="{...}" />
-            <marker date="1522332423270" expanded="true" signature="9462:10055" ph="{...}" />
-            <marker date="1522332423270" expanded="true" signature="10120:10176" ph="{...}" />
-            <marker date="1522332423270" expanded="false" signature="10205:10216" ph=" { " />
-            <marker date="1522332423270" expanded="false" signature="10234:10240" ph=" }" />
-            <marker date="1522332423270" expanded="false" signature="10279:10290" ph=" { " />
-            <marker date="1522332423270" expanded="false" signature="10309:10315" ph=" }" />
-            <marker date="1522332423270" expanded="false" signature="10372:10383" ph=" { " />
-            <marker date="1522332423270" expanded="false" signature="10412:10418" ph=" }" />
-            <marker date="1522332423270" expanded="false" signature="10475:10486" ph=" { " />
-            <marker date="1522332423270" expanded="false" signature="10515:10521" ph=" }" />
-            <marker date="1522332423270" expanded="true" signature="10570:10632" ph="{...}" />
-            <marker date="1522332423270" expanded="true" signature="10696:10747" ph="{...}" />
-            <marker date="1522332423270" expanded="true" signature="10810:10867" ph="{...}" />
-            <marker date="1522332423270" expanded="false" signature="10907:10918" ph=" { " />
-            <marker date="1522332423270" expanded="false" signature="10949:10955" ph=" }" />
-            <marker date="1522332423270" expanded="false" signature="11009:11020" ph=" { " />
-            <marker date="1522332423270" expanded="false" signature="11053:11059" ph=" }" />
-            <marker date="1522332423270" expanded="false" signature="11116:11127" ph=" { " />
-            <marker date="1522332423270" expanded="false" signature="11162:11168" ph=" }" />
-            <marker date="1522332423270" expanded="true" signature="11242:11303" ph="{...}" />
-            <marker date="1522332423270" expanded="true" signature="11377:11438" ph="{...}" />
-            <marker date="1522332423270" expanded="true" signature="11509:11589" ph="{...}" />
-            <marker date="1522332423270" expanded="false" signature="11630:11641" ph=" { " />
-            <marker date="1522332423270" expanded="false" signature="11671:11677" ph=" }" />
-            <marker date="1522332423270" expanded="true" signature="11759:11828" ph="{...}" />
-            <marker date="1522332423270" expanded="true" signature="11922:12003" ph="{...}" />
-            <marker date="1522332423270" expanded="true" signature="12097:12178" ph="{...}" />
-            <marker date="1522332423270" expanded="true" signature="12250:12568" ph="{...}" />
-            <marker date="1522332423270" expanded="false" signature="12630:12641" ph=" { " />
-            <marker date="1522332423270" expanded="false" signature="12663:12669" ph=" }" />
-            <marker date="1522332423270" expanded="false" signature="12725:12736" ph=" { " />
-            <marker date="1522332423270" expanded="false" signature="12763:12769" ph=" }" />
-            <marker date="1522332423270" expanded="true" signature="12845:12898" ph="{...}" />
-            <marker date="1522332423270" expanded="true" signature="12935:13009" ph="{...}" />
-            <marker date="1522332423270" expanded="true" signature="13046:13216" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/TarefasEditActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="114">
-          <caret line="204" column="51" lean-forward="false" selection-start-line="204" selection-start-column="51" selection-end-line="204" selection-end-column="51" />
-          <folding>
-            <element signature="e#6636#7030#0" expanded="true" />
-            <element signature="e#7029#7030#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/MeuPetFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="159">
-          <caret line="141" column="53" lean-forward="false" selection-start-line="141" selection-start-column="53" selection-end-line="141" selection-end-column="53" />
+        <state relative-caret-position="7038">
+          <caret line="438" column="0" lean-forward="false" selection-start-line="438" selection-start-column="0" selection-end-line="438" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="6" column="37" lean-forward="false" selection-start-line="6" selection-start-column="37" selection-end-line="6" selection-end-column="37" />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/CustomDrawer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="342">
+          <caret line="28" column="36" lean-forward="false" selection-start-line="28" selection-start-column="36" selection-end-line="28" selection-end-column="36" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#328#329#0" expanded="true" />
+            <element signature="e#358#359#0" expanded="true" />
+            <element signature="e#422#423#0" expanded="true" />
+            <element signature="e#459#460#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.support/support-core-ui/27.0.2/304d1a77fad841db2ed31e95322d4efd5cbf6ffb/support-core-ui-27.0.2-sources.jar!/android/support/v4/widget/DrawerLayout.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-686">
+          <caret line="1432" column="0" lean-forward="false" selection-start-line="1432" selection-start-column="0" selection-end-line="1432" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.support/appcompat-v7/27.0.2/4ae031a24f432a35efae0d609731c5a34e65696c/appcompat-v7-27.0.2-sources.jar!/android/support/v7/app/ActionBarDrawerToggle.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="196">
+          <caret line="380" column="16" lean-forward="false" selection-start-line="380" selection-start-column="16" selection-end-line="380" selection-end-column="16" />
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/firebase-database-11.8.0.aar/4eb166763eb4fa74fbded10a2078e5ed/jars/classes.jar!/com/google/firebase/database/Query.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="196">
-          <caret line="93" column="30" lean-forward="false" selection-start-line="93" selection-start-column="30" selection-end-line="93" selection-end-column="30" />
+        <state relative-caret-position="202">
+          <caret line="98" column="30" lean-forward="false" selection-start-line="98" selection-start-column="30" selection-end-line="98" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/firebase-database-11.8.0.aar/4eb166763eb4fa74fbded10a2078e5ed/jars/classes.jar!/com/google/firebase/database/ValueEventListener.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="7" column="17" lean-forward="false" selection-start-line="7" selection-start-column="17" selection-end-line="7" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/ValueEventListenerSend.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="378">
+          <caret line="25" column="5" lean-forward="false" selection-start-line="8" selection-start-column="4" selection-end-line="25" selection-end-column="5" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/ChildEventListenerSend.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="24" column="35" lean-forward="false" selection-start-line="24" selection-start-column="35" selection-end-line="24" selection-end-column="35" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/firebase-database-11.8.0.aar/4eb166763eb4fa74fbded10a2078e5ed/jars/classes.jar!/com/google/firebase/database/ChildEventListener.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="10" column="46" lean-forward="false" selection-start-line="10" selection-start-column="46" selection-end-line="10" selection-end-column="46" />
+          <folding>
+            <marker date="1522332423146" expanded="false" signature="0:104" ph="/.../" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/TarefasConcentradas.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="177">
-          <caret line="311" column="56" lean-forward="true" selection-start-line="311" selection-start-column="56" selection-end-line="311" selection-end-column="56" />
+        <state relative-caret-position="231">
+          <caret line="529" column="30" lean-forward="false" selection-start-line="529" selection-start-column="30" selection-end-line="529" selection-end-column="30" />
           <folding>
-            <element signature="e#7943#7955#0" expanded="false" />
-            <element signature="e#7957#8309#0" expanded="false" />
-            <element signature="e#8308#8309#0" expanded="false" />
-            <element signature="e#8350#8362#0" expanded="false" />
-            <element signature="e#8364#8612#0" expanded="false" />
-            <element signature="e#8611#8612#0" expanded="false" />
-            <element signature="e#8971#8983#0" expanded="false" />
-            <element signature="e#8985#10426#0" expanded="false" />
-            <element signature="e#9622#10067#0" expanded="false" />
-            <element signature="e#10066#10067#0" expanded="false" />
-            <element signature="e#10425#10426#0" expanded="false" />
-            <element signature="e#10471#10483#0" expanded="false" />
-            <element signature="e#10485#10753#0" expanded="false" />
-            <element signature="e#10752#10753#0" expanded="false" />
-            <element signature="e#11003#11015#0" expanded="false" />
-            <element signature="e#11017#12458#0" expanded="false" />
-            <element signature="e#11654#12099#0" expanded="false" />
-            <element signature="e#12098#12099#0" expanded="false" />
-            <element signature="e#12457#12458#0" expanded="false" />
-            <element signature="e#12503#12515#0" expanded="false" />
-            <element signature="e#12517#12785#0" expanded="false" />
-            <element signature="e#12784#12785#0" expanded="false" />
+            <element signature="e#12197#12209#0" expanded="true" />
+            <element signature="e#12211#12563#0" expanded="true" />
+            <element signature="e#12562#12563#0" expanded="true" />
+            <element signature="e#12604#12616#0" expanded="true" />
+            <element signature="e#12618#12866#0" expanded="true" />
+            <element signature="e#12865#12866#0" expanded="true" />
+            <element signature="e#15361#16102#0" expanded="true" />
+            <element signature="e#16101#16102#0" expanded="true" />
+            <element signature="e#19184#19728#0" expanded="true" />
+            <element signature="e#19727#19728#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/ReunioesFragment.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/magosoftware/petprojetos/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="324">
-          <caret line="78" column="93" lean-forward="false" selection-start-line="78" selection-start-column="93" selection-end-line="78" selection-end-column="93" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="9" column="21" lean-forward="false" selection-start-line="9" selection-start-column="21" selection-end-line="9" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
-      <provider editor-type-id="android-manifest">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="12" column="32" lean-forward="false" selection-start-line="12" selection-start-column="32" selection-end-line="12" selection-end-column="32" />
+        <state relative-caret-position="12096">
+          <caret line="742" column="51" lean-forward="false" selection-start-line="742" selection-start-column="51" selection-end-line="742" selection-end-column="51" />
           <folding />
         </state>
       </provider>

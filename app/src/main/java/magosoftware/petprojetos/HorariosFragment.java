@@ -95,6 +95,7 @@ public class HorariosFragment extends BaseFragment implements View.OnClickListen
     private String opcaoSelecionada = "tudo";
     private RelativeLayout mainCompara;
     private TextView aviso;
+    private String nodePET;
 
 
     public static HorariosFragment newInstance() {
@@ -108,7 +109,8 @@ public class HorariosFragment extends BaseFragment implements View.OnClickListen
         user = mAuth.getCurrentUser();
         sharedPref = getActivity().getSharedPreferences("todoApp", 0);
         nomePET = sharedPref.getString("nome_meu_pet", null);
-        dbTimePet = mDatabase.child("PETs").child(nomePET).child("time");
+        nodePET = sharedPref.getString("node_meu_pet", null);
+        dbTimePet = mDatabase.child("PETs").child(nodePET).child("time");
         return inflater.inflate(R.layout.compara_horarios, container, false);
     }
 
@@ -138,7 +140,7 @@ public class HorariosFragment extends BaseFragment implements View.OnClickListen
     }
 
     public void verificaPET() {
-        mDatabase.child("Usuarios").child(user.getUid()).child("pet").child(nomePET).child("situacao").addListenerForSingleValueEvent(new ValueEventListenerSend(this) {
+        mDatabase.child("Usuarios").child(user.getUid()).child("pet").child(nodePET).child("situacao").addListenerForSingleValueEvent(new ValueEventListenerSend(this) {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(!dataSnapshot.exists() || dataSnapshot.getValue(String.class).equals("aguardando")) {
@@ -179,7 +181,7 @@ public class HorariosFragment extends BaseFragment implements View.OnClickListen
         if(id == R.id.selecionar_pessoas) {
             linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.lista_presenca, null, false);
             new AlertDialog.Builder(getActivity())
-                    .setTitle("Lista de Presença")
+                    .setTitle("Selecione os petianos")
                     .setView(linearLayout)
                     .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {

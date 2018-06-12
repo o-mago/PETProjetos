@@ -24,6 +24,7 @@ import com.pchmn.materialchips.ChipsInput;
 import com.pchmn.materialchips.model.Chip;
 //import com.pchmn.materialchips.ChipsInput;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,16 +39,30 @@ public class AdicioneSeuPetActivity extends BaseActivity implements View.OnClick
     private Button adicionar_pet;
     private DatabaseReference dbPets;
     FirebaseAuth mAuth;
+    //    private EditText nPetianos;
     private EditText nome;
     private EditText cidade;
-    private EditText nPetianos;
     private EditText email;
     private EditText site;
     private EditText ano_surgimento;
     ChipsInput chipsCursos;
     private Spinner spinner_universidade;
     private Spinner spinner_estado;
-    FirebaseUser user;
+    private Spinner spinner_condicao;
+    private String oldNode = "";
+    private String oldNome;
+    private String oldCidade;
+    private String oldEmail;
+    private String oldSite;
+    private String oldAno_surgimento;
+    private List<String> oldCursos;
+    private String oldUniversidade;
+    private String oldEstado;
+    private String tipo;
+    private int indexUniversidade;
+    private int indexCurso;
+    private String nomeUsuario;
+    private FirebaseUser user;
 
     @Override
     public void onCreate(Bundle savedInstaceState) {
@@ -62,7 +77,7 @@ public class AdicioneSeuPetActivity extends BaseActivity implements View.OnClick
         nome = findViewById(R.id.field_nome);
         email = findViewById(R.id.field_email);
         cidade = findViewById(R.id.field_cidade);
-        nPetianos = findViewById(R.id.numero_petianos);
+//        nPetianos = findViewById(R.id.numero_petianos);
         ano_surgimento = findViewById(R.id.field_ano);
         site = findViewById(R.id.field_site);
 
@@ -70,12 +85,27 @@ public class AdicioneSeuPetActivity extends BaseActivity implements View.OnClick
         user = mAuth.getCurrentUser();
 
         dbPets = mDatabase.child("PETs");
-
         findViewById(R.id.adicionar_pet).setOnClickListener(this);
         final Spinner spinner_universidade = (Spinner) findViewById(R.id.universidade_spinner);
         Spinner spinner_estado = findViewById(R.id.estado_spinner);
         this.spinner_universidade = spinner_universidade;
         this.spinner_estado = spinner_estado;
+        Spinner spinner_condicao = findViewById(R.id.condicao_spinner);
+        this.spinner_condicao = spinner_condicao;
+
+        Intent intent = getIntent();
+        try {
+            oldNode = intent.getStringExtra("node");
+            if(!oldNode.equals("")) {
+                spinner_condicao.setVisibility(View.GONE);
+                adicionar_pet.setText("OK");
+                getInfo();
+            }
+        }
+        catch (Exception e) {
+
+        }
+        oldCursos = new ArrayList<>();
 
         final ChipsInput chipsCursos = (ChipsInput) findViewById(R.id.chips_cursos);
         this.chipsCursos = chipsCursos;
@@ -102,8 +132,31 @@ public class AdicioneSeuPetActivity extends BaseActivity implements View.OnClick
         adapter_estado.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_estado.setAdapter(adapter_estado);
 
+        String[] lista_condicao = getResources().getStringArray(R.array.condicao);
+        ArrayAdapter<String> adapter_condicao = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, lista_condicao) {
+            @Override
+            public View getDropDownView(int position, View convertView,
+                                        ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView tv = (TextView) view;
+                if(position == 0){
+                    // Set the hint text color gray
+                    tv.setTextColor(Color.GRAY);
+                    tv.setTextSize(20);
+                }
+                else {
+                    tv.setTextColor(Color.BLACK);
+                    tv.setTextSize(16);
+                }
+                return view;
+            }
+        };
+        adapter_condicao.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_condicao.setAdapter(adapter_condicao);
+
         spinner_universidade.setSelection(0);
         spinner_estado.setSelection(0);
+        spinner_condicao.setSelection(0);
 
         feedSpinner("Base Universidades", spinner_universidade);
 
@@ -123,37 +176,129 @@ public class AdicioneSeuPetActivity extends BaseActivity implements View.OnClick
 
         });
 
+        mDatabase.child("Usuarios").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                nomeUsuario = dataSnapshot.child("nome").getValue(String.class);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void getInfo() {
+        dbPets.child(oldNode).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                oldNome = dataSnapshot.child("nome").getValue(String.class);
+                nome.setText(oldNome);
+                oldCidade = dataSnapshot.child("cidade").getValue(String.class);
+                cidade.setText(oldCidade);
+                oldEmail = dataSnapshot.child("email").getValue(String.class);
+                email.setText(oldEmail);
+                oldSite = dataSnapshot.child("site").getValue(String.class);
+                site.setText(oldSite);
+                oldAno_surgimento = dataSnapshot.child("ano").getValue(String.class);
+                ano_surgimento.setText(oldAno_surgimento);
+                for(DataSnapshot listSnapshot : dataSnapshot.child("cursos").getChildren()) {
+                    oldCursos.add(listSnapshot.getValue(String.class));
+                    chipsCursos.addChip(oldCidade, "");
+                }
+                oldEstado = dataSnapshot.child("estado").getValue(String.class);
+                String[] lista = getResources().getStringArray(R.array.estados);
+                int j=0;
+                for(String item : lista) {
+                    if(item.equals(oldEstado)) {
+                        spinner_estado.setSelection(j);
+                        break;
+                    }
+                    j++;
+                }
+                oldUniversidade = dataSnapshot.child("universidade").getValue(String.class);
+                mDatabase.child("Base Universidades").addListenerForSingleValueEvent(new ValueEventListenerSend(oldUniversidade) {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        int i=0;
+                        for(DataSnapshot listSnapshot : dataSnapshot.getChildren()) {
+                            if(listSnapshot.getValue(String.class).equals(variavel)) {
+                                indexUniversidade = i;
+                                spinner_universidade.setSelection(indexUniversidade);
+                                break;
+                            }
+                            i++;
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
     public void onClick(View view) {
         int i = view.getId();
         if(i == R.id.adicionar_pet) {
-            DatabaseReference dbNovoPet = dbPets.push();
+            DatabaseReference dbNovoPet;
+            if(oldNode.equals("")) {
+                dbNovoPet = dbPets.push();
+            }
+            else {
+                dbNovoPet = dbPets.child(oldNode);
+            }
             String nomePet = nome.getText().toString();
-            Map<String, String> pets = new HashMap<>();
-            pets.put("nome", nome.getText().toString());
-            pets.put("nPetianos", nPetianos.getText().toString());
-            pets.put("email", email.getText().toString());
-            pets.put("universidade", spinner_universidade.getSelectedItem().toString());
-            pets.put("ano", ano_surgimento.getText().toString());
-            pets.put("site", site.getText().toString());
-            pets.put("cidade", arrumaTexto(cidade.getText().toString()));
-            pets.put("estado", spinner_estado.getSelectedItem().toString());
-            dbNovoPet.setValue(pets);
+//            Map<String, String> pets = new HashMap<>();
+//            pets.put("nome", nome.getText().toString());
+////            pets.put("nPetianos", nPetianos.getText().toString());
+//            pets.put("email", email.getText().toString());
+//            pets.put("universidade", spinner_universidade.getSelectedItem().toString());
+//            pets.put("ano", ano_surgimento.getText().toString());
+//            pets.put("site", site.getText().toString());
+//            pets.put("cidade", arrumaTexto(cidade.getText().toString()));
+//            pets.put("estado", spinner_estado.getSelectedItem().toString());
+//            pets.put("criador", user.getUid());
+//            dbNovoPet.setValue(pets);
+            dbNovoPet.child("nome").setValue(nome.getText().toString());
+            dbNovoPet.child("email").setValue(email.getText().toString());
+            dbNovoPet.child("universidade").setValue(spinner_universidade.getSelectedItem().toString());
+            dbNovoPet.child("ano").setValue(ano_surgimento.getText().toString());
+            dbNovoPet.child("site").setValue(site.getText().toString());
+            dbNovoPet.child("cidade").setValue(arrumaTexto(cidade.getText().toString()));
+            dbNovoPet.child("estado").setValue(spinner_estado.getSelectedItem().toString());
+            dbNovoPet.child("criador").setValue(user.getUid());
+
+            if(oldNode.equals("")) {
+                String condicao = "";
+                if (spinner_condicao.getSelectedItemPosition() == 1) {
+                    condicao = "bolsistas";
+                } else if (spinner_condicao.getSelectedItemPosition() == 2) {
+                    condicao = "oficiais";
+                } else if (spinner_condicao.getSelectedItemPosition() == 3) {
+                    condicao = "voluntarios";
+                }
+                dbNovoPet.child("time").child(condicao).child(user.getUid()).setValue(nomeUsuario);
+                mDatabase.child("Usuarios").child(user.getUid())
+                        .child("pet").child(dbNovoPet.getKey())
+                        .child("situacao")
+                        .setValue(condicao);
+            }
+            mDatabase.child("Usuarios").child(user.getUid())
+                    .child("pet").child(dbNovoPet.getKey())
+                    .child("nome")
+                    .setValue(nomePet);
             dbNovoPet.orderByPriority();
-
-            mDatabase.child("Usuarios").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
 
             List<Chip> contactsSelected = (List<Chip>) chipsCursos.getSelectedChipList();
             for(Chip c : contactsSelected) {
@@ -167,11 +312,13 @@ public class AdicioneSeuPetActivity extends BaseActivity implements View.OnClick
 //            catch (NullPointerException e) {
 //
 //            }
-            String caminho = "imagensPET/"+dbNovoPet.getKey()+".jpg";
-            Intent intent = new Intent(this, AdicionaImagem.class);
-            intent.putExtra("caminho", caminho);
-            intent.putExtra("tipo", "novo pet");
-            startActivity(intent);
+            if(oldNode.equals("")) {
+                String caminho = "imagensPET/" + dbNovoPet.getKey() + ".jpg";
+                Intent intent = new Intent(this, AdicionaImagem.class);
+                intent.putExtra("caminho", caminho);
+                intent.putExtra("tipo", "novo pet");
+                startActivity(intent);
+            }
             finish();
         }
 //        if(i == R.id.chips_cursos) {
