@@ -20,6 +20,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -79,11 +80,12 @@ public class MeuPetFragment extends BaseFragment implements View.OnClickListener
     DatabaseReference dbSituacaoPET;
     ValueEventListener valueEventListener;
     private RelativeLayout perfilPet;
-    private LinearLayout menu;
+    private CardView menu;
     private String nodePET;
     private ProgressBar progressBar;
     private ImageView drive;
     private ImageView config;
+    private ImageView newMembro;
 
     public static MeuPetFragment newInstance() {
         MeuPetFragment meuPetFragment = new MeuPetFragment();
@@ -98,6 +100,7 @@ public class MeuPetFragment extends BaseFragment implements View.OnClickListener
         storageRef = storage.getReference();
         sharedPref = getActivity().getSharedPreferences("todoApp", 0);
         editor = sharedPref.edit();
+        dbSituacaoPET = mDatabase.child("Usuarios").child(user.getUid()).child("pet");
 //        File cacheDir = getDiskCacheDir(this, DISK_CACHE_SUBDIR);
         return inflater.inflate(R.layout.meu_pet, container, false);
     }
@@ -117,6 +120,8 @@ public class MeuPetFragment extends BaseFragment implements View.OnClickListener
         menuProjetosClick = getView().findViewById(R.id.menu_projetos_click);
         menuTarefasClick = getView().findViewById(R.id.menu_tarefas_click);
         menuMembrosClick = getView().findViewById(R.id.menu_membros_click);
+        newMembro = getView().findViewById(R.id.new_membro);
+        newMembro.setVisibility(View.GONE);
         drive = getView().findViewById(R.id.drive);
         drive.setOnClickListener(this);
         config = getView().findViewById(R.id.config);
@@ -127,9 +132,9 @@ public class MeuPetFragment extends BaseFragment implements View.OnClickListener
         menuProjetos = getView().findViewById(R.id.menu_projetos);
         menuTarefas = getView().findViewById(R.id.menu_tarefas);
         corPadrao = menuTarefas.getTextColors();
+//        corPadrao = Color.parseColor("#FFFFFF");
         menuMembros = getView().findViewById(R.id.menu_membros);
         progressBar = getView().findViewById(R.id.progress_bar);
-        dbSituacaoPET = mDatabase.child("Usuarios").child(user.getUid()).child("pet");
         getPET();
 //        if(nomePET.equals("nada")) {
 //            semPet();
@@ -143,9 +148,9 @@ public class MeuPetFragment extends BaseFragment implements View.OnClickListener
     public void onClick(View view) {
         int id = view.getId();
         if(id == R.id.menu_projetos_click) {
-            menuProjetos.setTextColor(Color.parseColor("#03A9F4"));
-            menuTarefas.setTextColor(corPadrao);
-            menuMembros.setTextColor(corPadrao);
+            menuProjetos.setTextColor(getResources().getColor(R.color.colorSecondary));
+            menuTarefas.setTextColor(Color.parseColor("#FFFFFF"));
+            menuMembros.setTextColor(Color.parseColor("#FFFFFF"));
             FragmentManager manager = getChildFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.replace(R.id.fragment_container_child, ProjetosFragment.newInstance());
@@ -163,9 +168,9 @@ public class MeuPetFragment extends BaseFragment implements View.OnClickListener
             transaction.commit();
         }
         else if (id == R.id.menu_tarefas_click) {
-            menuProjetos.setTextColor(corPadrao);
-            menuTarefas.setTextColor(Color.parseColor("#03A9F4"));
-            menuMembros.setTextColor(corPadrao);
+            menuProjetos.setTextColor(Color.parseColor("#FFFFFF"));
+            menuTarefas.setTextColor(getResources().getColor(R.color.colorSecondary));
+            menuMembros.setTextColor(Color.parseColor("#FFFFFF"));
             FragmentManager manager = getChildFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             Bundle bundle = new Bundle();
@@ -178,9 +183,9 @@ public class MeuPetFragment extends BaseFragment implements View.OnClickListener
             transaction.commit();
         }
         else if (id == R.id.menu_membros_click) {
-            menuProjetos.setTextColor(corPadrao);
-            menuTarefas.setTextColor(corPadrao);
-            menuMembros.setTextColor(Color.parseColor("#03A9F4"));
+            menuProjetos.setTextColor(Color.parseColor("#FFFFFF"));
+            menuTarefas.setTextColor(Color.parseColor("#FFFFFF"));
+            menuMembros.setTextColor(getResources().getColor(R.color.colorSecondary));
             FragmentManager manager = getChildFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             Bundle bundle = new Bundle();
@@ -265,6 +270,7 @@ public class MeuPetFragment extends BaseFragment implements View.OnClickListener
                         try {
                             Log.d("DEV/MEUPET", "try");
                             nodePET = listSnapshot.getKey();
+                            verificaMembros();
                             condicaoPET = listSnapshot.child("situacao").getValue(String.class);
                             mDatabase.child("PETs").child(nodePET).addListenerForSingleValueEvent(new ValueEventListenerSend(condicaoPET) {
                                 @Override
@@ -369,14 +375,14 @@ public class MeuPetFragment extends BaseFragment implements View.OnClickListener
         String nomeFragment = sharedPref.getString("fragment", "ProjetosFragment");
         Log.d("DEV/MEUPETFRAGMENT", "nomeFragment= "+nomeFragment);
         if(nomeFragment.equals("ProjetosFragment")) {
-            menuProjetos.setTextColor(Color.parseColor("#03A9F4"));
+            menuProjetos.setTextColor(getResources().getColor(R.color.colorSecondary));
             menuTarefas.setTextColor(corPadrao);
             menuMembros.setTextColor(corPadrao);
             fragment = ProjetosFragment.newInstance();
         }
         else if(nomeFragment.equals("TarefasConcentradas")) {
             menuProjetos.setTextColor(corPadrao);
-            menuTarefas.setTextColor(Color.parseColor("#03A9F4"));
+            menuTarefas.setTextColor(getResources().getColor(R.color.colorSecondary));
             menuMembros.setTextColor(corPadrao);
             Bundle bundle = new Bundle();
             bundle.putString("tarefa_path", "PETs/"+nodePET);
@@ -388,7 +394,7 @@ public class MeuPetFragment extends BaseFragment implements View.OnClickListener
         else if(nomeFragment.equals("MembrosFragment")) {
             menuProjetos.setTextColor(corPadrao);
             menuTarefas.setTextColor(corPadrao);
-            menuMembros.setTextColor(Color.parseColor("#03A9F4"));
+            menuMembros.setTextColor(getResources().getColor(R.color.colorSecondary));
             Bundle bundle = new Bundle();
             bundle.putString("membros_path", "PETs/"+nodePET+"/time");
             bundle.putString("origem", "meupet");
@@ -396,13 +402,31 @@ public class MeuPetFragment extends BaseFragment implements View.OnClickListener
             fragment.setArguments(bundle);
         }
         else {
-            menuProjetos.setTextColor(Color.parseColor("#03A9F4"));
+            menuProjetos.setTextColor(getResources().getColor(R.color.colorSecondary));
             menuTarefas.setTextColor(corPadrao);
             menuMembros.setTextColor(corPadrao);
             fragment = ProjetosFragment.newInstance();
         }
         transaction.replace(R.id.fragment_container_child, fragment);
         transaction.commit();
+    }
+
+    public void verificaMembros() {
+        mDatabase.child("PETs").child(nodePET).child("time").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.child("aguardando").exists()) {
+                    newMembro.setVisibility(View.VISIBLE);
+                } else {
+                    newMembro.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public Uri getImageUri(Context inContext, Bitmap inImage) {
@@ -447,7 +471,7 @@ public class MeuPetFragment extends BaseFragment implements View.OnClickListener
         super.onResume();
         Log.d("DEV/MEUPETFRAGMENT", "onResume()");
 //        getActivity().getSupportFragmentManager().popBackStack();
-        dbSituacaoPET.addListenerForSingleValueEvent(valueEventListener);
+        //dbSituacaoPET.addListenerForSingleValueEvent(valueEventListener);
 //        FragmentManager manager = getChildFragmentManager();
 //        FragmentTransaction transaction = manager.beginTransaction();
 //        Fragment fragment;

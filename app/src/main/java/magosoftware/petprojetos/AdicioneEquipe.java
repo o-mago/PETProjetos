@@ -16,8 +16,10 @@ import com.android.colorpicker.ColorPickerPalette;
 import com.android.colorpicker.ColorPickerSwatch;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 /**
  * Created by root on 14/03/18.
@@ -35,6 +37,7 @@ public class AdicioneEquipe extends BaseActivity implements View.OnClickListener
     int corEscolhida;
     FrameLayout frameCor;
     private String nodePET;
+    private String nomeUsuario;
 
     @Override
     public void onCreate(Bundle savedInstantState) {
@@ -80,6 +83,17 @@ public class AdicioneEquipe extends BaseActivity implements View.OnClickListener
             }
         });
         colorPickerPalette.drawPalette(colors, Color.parseColor("#F6402C"));
+        mDatabase.child("Usuarios").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                nomeUsuario = dataSnapshot.child("nome").getValue(String.class);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -101,6 +115,9 @@ public class AdicioneEquipe extends BaseActivity implements View.OnClickListener
             DatabaseReference dbNovaEquipe = dbEquipes.push();
             dbNovaEquipe.child("nome").setValue(nome);
             dbNovaEquipe.child("cor").setValue(corEscolhida);
+            dbNovaEquipe.child("coordenador").child(user.getUid()).setValue(nomeUsuario);
+            dbNovaEquipe.child("time").child(user.getUid()).setValue(nomeUsuario);
+            dbNovaEquipe.child("time").child(user.getUid()).setValue(nomeUsuario);
             finish();
         }
     }

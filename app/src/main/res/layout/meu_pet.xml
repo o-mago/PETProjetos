@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools"
     android:id="@+id/meu_pet"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -8,8 +9,7 @@
     <RelativeLayout
         android:id="@+id/perfil_pet"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:background="#ECEFF1">
+        android:layout_height="70dp">
         <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/logo_pet"
             android:layout_marginLeft="15dp"
@@ -17,6 +17,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_centerVertical="true"
+            app:civ_border_color="#0069c0"
             android:src="@drawable/logo_pet"/>
         <TextView
             android:id="@+id/nome_pet"
@@ -52,14 +53,23 @@
             android:layout_marginEnd="10dp"
             android:src="@drawable/drive_button"/>
     </RelativeLayout>
-    <LinearLayout
+
+    <android.support.v7.widget.CardView
         android:id="@+id/menu"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
         android:layout_marginTop="70dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        card_view:cardCornerRadius="20dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:orientation="horizontal"
         android:weightSum="3"
-        android:background="#CFD8DC">
+        android:background="@color/colorPrimaryDark">
 
         <FrameLayout
             android:id="@+id/menu_projetos_click"
@@ -71,7 +81,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textColor="#03A9F4"
+                android:textColor="@color/colorSecondary"
                 android:text="PROJETOS"/>
         </FrameLayout>
         <FrameLayout
@@ -86,6 +96,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:textColor="#FFFFFF"
                 android:text="TAREFAS"/>
         </FrameLayout>
         <FrameLayout
@@ -95,14 +106,30 @@
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
             android:layout_weight="1">
-            <TextView
-                android:id="@+id/menu_membros"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="MEMBROS"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
+                <TextView
+                    android:id="@+id/menu_membros"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:textColor="#FFFFFF"
+                    android:text="MEMBROS"/>
+                <ImageView
+                    android:id="@+id/new_membro"
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/circle"
+                    android:layout_toRightOf="@id/menu_membros"
+                    android:layout_toEndOf="@id/menu_membros"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="5dp"/>
+            </RelativeLayout>
         </FrameLayout>
     </LinearLayout>
+    </android.support.v7.widget.CardView>
     <FrameLayout
         android:id="@+id/fragment_container_child"
         android:layout_width="match_parent"

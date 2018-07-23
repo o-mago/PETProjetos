@@ -59,7 +59,7 @@
         app:elevation="6dp"
         app:pressedTranslationZ="12dp"
         android:src="@drawable/adicionar"
-        app:backgroundTint="#1565C0"/>
+        app:backgroundTint="@color/colorFab"/>
 
     <TextView
         android:id="@+id/aviso"

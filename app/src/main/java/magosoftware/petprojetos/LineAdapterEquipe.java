@@ -29,7 +29,7 @@ public class LineAdapterEquipe extends RecyclerView.Adapter<LineHolderEquipe> {
 
     //make interface like this
     public interface OnItemClicked {
-        void onItemClick(int position, String nome, String node);
+        void onItemClick(int position, String nome, String node, String situacao);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class LineAdapterEquipe extends RecyclerView.Adapter<LineHolderEquipe> {
         holder.cardEquipe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onClick.onItemClick(position, mEquipe.get(position).getNome(), mEquipe.get(position).getNode());
+                onClick.onItemClick(position, mEquipe.get(position).getNome(), mEquipe.get(position).getNode(), mEquipe.get(position).getSituacao());
             }
         });
     }

@@ -165,7 +165,7 @@ public class HorariosFragment extends BaseFragment implements View.OnClickListen
     public void onClick(View view) {
         int id = view.getId();
         if(id == R.id.menu_todos_click) {
-            tvTodos.setTextColor(Color.parseColor("#03A9F4"));
+            tvTodos.setTextColor(getResources().getColor(R.color.colorSecondary));
             tvMelhores.setTextColor(corPadrao);
             opcaoSelecionada = "tudo";
             setHorarios(opcaoSelecionada);
@@ -173,7 +173,7 @@ public class HorariosFragment extends BaseFragment implements View.OnClickListen
         }
         if(id == R.id.menu_melhores_click) {
             tvTodos.setTextColor(corPadrao);
-            tvMelhores.setTextColor(Color.parseColor("#03A9F4"));
+            tvMelhores.setTextColor(getResources().getColor(R.color.colorSecondary));
             opcaoSelecionada = "melhores";
             setHorarios(opcaoSelecionada);
 //            setExpandable(opcaoSelecionada);

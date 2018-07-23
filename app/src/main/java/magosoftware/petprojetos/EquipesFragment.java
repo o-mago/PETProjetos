@@ -65,6 +65,8 @@ public class EquipesFragment extends BaseFragment implements LineAdapterEquipe.O
     private CoordinatorLayout coordinator;
     private FloatingActionButton addEquipe;
     private String nomeProjeto;
+    private String nomeCoordenador;
+    private String situacao = "fora";
 
     public static EquipesFragment newInstance() {
         EquipesFragment equipesFragment = new EquipesFragment();
@@ -83,6 +85,7 @@ public class EquipesFragment extends BaseFragment implements LineAdapterEquipe.O
         Log.d("DEV/EQUIPESFRAG", "nomePET: "+nomePET);
         nodeProjeto = getArguments().getString("node_projeto");
         nomeProjeto = getArguments().getString("nome_projeto");
+        nomeCoordenador = getArguments().getString("nome_coordenador");
         Log.d("DEV/EQUIPESFRAG", "nodeProjeto: "+nodeProjeto);
         dbEquipes = mDatabase.child("PETs").child(nodePET).child("projetos").child(nodeProjeto).child("equipes");
         Log.d("nomePETWOW", nomePET);
@@ -117,9 +120,36 @@ public class EquipesFragment extends BaseFragment implements LineAdapterEquipe.O
                     for (DataSnapshot listSnapshot : dataSnapshot.getChildren()) {
                         String nodeEquipe = listSnapshot.getKey();
                         try {
+                            DataSnapshot dbRef = listSnapshot.child("time");
+                            for (DataSnapshot timeSnapshot : dbRef.getChildren()) {
+                                if (timeSnapshot.getKey().equals(user.getUid())) {
+                                    situacao = "membro";
+                                    break;
+                                } else {
+                                    situacao = "fora";
+                                }
+                            }
+                        } catch (NullPointerException e) {
+
+                        }
+                        try {
+                            DataSnapshot dbRef = listSnapshot.child("aguardando");
+                            for (DataSnapshot aguardandoSnapshot : dbRef.getChildren()) {
+                                if (aguardandoSnapshot.getKey().equals(user.getUid())) {
+                                    situacao = "aguardando";
+                                    break;
+                                } else if (!situacao.equals("membro")) {
+                                    situacao = "fora";
+                                }
+                            }
+                        } catch (NullPointerException e) {
+
+                        }
+                        Log.d("PROJETOSWOW", situacao);
+                        try {
                             String nome = listSnapshot.child("nome").getValue(String.class);
                             int cor = listSnapshot.child("cor").getValue(Integer.class);
-                            mModels.add(new Equipe(nome, cor, nodeEquipe));
+                            mModels.add(new Equipe(nome, cor, nodeEquipe, situacao));
                         } catch (NullPointerException e) {
                             dbEquipes.removeEventListener(valueEventListener);
                             setupLista();
@@ -161,28 +191,40 @@ public class EquipesFragment extends BaseFragment implements LineAdapterEquipe.O
             intent.putExtra("nome_pet", nomePET);
             intent.putExtra("node_pet", nodePET);
             intent.putExtra("node_projeto", nodeProjeto);
+            intent.putExtra("nome_coordenador", nomeCoordenador);
             startActivity(intent);
         }
     }
 
     @Override
-    public void onItemClick(int position, String nome, String node) {
-        Bundle bundle = new Bundle();
-        bundle.putString("node_equipe", node);
-        bundle.putString("node_projeto", nodeProjeto);
-        bundle.putString("nome_projeto", nomeProjeto);
-        bundle.putString("nome_equipe", nome);
-        bundle.putString("node_pet", nodePET);
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.remove(this);
-        fragmentTransaction.commit();
-        ft = getActivity().getSupportFragmentManager().beginTransaction();
-        Fragment fragment = EquipePageFragment.newInstance();
-        fragment.setArguments(bundle);
-        ft.replace(R.id.fragment_container, fragment);
-        ft.addToBackStack(null);
-        Log.d("EQUIPESFRAGMENT", "chamou fragment page");
-        ft.commit();
+    public void onItemClick(int position, String nome, String node, String situacao) {
+        if(situacao.equals("membro")) {
+            Bundle bundle = new Bundle();
+            bundle.putString("node_equipe", node);
+            bundle.putString("node_projeto", nodeProjeto);
+            bundle.putString("nome_projeto", nomeProjeto);
+            bundle.putString("nome_equipe", nome);
+            bundle.putString("node_pet", nodePET);
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.remove(this);
+            fragmentTransaction.commit();
+            ft = getActivity().getSupportFragmentManager().beginTransaction();
+            Fragment fragment = EquipePageFragment.newInstance();
+            fragment.setArguments(bundle);
+            ft.replace(R.id.fragment_container, fragment);
+//            ft.addToBackStack(null);
+            Log.d("EQUIPESFRAGMENT", "chamou fragment page");
+            ft.commit();
+        }
+        if(situacao.equals("fora")) {
+            dbEquipes.child(node).child("aguardando").child(user.getUid()).setValue(sharedPref.getString("nome_usuario", "Cumpadi"));
+            Snackbar.make(getView().findViewById(R.id.coordinator), "Solicitação enviada",
+                    Snackbar.LENGTH_SHORT).show();
+        }
+        if(situacao.equals("aguardando")) {
+            Snackbar.make(getView().findViewById(R.id.coordinator), "Aguardando aprovação",
+                    Snackbar.LENGTH_SHORT).show();
+        }
     }
 
     private void setupRecycler() {

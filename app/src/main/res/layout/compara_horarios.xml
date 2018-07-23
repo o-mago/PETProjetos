@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/main_compara">
@@ -11,42 +12,54 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
+        <android.support.v7.widget.CardView
             android:id="@+id/menu"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:orientation="horizontal"
-            android:weightSum="2"
-            android:background="#CFD8DC">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            card_view:cardCornerRadius="20dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp">
 
-            <FrameLayout
-                android:id="@+id/menu_todos_click"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/menu_todos"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:background="@color/colorPrimaryDark">
+
+                <FrameLayout
+                    android:id="@+id/menu_todos_click"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:textColor="#03A9F4"
-                    android:text="TODOS"/>
-            </FrameLayout>
-            <FrameLayout
-                android:id="@+id/menu_melhores_click"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/menu_melhores"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+                    <TextView
+                        android:id="@+id/menu_todos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textColor="@color/colorSecondary"
+                        android:text="TODOS"/>
+                </FrameLayout>
+                <FrameLayout
+                    android:id="@+id/menu_melhores_click"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="MELHORES"/>
-            </FrameLayout>
-        </LinearLayout>
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1">
+                    <TextView
+                        android:id="@+id/menu_melhores"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textColor="#FFFFFF"
+                        android:text="MELHORES"/>
+                </FrameLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -74,6 +87,6 @@
         android:layout_marginRight="15dp"
         android:layout_marginEnd="15dp"
         android:src="@drawable/pessoas_branco"
-        app:backgroundTint="#1565C0"/>
+        app:backgroundTint="@color/colorFab"/>
 
 </RelativeLayout>

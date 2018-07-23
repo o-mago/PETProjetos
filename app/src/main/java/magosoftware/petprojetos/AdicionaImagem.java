@@ -161,7 +161,7 @@ public class AdicionaImagem extends BaseActivity implements SeekBar.OnSeekBarCha
                         (int)raio,
                         (int)raio);
                 Bitmap resizedBmp = Bitmap.createScaledBitmap(croppedBmp, tamanhoBD, tamanhoBD, false);
-                mDatabase.child("Usuarios").child(user.getUid()).child("update").setValue(true);
+//                mDatabase.child("Usuarios").child(user.getUid()).child("update").setValue(true);
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 resizedBmp.compress(Bitmap.CompressFormat.JPEG, 80, baos);
                 byte[] data = baos.toByteArray();

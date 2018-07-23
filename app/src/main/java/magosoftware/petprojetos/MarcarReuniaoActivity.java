@@ -67,7 +67,7 @@ public class MarcarReuniaoActivity  extends BaseActivity implements View.OnClick
     private TextView horarioFinalSemanal;
     private Switch semanalSwitch;
     private RelativeLayout relativeLayout;
-    private LinearLayout linearLayout;
+    private RelativeLayout layoutDialog;
     private TextView tvTodos;
     private TextView tvMelhores;
     private ColorStateList corPadrao;
@@ -86,6 +86,7 @@ public class MarcarReuniaoActivity  extends BaseActivity implements View.OnClick
     private ProgressBar progressBar;
     private String nodePET;
     private SharedPreferences sharedPref;
+    private LinearLayout linearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +105,7 @@ public class MarcarReuniaoActivity  extends BaseActivity implements View.OnClick
         clickHorariosEquipe = findViewById(R.id.click_horarios_equipe);
         horarioSemanal = findViewById(R.id.horario_text);
         horarioFinalSemanal = findViewById(R.id.horario_final_text);
-        semanalSwitch = findViewById(R.id.semanal_switch);
+//        semanalSwitch = findViewById(R.id.semanal_switch);
         sharedPref = this.getSharedPreferences("todoApp", 0);
         nodePET = sharedPref.getString("node_meu_pet", "nada");
         format = new SimpleDateFormat("HH:mm");
@@ -267,6 +268,10 @@ public class MarcarReuniaoActivity  extends BaseActivity implements View.OnClick
                                 .child("Projeto "+nomeProjeto)
                                 .child("nova")
                                 .setValue(true);
+                        mDatabase.child("Usuarios").child(listSnapshot.getKey()).child("pet").child(nodePET).child("reunioes")
+                                .child("Projeto "+nomeProjeto)
+                                .child("avisoPrazo")
+                                .setValue(false);
                         mDatabase.child("Usuarios").child(listSnapshot.getKey()).child("update").setValue(true);
                         mDatabase.child("Usuarios").child(listSnapshot.getKey()).child("horarios")
                                 .addListenerForSingleValueEvent(new ValueEventListenerSend(listSnapshot.getKey()) {
@@ -329,29 +334,29 @@ public class MarcarReuniaoActivity  extends BaseActivity implements View.OnClick
         }
 
         if(id == R.id.click_horarios_equipe) {
-            linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.compara_horario_dialog, null, false);
+            layoutDialog = (RelativeLayout) getLayoutInflater().inflate(R.layout.compara_horario_dialog, null, false);
             new AlertDialog.Builder(this)
-                    .setView(linearLayout)
+                    .setView(layoutDialog)
                     .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             dialog.dismiss();
                         }
                     }).show();
-            tvTodos = linearLayout.findViewById(R.id.menu_todos);
-            tvMelhores = linearLayout.findViewById(R.id.menu_melhores);
+            tvTodos = layoutDialog.findViewById(R.id.menu_todos);
+            tvMelhores = layoutDialog.findViewById(R.id.menu_melhores);
             corPadrao = tvMelhores.getTextColors();
-            linearLayout.findViewById(R.id.menu_todos_click).setOnClickListener(this);
-            linearLayout.findViewById(R.id.menu_melhores_click).setOnClickListener(this);
+            layoutDialog.findViewById(R.id.menu_todos_click).setOnClickListener(this);
+            layoutDialog.findViewById(R.id.menu_melhores_click).setOnClickListener(this);
             setExpandable("tudo");
         }
         if(id == R.id.menu_todos_click) {
-            tvTodos.setTextColor(Color.parseColor("#03A9F4"));
+            tvTodos.setTextColor(getResources().getColor(R.color.colorSecondary));
             tvMelhores.setTextColor(corPadrao);
             setExpandable("tudo");
         }
         if(id == R.id.menu_melhores_click) {
             tvTodos.setTextColor(corPadrao);
-            tvMelhores.setTextColor(Color.parseColor("#03A9F4"));
+            tvMelhores.setTextColor(getResources().getColor(R.color.colorSecondary));
             setExpandable("melhores");
         }
         if(id == R.id.data_text) {
@@ -624,7 +629,7 @@ public class MarcarReuniaoActivity  extends BaseActivity implements View.OnClick
     }
 
     private void setExpandable(String opcao) {
-        ExpandableListView expandableListView = (ExpandableListView) linearLayout.findViewById(R.id.lista_horarios);
+        ExpandableListView expandableListView = (ExpandableListView) layoutDialog.findViewById(R.id.lista_horarios);
 
         // cria os grupos
         lstItensGrupo = new LinkedHashMap<>();

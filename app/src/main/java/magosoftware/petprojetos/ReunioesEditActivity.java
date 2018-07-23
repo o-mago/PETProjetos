@@ -17,6 +17,7 @@ import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -37,8 +38,8 @@ import java.util.List;
 
 public class ReunioesEditActivity extends BaseActivity implements View.OnClickListener{
 
-    private ImageButton certo;
-    private ImageButton cancela;
+    private ImageView certo;
+    private ImageView cancela;
     private EditText titulo;
     private TextView dataText;
     private EditText anotacoes;

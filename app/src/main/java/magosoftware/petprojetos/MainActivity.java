@@ -2,11 +2,16 @@ package magosoftware.petprojetos;
 
 import android.Manifest;
 import android.animation.ObjectAnimator;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -18,6 +23,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -63,7 +69,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends BaseActivity implements
@@ -104,8 +114,8 @@ public class MainActivity extends BaseActivity implements
     private LineAdapterNotificacao mAdapterNotificacao;
     private ValueEventListener valueEventListener;
     private List<Notificacao> mModelsNotificacao;
-    private int j = 0;
-    private int i = 0;
+    private int contTarefa = 0;
+    private int contReuniao;
     private String nodePet;
     private String nodeProjeto;
     private DatabaseReference dbPetUsuario;
@@ -125,13 +135,14 @@ public class MainActivity extends BaseActivity implements
         setContentView(R.layout.activity_main);
 
         myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-//        myToolbar.setOverflowIcon(getResources().getDrawable(R.drawable.sino));
-        setSupportActionBar(myToolbar);
+        myToolbar.setBackgroundColor(Color.parseColor("#2196f3"));
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
+//        myToolbar.setOverflowIcon(getResources().getDrawable(R.drawable.sino));
+        setSupportActionBar(myToolbar);
         sharedPref = this.getSharedPreferences("todoApp", 0);
         editor = sharedPref.edit();
-        progressBar = findViewById(R.id.progress_bar);
+//        progressBar = findViewById(R.id.progress_bar);
 
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
@@ -153,7 +164,6 @@ public class MainActivity extends BaseActivity implements
 
         dbPetUsuario = mDatabase.child("Usuarios").child(user.getUid()).child("pet");
         aviso = findViewById(R.id.aviso);
-        aviso.setVisibility(View.GONE);
         setupRecyclerView();
         setupLista();
         mAdapterNotificacao.setOnClick(this);
@@ -166,7 +176,7 @@ public class MainActivity extends BaseActivity implements
 //        setupRecycler();
         mDrawerLayout = findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
-        dbUsuario = mDatabase.child("Usuarios");
+        dbUsuario = mDatabase.child("Usuarios").child(user.getUid());
         setupDrawer();
         addDrawerItems();
 
@@ -191,38 +201,249 @@ public class MainActivity extends BaseActivity implements
         requestPermission();
 
         setupMeuPET();
-
-        dbUsuario.child(user.getUid()).child("pet").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.hasChildren()) {
-                    for (DataSnapshot listSnapshots : dataSnapshot.getChildren()) {
-                        String condicao = listSnapshots.child("situacao").getValue(String.class);
-                        Log.d("DEV/MAIN", "Entrou situacao");
+        if(savedInstanceState == null) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            dbUsuario.child("pet").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.hasChildren()) {
+                        for (DataSnapshot listSnapshots : dataSnapshot.getChildren()) {
+                            String condicao = listSnapshots.child("situacao").getValue(String.class);
+                            Log.d("DEV/MAIN", "Entrou situacao");
+                            ft = getSupportFragmentManager().beginTransaction();
+                            ft.addToBackStack(null);
+                            ft.replace(R.id.fragment_container, MeuPetFragment.newInstance());
+                            ft.commit();
+//                            progressBar.setVisibility(View.GONE);
+                            break;
+                        }
+                    } else {
+                        Log.d("DEV/MAIN", "Entrou else");
                         ft = getSupportFragmentManager().beginTransaction();
                         ft.addToBackStack(null);
-                        ft.replace(R.id.fragment_container, MeuPetFragment.newInstance());
+                        ft.replace(R.id.fragment_container, EncontreSeuPet.newInstance());
                         ft.commit();
-                        progressBar.setVisibility(View.GONE);
-                        break;
+//                        progressBar.setVisibility(View.GONE);
                     }
                 }
-                else {
-                    Log.d("DEV/MAIN", "Entrou else");
-                    ft = getSupportFragmentManager().beginTransaction();
-                    ft.addToBackStack(null);
-                    ft.replace(R.id.fragment_container, EncontreSeuPet.newInstance());
-                    ft.commit();
-                    progressBar.setVisibility(View.GONE);
-                }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d("UNI", "Deu merda");
-            }
-        });
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.d("UNI", "Deu merda");
+                }
+            });
+        }
     }
+
+//    private void setupLista() {
+//        Log.d("DEV/NOTIFICACAO", "setupLista");
+//        mModelsNotificacao = new ArrayList<>();
+//        valueEventListener = new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                Log.d("DEV/NOTIFICACAO", "PrimeiroOnDataChange");
+//                for(DataSnapshot listSnapshot : dataSnapshot.getChildren()) {
+//                    String nodePET = listSnapshot.getKey();
+//                    if (listSnapshot.hasChild("tarefas")) {
+//                        Log.d("DEV/NOTIFICACAO", "PrimeiroIf");
+//                        contTarefa = 0;
+//                        final int i = (int) listSnapshot.child("tarefas").getChildrenCount();
+//                        for (DataSnapshot subListSnapshot : listSnapshot.child("tarefas").getChildren()) {
+////                            Log.d("DEV/NOTIFICACAO", ""+subListSnapshoot.child("nova").getValue(Boolean.class));
+//                            boolean nova = false;
+//                            if (subListSnapshot.child("nova").getValue(Boolean.class).equals(true)) {
+//                                nova = true;
+//                            }
+//                            Log.d("DEV/NOTIFICACAO", "SegundoIf");
+////                                mDatabase.child("Usuarios").child(user.getUid()).child("pet")
+////                                        .child(nodePET).child("tarefas")
+////                                        .child(subListSnapshoot.getKey())
+////                                        .child("nova")
+////                                        .setValue(false);
+//                            mDatabase.child(subListSnapshot.child("caminho").getValue(String.class))
+//                                    .addListenerForSingleValueEvent(new ValueEventListenerSend(subListSnapshot.child("caminho").getValue(String.class), nodePET, nova) {
+//                                        @Override
+//                                        public void onDataChange(DataSnapshot dataSnapshot) {
+//                                            contTarefa++;
+//                                            Log.d("DEV/NOTIFICACAO", "SegundoOnDataChange"+dataSnapshot.getKey());
+//                                            String data = dataSnapshot.child("prazo").getValue(String.class);
+//                                            long dataLong = dateToMillis(data);
+//                                            long dataAtual = System.currentTimeMillis() - 1000;
+//                                            boolean avisoPrazo = false;
+//                                            if(dataSnapshot.hasChild("avisoPrazo")) {
+//                                                avisoPrazo = dataSnapshot.child("avisoPrazo").getValue(Boolean.class);
+//                                            }
+//                                            if (dataLong - dataAtual < 172800000 && dataLong - dataAtual > 0 && !avisoPrazo) {
+//                                                dbPetUsuario.child((String) variavel2).child("tarefas").child(dataSnapshot.getKey()).child("avisoPrazo").setValue(true);
+//                                                dbUsuario.child("update").setValue(true);
+//                                                avisoPrazo = true;
+//                                            }
+//                                            else if (dataLong - dataAtual < 0 && avisoPrazo) {
+//                                                dbPetUsuario.child((String) variavel2).child("tarefas").child(dataSnapshot.getKey()).child("avisoPrazo").setValue(false);
+//                                                avisoPrazo = false;
+//                                            }
+//                                            if(avisoPrazo) {
+//                                                mModelsNotificacao.add(new Notificacao("tarefa",
+//                                                        dataSnapshot.child("titulo").getValue(String.class),
+//                                                        dataSnapshot.child("prazo").getValue(String.class),
+//                                                        (String) variavel, "Prazo acabando"));
+//                                                showNotification("Tarefa " + dataSnapshot.child("titulo").getValue(String.class),
+//                                                        "Prazo acabando");
+//                                                aviso.setVisibility(View.GONE);
+//                                            }
+//                                            else if ((boolean)variavel3){
+//                                                mModelsNotificacao.add(new Notificacao("tarefa",
+//                                                        dataSnapshot.child("titulo").getValue(String.class),
+//                                                        dataSnapshot.child("prazo").getValue(String.class),
+//                                                        (String) variavel, "Você foi marcado em uma tarefa"));
+//                                                showNotification("Tarefa " + dataSnapshot.child("titulo").getValue(String.class),
+//                                                        "Você foi marcado em uma tarefa");
+//                                                aviso.setVisibility(View.GONE);
+//                                            }
+//                                            if(i == contTarefa) {
+//                                                mAdapterNotificacao.replaceAll(mModelsNotificacao);
+//                                                mAdapterNotificacao.notifyDataSetChanged();
+////                                                    navNotificacoes.bringToFront();
+//                                                if(isNotificacaoOpen) {
+//                                                    closeNotificacao();
+////                                                        navNotificacoes.setX(-width);
+//                                                }
+//                                                mModelsNotificacao.clear();
+//                                            }
+//                                        }
+//
+//                                        @Override
+//                                        public void onCancelled(DatabaseError databaseError) {
+//
+//                                        }
+//                                    });
+//                        }
+////                        if(i == 0) {
+////                            mAdapterNotificacao.replaceAll(mModelsNotificacao);
+////                            mAdapterNotificacao.notifyDataSetChanged();
+////                            mModelsNotificacao.clear();
+////                            semNotificacoes();
+////                        }
+////                        else {
+////                            aviso.setVisibility(View.GONE);
+////                            mModelsNotificacao.clear();
+////                        }
+//                    }
+//                    if (listSnapshot.hasChild("reunioes")) {
+//                        contReuniao = 0;
+//                        final int i = (int)listSnapshot.child("reunioes").getChildrenCount();
+//                        for (DataSnapshot subListSnapshot : listSnapshot.child("reunioes").getChildren()) {
+////                            Log.d("DEV/NOTIFICACAO", ""+subListSnapshoot.child("nova").getValue(Boolean.class));
+//                            String data = subListSnapshot.child("data").getValue(String.class).split(" ")[0];
+//                            int diaSemanaReuniao = 0;
+//                            if (data.equals("DOMINGO")) {
+//                                diaSemanaReuniao = 1;
+//                            } else if (data.equals("SEGUNDA")) {
+//                                diaSemanaReuniao = 2;
+//                            } else if (data.equals("TERÇA")) {
+//                                diaSemanaReuniao = 3;
+//                            } else if (data.equals("QUARTA")) {
+//                                diaSemanaReuniao = 4;
+//                            } else if (data.equals("QUINTA")) {
+//                                diaSemanaReuniao = 5;
+//                            } else if (data.equals("SEXTA")) {
+//                                diaSemanaReuniao = 6;
+//                            } else if (data.equals("SÁBADO")) {
+//                                diaSemanaReuniao = 7;
+//                            }
+//                            Calendar calendar = Calendar.getInstance();
+//                            int dayWeek = calendar.get(Calendar.DAY_OF_WEEK);
+//                            boolean avisoPrazo = true;
+//                            if(subListSnapshot.hasChild("avisoPrazo")) {
+//                                avisoPrazo = subListSnapshot.child("avisoPrazo").getValue(Boolean.class);
+//                            }
+//                            Log.d("DEV/MAINACTIVITY", ""+subListSnapshot.child("avisoPrazo").getValue(Boolean.class));
+//                            if (diaSemanaReuniao - dayWeek == 1 && !avisoPrazo) {
+//                                dbPetUsuario.child(nodePET).child("reunioes").child(subListSnapshot.getKey()).child("avisoPrazo").setValue(true);
+//                                dbUsuario.child("update").setValue(true);
+//                            }
+//                            else if (diaSemanaReuniao - dayWeek != 1 && avisoPrazo) {
+//                                dbPetUsuario.child(nodePET).child("reunioes").child(subListSnapshot.getKey()).child("avisoPrazo").setValue(false);
+//                            }
+//                            boolean nova = false;
+//                            if (subListSnapshot.child("nova").getValue(Boolean.class).equals(true)) {
+//                                nova = true;
+//                            }
+//                            Log.d("DEV/NOTIFICACAO", "SegundoIf");
+////                                mDatabase.child("Usuarios").child(user.getUid()).child("pet")
+////                                        .child(nodePET).child("tarefas")
+////                                        .child(subListSnapshoot.getKey())
+////                                        .child("nova")
+////                                        .setValue(false);
+//                            mDatabase.child(subListSnapshot.child("caminho").getValue(String.class))
+//                                    .addListenerForSingleValueEvent(new ValueEventListenerSend(subListSnapshot.child("caminho").getValue(String.class), avisoPrazo, nova) {
+//                                        @Override
+//                                        public void onDataChange(DataSnapshot dataSnapshot) {
+//                                            contReuniao++;
+//                                            if((boolean)variavel2) {
+//                                                mModelsNotificacao.add(new Notificacao("reuniao",
+//                                                        dataSnapshot.child("nome").getValue(String.class),
+//                                                        dataSnapshot.child("reunioes").child("data").getValue(String.class) + " " +
+//                                                                dataSnapshot.child("reunioes").child("horario").getValue(String.class),
+//                                                        (String) variavel, "Reunião próxima"));
+//                                                showNotification("Reunião " + dataSnapshot.child("nome").getValue(String.class),
+//                                                        "Reunião próxima");
+//                                                Log.d("DEV/NOTIFICACAO", "Adicionou reunião próxima");
+//                                                aviso.setVisibility(View.GONE);
+//                                            }
+//                                            else if((boolean)variavel3){
+//                                                mModelsNotificacao.add(new Notificacao("reuniao",
+//                                                        dataSnapshot.child("nome").getValue(String.class),
+//                                                        dataSnapshot.child("reunioes").child("data").getValue(String.class) + " " +
+//                                                                dataSnapshot.child("reunioes").child("horario").getValue(String.class),
+//                                                        (String) variavel, "Nova reunião"));
+//                                                showNotification("Reunião " + dataSnapshot.child("nome").getValue(String.class),
+//                                                        "Nova reunião");
+//                                                aviso.setVisibility(View.GONE);
+//                                            }
+//                                            Log.d("DEV/NOTIFICACAO", "i="+i);
+//                                            Log.d("DEV/NOTIFICACAO", "j="+contReuniao);
+//                                            if(i == contReuniao) {
+//                                                Log.d("DEV/NOTIFICACAO", "Entrou i == j");
+//                                                mAdapterNotificacao.replaceAll(mModelsNotificacao);
+//                                                mAdapterNotificacao.notifyDataSetChanged();
+////                                                    navNotificacoes.bringToFront();
+//                                                if(isNotificacaoOpen) {
+//                                                    closeNotificacao();
+////                                                    navNotificacoes.setX(-width);
+//                                                }
+//                                                mModelsNotificacao.clear();
+//                                            }
+//                                        }
+//
+//                                        @Override
+//                                        public void onCancelled(DatabaseError databaseError) {
+//
+//                                        }
+//                                    });
+//                        }
+//                    }
+//                }
+//                if(contReuniao == 0 && contTarefa == 0) {
+//                    mAdapterNotificacao.replaceAll(mModelsNotificacao);
+//                    mAdapterNotificacao.notifyDataSetChanged();
+//                    mModelsNotificacao.clear();
+////                    semNotificacoes();
+//                }
+//                else {
+//                    Log.d("DEV/NOTIFICACAO", "Cheio de notificação");
+//                    aviso.setVisibility(View.GONE);
+//                    mModelsNotificacao.clear();
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        };
+//        dbPetUsuario.addValueEventListener(valueEventListener);
+//    }
 
     private void setupLista() {
         Log.d("DEV/NOTIFICACAO", "setupLista");
@@ -231,116 +452,147 @@ public class MainActivity extends BaseActivity implements
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d("DEV/NOTIFICACAO", "PrimeiroOnDataChange");
-                for(DataSnapshot listSnapshot : dataSnapshot.getChildren()) {
+                DataSnapshot petUsuario = dataSnapshot.child("Usuarios").child(user.getUid()).child("pet");
+                for(DataSnapshot listSnapshot : petUsuario.getChildren()) {
                     String nodePET = listSnapshot.getKey();
-                    i = 0;
-                    j = 0;
                     if (listSnapshot.hasChild("tarefas")) {
                         Log.d("DEV/NOTIFICACAO", "PrimeiroIf");
-                        for (DataSnapshot subListSnapshoot : listSnapshot.child("tarefas").getChildren()) {
+                        contTarefa = 0;
+                        final int i = (int) listSnapshot.child("tarefas").getChildrenCount();
+                        for (DataSnapshot subListSnapshot : listSnapshot.child("tarefas").getChildren()) {
 //                            Log.d("DEV/NOTIFICACAO", ""+subListSnapshoot.child("nova").getValue(Boolean.class));
-                            if (subListSnapshoot.child("nova").getValue(Boolean.class).equals(true)) {
-                                i++;
-                                Log.d("DEV/NOTIFICACAO", "SegundoIf");
+                            boolean nova = false;
+                            if (subListSnapshot.child("nova").getValue(Boolean.class).equals(true)) {
+                                nova = true;
+                            }
+                            Log.d("DEV/NOTIFICACAO", "SegundoIf");
 //                                mDatabase.child("Usuarios").child(user.getUid()).child("pet")
 //                                        .child(nodePET).child("tarefas")
 //                                        .child(subListSnapshoot.getKey())
 //                                        .child("nova")
 //                                        .setValue(false);
-                                mDatabase.child(subListSnapshoot.child("caminho").getValue(String.class))
-                                        .addListenerForSingleValueEvent(new ValueEventListenerSend(subListSnapshoot.child("caminho").getValue(String.class)) {
-                                            @Override
-                                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                                j++;
-                                                Log.d("DEV/NOTIFICACAO", "SegundoOnDataChange");
-                                                mModelsNotificacao.add(new Notificacao("tarefa",
-                                                        dataSnapshot.child("titulo").getValue(String.class),
-                                                        dataSnapshot.child("prazo").getValue(String.class),
-                                                        (String) variavel, "Você foi marcado em uma tarefa"));
-                                                if(i == j) {
-                                                    mAdapterNotificacao.replaceAll(mModelsNotificacao);
-                                                    mAdapterNotificacao.notifyDataSetChanged();
-//                                                    navNotificacoes.bringToFront();
-                                                    if(isNotificacaoOpen) {
-                                                        closeNotificacao();
-//                                                        navNotificacoes.setX(-width);
-                                                    }
-                                                    mModelsNotificacao.clear();
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onCancelled(DatabaseError databaseError) {
-
-                                            }
-                                        });
+                            String caminho = subListSnapshot.child("caminho").getValue(String.class);
+                            DataSnapshot tarefaPath = dataSnapshot.child(caminho);
+                            String data = tarefaPath.child("prazo").getValue(String.class);
+                            long dataLong = dateToMillis(data);
+                            long dataAtual = System.currentTimeMillis() - 1000;
+                            boolean avisoPrazo = false;
+                            if(tarefaPath.hasChild("avisoPrazo")) {
+                                avisoPrazo = tarefaPath.child("avisoPrazo").getValue(Boolean.class);
                             }
-                        }
-                        if(i == 0) {
-                            mAdapterNotificacao.replaceAll(mModelsNotificacao);
-                            mAdapterNotificacao.notifyDataSetChanged();
-                            mModelsNotificacao.clear();
-                            semNotificacoes();
-                        }
-                        else {
-                            aviso.setVisibility(View.GONE);
-                            mModelsNotificacao.clear();
+                            if (dataLong - dataAtual < 172800000 && dataLong - dataAtual > 0 && !avisoPrazo) {
+                                dbPetUsuario.child(nodePET).child("tarefas").child(tarefaPath.getKey()).child("avisoPrazo").setValue(true);
+                                dbUsuario.child("update").setValue(true);
+                                avisoPrazo = true;
+                            }
+                            else if (dataLong - dataAtual < 0 && avisoPrazo) {
+                                dbPetUsuario.child(nodePET).child("tarefas").child(tarefaPath.getKey()).child("avisoPrazo").setValue(false);
+                                avisoPrazo = false;
+                            }
+                            if(avisoPrazo) {
+                                mModelsNotificacao.add(new Notificacao("tarefa",
+                                        tarefaPath.child("titulo").getValue(String.class),
+                                        tarefaPath.child("prazo").getValue(String.class),
+                                        caminho, "Prazo acabando"));
+                                showNotification("Tarefa " + tarefaPath.child("titulo").getValue(String.class),
+                                        "Prazo acabando");
+                                aviso.setVisibility(View.GONE);
+                            }
+                            else if (nova) {
+                                mModelsNotificacao.add(new Notificacao("tarefa",
+                                        tarefaPath.child("titulo").getValue(String.class),
+                                        tarefaPath.child("prazo").getValue(String.class),
+                                        caminho, "Você foi marcado em uma tarefa"));
+                                showNotification("Tarefa " + tarefaPath.child("titulo").getValue(String.class),
+                                        "Você foi marcado em uma tarefa");
+                                aviso.setVisibility(View.GONE);
+                            }
                         }
                     }
                     if (listSnapshot.hasChild("reunioes")) {
-                        for (DataSnapshot subListSnapshoot : listSnapshot.child("reunioes").getChildren()) {
+                        final int i = (int)listSnapshot.child("reunioes").getChildrenCount();
+                        for (DataSnapshot subListSnapshot : listSnapshot.child("reunioes").getChildren()) {
 //                            Log.d("DEV/NOTIFICACAO", ""+subListSnapshoot.child("nova").getValue(Boolean.class));
-                            if (subListSnapshoot.child("nova").getValue(Boolean.class).equals(true)) {
-                                i++;
-                                Log.d("DEV/NOTIFICACAO", "SegundoIf");
+                            String data = subListSnapshot.child("data").getValue(String.class).split(" ")[0];
+                            int diaSemanaReuniao = 0;
+                            if (data.equals("DOMINGO")) {
+                                diaSemanaReuniao = 1;
+                            } else if (data.equals("SEGUNDA")) {
+                                diaSemanaReuniao = 2;
+                            } else if (data.equals("TERÇA")) {
+                                diaSemanaReuniao = 3;
+                            } else if (data.equals("QUARTA")) {
+                                diaSemanaReuniao = 4;
+                            } else if (data.equals("QUINTA")) {
+                                diaSemanaReuniao = 5;
+                            } else if (data.equals("SEXTA")) {
+                                diaSemanaReuniao = 6;
+                            } else if (data.equals("SÁBADO")) {
+                                diaSemanaReuniao = 7;
+                            }
+                            Calendar calendar = Calendar.getInstance();
+                            int dayWeek = calendar.get(Calendar.DAY_OF_WEEK);
+                            boolean avisoPrazo = true;
+                            if(subListSnapshot.hasChild("avisoPrazo")) {
+                                avisoPrazo = subListSnapshot.child("avisoPrazo").getValue(Boolean.class);
+                            }
+                            Log.d("DEV/MAINACTIVITY", ""+subListSnapshot.child("avisoPrazo").getValue(Boolean.class));
+                            if (diaSemanaReuniao - dayWeek == 1 && !avisoPrazo) {
+                                dbPetUsuario.child(nodePET).child("reunioes").child(subListSnapshot.getKey()).child("avisoPrazo").setValue(true);
+                                dbUsuario.child("update").setValue(true);
+                            }
+                            else if (diaSemanaReuniao - dayWeek != 1 && avisoPrazo) {
+                                dbPetUsuario.child(nodePET).child("reunioes").child(subListSnapshot.getKey()).child("avisoPrazo").setValue(false);
+                            }
+                            boolean nova = false;
+                            if (subListSnapshot.child("nova").getValue(Boolean.class).equals(true)) {
+                                nova = true;
+                            }
+                            Log.d("DEV/NOTIFICACAO", "SegundoIf");
 //                                mDatabase.child("Usuarios").child(user.getUid()).child("pet")
 //                                        .child(nodePET).child("tarefas")
 //                                        .child(subListSnapshoot.getKey())
 //                                        .child("nova")
 //                                        .setValue(false);
-                                mDatabase.child(subListSnapshoot.child("caminho").getValue(String.class))
-                                        .addListenerForSingleValueEvent(new ValueEventListenerSend(subListSnapshoot.child("caminho").getValue(String.class)) {
-                                            @Override
-                                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                                j++;
-                                                Log.d("DEV/NOTIFICACAO", "SegundoOnDataChange");
-                                                mModelsNotificacao.add(new Notificacao("reuniao",
-                                                        dataSnapshot.child("nome").getValue(String.class),
-                                                        dataSnapshot.child("reunioes").child("data").getValue(String.class)+" "+
-                                                                dataSnapshot.child("reunioes").child("horario").getValue(String.class),
-                                                        (String) variavel, "Nova reunião"));
-                                                if(i == j) {
-                                                    mAdapterNotificacao.replaceAll(mModelsNotificacao);
-                                                    mAdapterNotificacao.notifyDataSetChanged();
-//                                                    navNotificacoes.bringToFront();
-                                                    if(isNotificacaoOpen) {
-                                                        closeNotificacao();
-//                                                        navNotificacoes.setX(-width);
-                                                    }
-                                                    mModelsNotificacao.clear();
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onCancelled(DatabaseError databaseError) {
-
-                                            }
-                                        });
+                            String caminho = subListSnapshot.child("caminho").getValue(String.class);
+                            DataSnapshot reuniaoPath = dataSnapshot.child(caminho);
+                            if(avisoPrazo) {
+                                mModelsNotificacao.add(new Notificacao("reuniao",
+                                        reuniaoPath.child("nome").getValue(String.class),
+                                        reuniaoPath.child("reunioes").child("data").getValue(String.class) + " " +
+                                                reuniaoPath.child("reunioes").child("horario").getValue(String.class),
+                                        caminho, "Reunião próxima"));
+                                showNotification("Reunião " + reuniaoPath.child("nome").getValue(String.class),
+                                        "Reunião próxima");
+                                Log.d("DEV/NOTIFICACAO", "Adicionou reunião próxima");
+                                aviso.setVisibility(View.GONE);
                             }
+                            else if(nova){
+                                mModelsNotificacao.add(new Notificacao("reuniao",
+                                        reuniaoPath.child("nome").getValue(String.class),
+                                        reuniaoPath.child("reunioes").child("data").getValue(String.class) + " " +
+                                                reuniaoPath.child("reunioes").child("horario").getValue(String.class),
+                                        caminho, "Nova reunião"));
+                                showNotification("Reunião " + reuniaoPath.child("nome").getValue(String.class),
+                                        "Nova reunião");
+                                aviso.setVisibility(View.GONE);
+                            }
+                            Log.d("DEV/NOTIFICACAO", "i="+i);
+                            Log.d("DEV/NOTIFICACAO", "j="+contReuniao);
                         }
                     }
-                    if(i == 0) {
-                        mAdapterNotificacao.replaceAll(mModelsNotificacao);
-                        mAdapterNotificacao.notifyDataSetChanged();
-                        mModelsNotificacao.clear();
-                        semNotificacoes();
-                    }
-                    else {
-                        aviso.setVisibility(View.GONE);
-                        mModelsNotificacao.clear();
-                    }
                 }
-
+                mAdapterNotificacao.replaceAll(mModelsNotificacao);
+                mAdapterNotificacao.notifyDataSetChanged();
+                if(mModelsNotificacao.size() > 0) {
+                    mModelsNotificacao.clear();
+//                    semNotificacoes();
+                }
+                else {
+                    Log.d("DEV/NOTIFICACAO", "Cheio de notificação");
+                    aviso.setVisibility(View.VISIBLE);
+                    mModelsNotificacao.clear();
+                }
             }
 
             @Override
@@ -348,7 +600,35 @@ public class MainActivity extends BaseActivity implements
 
             }
         };
-        dbPetUsuario.addValueEventListener(valueEventListener);
+        mDatabase.addValueEventListener(valueEventListener);
+    }
+
+    public void showNotification(String titulo, String descricao) {
+        PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0);
+        Resources r = getResources();
+        Notification notification = new NotificationCompat.Builder(this)
+                .setTicker("Novidades PET")
+                .setSmallIcon(R.drawable.pet_logo)
+                .setContentTitle(titulo)
+                .setContentText(descricao)
+                .setContentIntent(pi)
+                .setAutoCancel(true)
+                .build();
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(0, notification);
+    }
+
+    private long dateToMillis(String data) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        long timeInMilliseconds = 0;
+        try {
+            Date mDate = sdf.parse(data);
+            timeInMilliseconds = mDate.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return timeInMilliseconds;
     }
 
     private void semNotificacoes() {
@@ -579,6 +859,7 @@ public class MainActivity extends BaseActivity implements
         mModels.add(new ItemMenu("Perfil", getResources().getDrawable(R.drawable.icone_perfil)));
         mModels.add(new ItemMenu("Horários Petianos", getResources().getDrawable(R.drawable.time)));
         mModels.add(new ItemMenu("Calendário", getResources().getDrawable(R.drawable.calendar)));
+        mModels.add(new ItemMenu("SIGPET", getResources().getDrawable(R.drawable.sigpet_icon)));
         mModels.add(new ItemMenu("Pesquisar PET", getResources().getDrawable(R.drawable.search)));
         mModels.add(new ItemMenu("Pesquisar Petiano", getResources().getDrawable(R.drawable.pessoas)));
         mModels.add(new ItemMenu("Sair", getResources().getDrawable(R.drawable.exit_rotate)));
@@ -685,11 +966,21 @@ public class MainActivity extends BaseActivity implements
             ft = getSupportFragmentManager().beginTransaction();
 //            ft.addToBackStack(null);
             getSupportFragmentManager().popBackStack();
-            ft.replace(R.id.fragment_container, Perfil.newInstance());
+            ft.replace(R.id.fragment_container, CalendarioFragment.newInstance());
             ft.commit();
             getSupportFragmentManager().popBackStackImmediate();
         }
         if(position == 4) {
+//            ft = getSupportFragmentManager().beginTransaction();
+////            ft.addToBackStack(null);
+//            getSupportFragmentManager().popBackStack();
+//            ft.replace(R.id.fragment_container, Sigpet.newInstance());
+//            ft.commit();
+//            getSupportFragmentManager().popBackStackImmediate();
+            Intent intent = new Intent(this, SigpetActivity.class);
+            startActivity(intent);
+        }
+        if(position == 5) {
             ft = getSupportFragmentManager().beginTransaction();
 //            ft.addToBackStack(null);
             getSupportFragmentManager().popBackStack();
@@ -697,7 +988,7 @@ public class MainActivity extends BaseActivity implements
             ft.commit();
             getSupportFragmentManager().popBackStackImmediate();
         }
-        if(position == 5) {
+        if(position == 6) {
             ft = getSupportFragmentManager().beginTransaction();
 //            ft.addToBackStack(null);
             getSupportFragmentManager().popBackStack();
@@ -705,10 +996,12 @@ public class MainActivity extends BaseActivity implements
             ft.commit();
             getSupportFragmentManager().popBackStackImmediate();
         }
-        if(position == 6) {
+        if(position == 7) {
             revokeAccess();
         }
+//        progressBar.setVisibility(View.GONE);
         mDrawerLayout.closeDrawers();
+//        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
     private void setupDrawer() {
@@ -721,9 +1014,9 @@ public class MainActivity extends BaseActivity implements
         mAdapter = new DrawerAdapter();
         mDrawerList.setAdapter(mAdapter);
 
-        DividerItemDecoration dividerItemDecorationRequisicao = new DividerItemDecoration(mDrawerList.getContext(),
-                layoutManager.getOrientation());
-        mDrawerList.addItemDecoration(dividerItemDecorationRequisicao);
+//        DividerItemDecoration dividerItemDecorationRequisicao = new DividerItemDecoration(mDrawerList.getContext(),
+//                layoutManager.getOrientation());
+//        mDrawerList.addItemDecoration(dividerItemDecorationRequisicao);
 
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
 
@@ -766,6 +1059,19 @@ public class MainActivity extends BaseActivity implements
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
+
+        // Checks the orientation of the screen
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
+        }
+        // Checks whether a hardware keyboard is available
+        if (newConfig.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_NO) {
+            Toast.makeText(this, "keyboard visible", Toast.LENGTH_SHORT).show();
+        } else if (newConfig.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_YES) {
+            Toast.makeText(this, "keyboard hidden", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

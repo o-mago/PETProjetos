@@ -123,7 +123,7 @@ public class MembrosFragment extends BaseFragment implements LineAdapterMembros.
             public void onDataChange(DataSnapshot dataSnapshot) {
                 cont = 0;
                 i = 0;
-                if(origem.equals("projetos")) {
+                if(origem.equals("projetos") || origem.equals("equipes")) {
                     if (dataSnapshot.hasChildren()) {
                         quadroRequisicoes.setVisibility(View.VISIBLE);
                         for (DataSnapshot listSnapshotsAguardando : dataSnapshot.getChildren()) {
@@ -227,7 +227,7 @@ public class MembrosFragment extends BaseFragment implements LineAdapterMembros.
             public void onDataChange(DataSnapshot dataSnapshot) {
                 cont2 = 0;
                 i2 = 0;
-                if(origem.equals("projetos")) {
+                if(origem.equals("projetos") || origem.equals("equipes")) {
                     for(DataSnapshot coordenadorSnap : dataSnapshot.child("coordenador").getChildren()) {
                         coordenador = coordenadorSnap.getValue(String.class);
                     }
@@ -419,7 +419,7 @@ public class MembrosFragment extends BaseFragment implements LineAdapterMembros.
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(layoutManager);
 
-        if(origem.equals("projetos")) {
+        if(origem.equals("projetos") || origem.equals("equipes")) {
             mAdapter = new LineAdapterMembros(getResources().getDrawable(R.drawable.background_contorno),
                     getResources().getDrawable(R.drawable.background_contorno_ok));
         }

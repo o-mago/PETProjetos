@@ -277,11 +277,11 @@ public class TarefasConcentradas extends BaseFragment implements LineAdapterTare
             viewPager.setCurrentItem(0);
         }
         if(id == R.id.seta_esquerda) {
-            progressBar.setVisibility(View.VISIBLE);
+//            progressBar.setVisibility(View.VISIBLE);
             viewPager.setCurrentItem(pagerViewPosition-1);
         }
         if(id == R.id.seta_direita) {
-            progressBar.setVisibility(View.VISIBLE);
+//            progressBar.setVisibility(View.VISIBLE);
             viewPager.setCurrentItem(pagerViewPosition+1);
         }
     }

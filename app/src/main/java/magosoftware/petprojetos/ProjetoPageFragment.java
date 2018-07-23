@@ -15,6 +15,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -71,11 +72,13 @@ public class ProjetoPageFragment extends BaseFragment implements View.OnClickLis
     TextView menuMembros;
     private ProgressBar progressBar;
     private RelativeLayout perfilProjeto;
-    private LinearLayout menu;
+    private CardView menu;
     private String nomeProjeto;
     private String nodePET;
     private ImageView drive;
     private ImageView config;
+    private String nomeCoordenador;
+    private ImageView newMembro;
 
     public static ProjetoPageFragment newInstance() {
         ProjetoPageFragment projetoPageFragment = new ProjetoPageFragment();
@@ -115,6 +118,8 @@ public class ProjetoPageFragment extends BaseFragment implements View.OnClickLis
         menuEquipesClick = getView().findViewById(R.id.menu_equipes_click);
         menuReunioesClick = getView().findViewById(R.id.menu_reunioes_click);
         menuMembrosClick = getView().findViewById(R.id.menu_membros_click);
+        newMembro = getView().findViewById(R.id.new_membro);
+        newMembro.setVisibility(View.GONE);
         drive = getView().findViewById(R.id.drive);
         drive.setOnClickListener(this);
         config = getView().findViewById(R.id.config);
@@ -129,6 +134,7 @@ public class ProjetoPageFragment extends BaseFragment implements View.OnClickLis
         nomeProjetos.setText(nomeProjeto);
 
         setImagemProjeto();
+        verificaMembros();
     }
 
     @Override
@@ -136,7 +142,7 @@ public class ProjetoPageFragment extends BaseFragment implements View.OnClickLis
         int id = view.getId();
         if(id == R.id.menu_equipes_click) {
             progressBar.setVisibility(View.GONE);
-            menuEquipes.setTextColor(Color.parseColor("#03A9F4"));
+            menuEquipes.setTextColor(getResources().getColor(R.color.colorSecondary));
             menuReunioes.setTextColor(corPadrao);
             menuMembros.setTextColor(corPadrao);
             FragmentManager manager = getChildFragmentManager();
@@ -144,6 +150,7 @@ public class ProjetoPageFragment extends BaseFragment implements View.OnClickLis
             Bundle bundle = new Bundle();
             bundle.putString("node_projeto", nodeProjeto);
             bundle.putString("nome_projeto", nomeProjeto);
+            bundle.putString("nome_coordenador", nomeCoordenador);
             Fragment fragment= EquipesFragment.newInstance();
             fragment.setArguments(bundle);
             transaction.replace(R.id.fragment_container_child, fragment);
@@ -152,7 +159,7 @@ public class ProjetoPageFragment extends BaseFragment implements View.OnClickLis
         else if (id == R.id.menu_reunioes_click) {
             progressBar.setVisibility(View.GONE);
             menuEquipes.setTextColor(corPadrao);
-            menuReunioes.setTextColor(Color.parseColor("#03A9F4"));
+            menuReunioes.setTextColor(getResources().getColor(R.color.colorSecondary));
             menuMembros.setTextColor(corPadrao);
             FragmentManager manager = getChildFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
@@ -168,7 +175,7 @@ public class ProjetoPageFragment extends BaseFragment implements View.OnClickLis
             progressBar.setVisibility(View.GONE);
             menuEquipes.setTextColor(corPadrao);
             menuReunioes.setTextColor(corPadrao);
-            menuMembros.setTextColor(Color.parseColor("#03A9F4"));
+            menuMembros.setTextColor(getResources().getColor(R.color.colorSecondary));
             FragmentManager manager = getChildFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             Bundle bundle = new Bundle();
@@ -183,6 +190,9 @@ public class ProjetoPageFragment extends BaseFragment implements View.OnClickLis
             mDatabase.child("PETs").child(nodePET).child("projetos").child(nodeProjeto).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot listSnapshot : dataSnapshot.child("coordenador").getChildren()) {
+                        nomeCoordenador = listSnapshot.getValue(String.class);
+                    }
                     if(dataSnapshot.hasChild("drive")) {
                         String link = dataSnapshot.child("drive").getValue(String.class);
                         try {
@@ -215,6 +225,24 @@ public class ProjetoPageFragment extends BaseFragment implements View.OnClickLis
             intent.putExtra("node", "PETs/"+nodePET+"/projetos/"+nodeProjeto);
             startActivity(intent);
         }
+    }
+
+    public void verificaMembros() {
+        dbProjeto.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.child("aguardando").exists()) {
+                    newMembro.setVisibility(View.VISIBLE);
+                } else {
+                    newMembro.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override

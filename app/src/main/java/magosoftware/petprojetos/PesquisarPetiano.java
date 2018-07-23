@@ -164,7 +164,7 @@ public class PesquisarPetiano extends BaseFragment implements SearchView.OnQuery
                                 }
                             });
                         } catch (NullPointerException e) {
-                            bitmapDrawablePet = getResources().getDrawable(R.drawable.pet_logo);
+//                            bitmapDrawablePet = getResources().getDrawable(R.drawable.pet_logo);
                         }
                     }
                 }

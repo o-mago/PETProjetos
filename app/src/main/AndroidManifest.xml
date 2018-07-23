@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -13,13 +14,14 @@
         android:supportsRtl="true"
         android:largeHeap="true"
         android:theme="@style/TemaNoActionBar"
-        android:versionCode="6">
+        android:versionCode="7">
         <activity android:screenOrientation="portrait" android:name=".MainActivity">
         </activity>
         <activity
             android:name=".SplashScreen"
             android:label="PET App"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -41,6 +43,7 @@
         <activity android:screenOrientation="portrait" android:name=".HorariosEdit"></activity>
         <activity android:screenOrientation="portrait" android:name=".MarcarReuniaoActivity"></activity>
         <activity android:screenOrientation="portrait" android:name=".ConfigActivity"></activity>
+        <activity android:screenOrientation="landscape" android:name=".SigpetActivity"></activity>
     </application>
 
 </manifest>

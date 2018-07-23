@@ -36,6 +36,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerHolder>{
     public void onBindViewHolder(final DrawerHolder holder, final int position) {
         holder.opcao.setText(mItem.get(position).getOpcao());
         holder.icone.setImageDrawable(mItem.get(position).getIcone());
+        holder.icone.setColorFilter(Color.parseColor("#FFFFFFFF"));
         
         holder.menuClick.setOnClickListener(new View.OnClickListener() {
             @Override

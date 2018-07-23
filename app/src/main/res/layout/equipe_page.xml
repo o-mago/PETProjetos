@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/minha_equipe"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -8,8 +8,7 @@
     <RelativeLayout
         android:id="@+id/perfil_equipe"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="#ECEFF1">
+        android:layout_height="40dp">
         <TextView
             android:id="@+id/nome_equipe"
             android:layout_width="wrap_content"
@@ -21,14 +20,22 @@
             android:textStyle="bold"
             android:textSize="20sp"/>
     </RelativeLayout>
-    <LinearLayout
+    <android.support.v7.widget.CardView
         android:id="@+id/menu"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
         android:layout_marginTop="40dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        card_view:cardCornerRadius="20dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:orientation="horizontal"
-        android:weightSum="2"
-        android:background="#CFD8DC">
+        android:weightSum="3"
+        android:background="@color/colorPrimaryDark">
 
         <FrameLayout
             android:id="@+id/menu_tarefas_click"
@@ -40,7 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textColor="#03A9F4"
+                android:textColor="@color/colorSecondary"
                 android:text="TAREFAS"/>
         </FrameLayout>
         <FrameLayout
@@ -55,9 +62,40 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:textColor="#FFFFFF"
                 android:text="REUNIÕES"/>
         </FrameLayout>
+        <FrameLayout
+            android:id="@+id/menu_membros_click"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
+                <TextView
+                    android:id="@+id/menu_membros"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:textColor="#FFFFFF"
+                    android:text="MEMBROS"/>
+                <ImageView
+                    android:id="@+id/new_membro"
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/circle"
+                    android:layout_toRightOf="@id/menu_membros"
+                    android:layout_toEndOf="@id/menu_membros"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="5dp"/>
+            </RelativeLayout>
+        </FrameLayout>
     </LinearLayout>
+    </android.support.v7.widget.CardView>
     <FrameLayout
         android:id="@+id/fragment_container_child"
         android:layout_width="match_parent"

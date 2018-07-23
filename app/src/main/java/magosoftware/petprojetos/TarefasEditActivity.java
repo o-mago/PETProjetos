@@ -15,6 +15,7 @@ import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -39,8 +40,8 @@ import java.util.List;
 
 public class TarefasEditActivity extends BaseActivity implements View.OnClickListener, ChipsInput.ChipsListener {
 
-    private ImageButton certo;
-    private ImageButton cancela;
+    private ImageView certo;
+    private ImageView cancela;
     private EditText titulo;
     private ChipsInput chipsPetianos;
     private TextView dataText;
@@ -223,6 +224,16 @@ public class TarefasEditActivity extends BaseActivity implements View.OnClickLis
 
             for (Chip c : contactsSelected) {
                 Log.d("DEV/TAREFASEDIT", (String) c.getId());
+                if(nova || !petianoAnterior.contains(c.getLabel())) {
+                    mDatabase.child("Usuarios").child((String) c.getId())
+                            .child("pet").child(nodePET).child("tarefas")
+                            .child(node).child("nova").setValue(true);
+                    mDatabase.child("Usuarios").child((String) c.getId())
+                            .child("pet").child(nodePET).child("tarefas")
+                            .child(node).child("avisoPrazo").setValue(false);
+                    mDatabase.child("Usuarios").child((String) c.getId())
+                            .child("update").setValue(true);
+                }
                 dbAtualizaTarefa.child("time").child((String) c.getId()).setValue(c.getLabel());
 //                mDatabase.child("Usuarios").child((String) c.getId())
 //                        .child("pet").child(nodePET).child("tarefas")
@@ -230,13 +241,6 @@ public class TarefasEditActivity extends BaseActivity implements View.OnClickLis
                 mDatabase.child("Usuarios").child((String) c.getId())
                         .child("pet").child(nodePET).child("tarefas")
                         .child(node).child("caminho").setValue(dbAtualizaTarefa.getRef().toString().split("\\.firebaseio\\.com/")[1]);
-                if(nova || !petianoAnterior.contains(c.getLabel())) {
-                    mDatabase.child("Usuarios").child((String) c.getId())
-                            .child("pet").child(nodePET).child("tarefas")
-                            .child(node).child("nova").setValue(true);
-                    mDatabase.child("Usuarios").child((String) c.getId())
-                            .child("update").setValue(true);
-                }
             }
             finish();
         }

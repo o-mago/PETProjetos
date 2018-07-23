@@ -169,7 +169,7 @@ public class EncontreSeuPet extends BaseFragment implements SearchView.OnQueryTe
                                 }
                             });
                         } catch (NullPointerException e) {
-                            bitmapDrawablePet = getResources().getDrawable(R.drawable.pet_logo);
+//                            bitmapDrawablePet = getResources().getDrawable(R.drawable.pet_logo);
                         }
                     }
                 }

@@ -36,11 +36,17 @@ public class LineAdapterNotificacao extends RecyclerView.Adapter<LineHolderNotif
         holder.tituloNotificacao.setText(mNotificacao.get(position).getTitulo());
         holder.dataNotificacao.setText(mNotificacao.get(position).getData());
         holder.mensagemNotificacao.setText(mNotificacao.get(position).getMensagem());
+        if(mNotificacao.get(position).getMensagem().equals("")) {
+            holder.mensagemNotificacao.setVisibility(View.GONE);
+        }
         if(mNotificacao.get(position).getTipo().equals("tarefa")) {
             holder.imagemNotificacao.setImageResource(R.mipmap.tarefa_card);
         }
         if(mNotificacao.get(position).getTipo().equals("reuniao")) {
             holder.imagemNotificacao.setImageResource(R.mipmap.evento_notificacao_round);
+        }
+        if(mNotificacao.get(position).getTipo().equals("aniversario")) {
+            holder.imagemNotificacao.setImageResource(R.mipmap.bolo_aniversario_round);
         }
         holder.card.setOnClickListener(new View.OnClickListener() {
             @Override

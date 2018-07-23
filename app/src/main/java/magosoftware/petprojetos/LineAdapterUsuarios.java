@@ -21,9 +21,8 @@ public class LineAdapterUsuarios extends RecyclerView.Adapter<LineHolderUsuarios
 
     }
 
-    //make interface like this
     public interface OnItemClicked {
-        void onItemClick(int position, String nome);
+        void onItemClick(int position, String codigo);
     }
 
     @Override
@@ -40,7 +39,7 @@ public class LineAdapterUsuarios extends RecyclerView.Adapter<LineHolderUsuarios
         holder.cardUsuario.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onClick.onItemClick(position, mUsuario.get(position).getNome());
+                onClick.onItemClick(position, mUsuario.get(position).getCodigo());
             }
         });
     }

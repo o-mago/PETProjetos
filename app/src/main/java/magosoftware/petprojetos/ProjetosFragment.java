@@ -1,7 +1,5 @@
 package magosoftware.petprojetos;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -14,9 +12,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -25,15 +21,11 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -42,6 +34,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.transitionseverywhere.Slide;
+import com.transitionseverywhere.TransitionManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -266,6 +260,8 @@ public class ProjetosFragment extends BaseFragment implements LineAdapterProjeto
     @Override
     public void onItemClick(int position, String nome, String situacao, String node) {
         if(situacao.equals("membro")) {
+//            TransitionManager.beginDelayedTransition(coordinator, new Slide(Gravity.LEFT));
+//            mRecyclerView.setVisibility(View.GONE);
             Bundle bundle = new Bundle();
             bundle.putString("node_projeto", node);
             Log.d("DEV/PROJETOSFRAG", "node2: "+node);
@@ -279,14 +275,13 @@ public class ProjetosFragment extends BaseFragment implements LineAdapterProjeto
             ft.replace(R.id.fragment_container, fragment);
             ft.addToBackStack(null);
             ft.commit();
+//            mRecyclerView.setVisibility(visible ? View.VISIBLE : View.GONE);
 //            MainActivity.changeFragment(getFragmentManager(), nome);
         }
         if(situacao.equals("fora")) {
             dbPET.child("projetos").child(node).child("aguardando").child(user.getUid()).setValue(sharedPref.getString("nome_usuario", "Cumpadi"));
             Snackbar.make(getView().findViewById(R.id.coordinator), "Solicitação enviada",
                     Snackbar.LENGTH_SHORT).show();
-//            mAdapter.removeAll();
-//            setupLista();
         }
         if(situacao.equals("aguardando")) {
             Snackbar.make(getView().findViewById(R.id.coordinator), "Aguardando aprovação",

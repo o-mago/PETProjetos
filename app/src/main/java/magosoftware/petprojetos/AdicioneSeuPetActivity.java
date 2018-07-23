@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.pchmn.materialchips.ChipsInput;
 import com.pchmn.materialchips.model.Chip;
+import com.pchmn.materialchips.model.ChipInterface;
 //import com.pchmn.materialchips.ChipsInput;
 
 import java.io.Serializable;
@@ -56,6 +57,7 @@ public class AdicioneSeuPetActivity extends BaseActivity implements View.OnClick
     private String oldSite;
     private String oldAno_surgimento;
     private List<String> oldCursos;
+    private List<String> deleteChip;
     private String oldUniversidade;
     private String oldEstado;
     private String tipo;
@@ -110,6 +112,22 @@ public class AdicioneSeuPetActivity extends BaseActivity implements View.OnClick
         final ChipsInput chipsCursos = (ChipsInput) findViewById(R.id.chips_cursos);
         this.chipsCursos = chipsCursos;
         getCursos(chipsCursos);
+        chipsCursos.addChipsListener(new ChipsInput.ChipsListener() {
+            @Override
+            public void onChipAdded(ChipInterface chipInterface, int i) {
+                oldCursos.add(chipInterface.getLabel());
+            }
+
+            @Override
+            public void onChipRemoved(ChipInterface chipInterface, int i) {
+                oldCursos.remove(chipInterface.getLabel());
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence) {
+
+            }
+        });
         String[] lista = getResources().getStringArray(R.array.estados);
         ArrayAdapter<String> adapter_estado = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, lista) {
             @Override
@@ -206,7 +224,7 @@ public class AdicioneSeuPetActivity extends BaseActivity implements View.OnClick
                 ano_surgimento.setText(oldAno_surgimento);
                 for(DataSnapshot listSnapshot : dataSnapshot.child("cursos").getChildren()) {
                     oldCursos.add(listSnapshot.getValue(String.class));
-                    chipsCursos.addChip(oldCidade, "");
+                    chipsCursos.addChip(listSnapshot.getValue(String.class), "");
                 }
                 oldEstado = dataSnapshot.child("estado").getValue(String.class);
                 String[] lista = getResources().getStringArray(R.array.estados);
@@ -300,9 +318,15 @@ public class AdicioneSeuPetActivity extends BaseActivity implements View.OnClick
                     .setValue(nomePet);
             dbNovoPet.orderByPriority();
 
-            List<Chip> contactsSelected = (List<Chip>) chipsCursos.getSelectedChipList();
-            for(Chip c : contactsSelected) {
-                dbNovoPet.child("cursos").child(c.getLabel()).setValue(c.getLabel());
+//            List<Chip> contactsSelected = (List<Chip>) chipsCursos.getSelectedChipList();
+//
+//            for(Chip c : contactsSelected) {
+//                dbNovoPet.child("cursos").child(c.getLabel()).setValue(c.getLabel());
+//                dbNovoPet.child("cursos").orderByPriority();
+//            }
+            for(String contato : oldCursos) {
+                dbNovoPet.child("cursos").removeValue();
+                dbNovoPet.child("cursos").child(contato).setValue(contato);
                 dbNovoPet.child("cursos").orderByPriority();
             }
 //            String nomeSemEspaco = "";

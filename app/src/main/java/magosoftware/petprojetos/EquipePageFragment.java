@@ -14,13 +14,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.mikhaellopez.circularimageview.CircularImageView;
@@ -31,7 +35,8 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 
 public class EquipePageFragment extends BaseFragment implements View.OnClickListener {
     FirebaseUser user;
-    FirebaseAuth mAuth; FirebaseStorage storage;
+    FirebaseAuth mAuth;
+    FirebaseStorage storage;
     StorageReference storageRef;
     DatabaseReference dbProjeto;
     public SharedPreferences sharedPref;
@@ -41,11 +46,11 @@ public class EquipePageFragment extends BaseFragment implements View.OnClickList
     RelativeLayout minhaEquipe;
     TextView nomeEquipes;
     FrameLayout menuTarefasClick;
-    FrameLayout menuTarefasConcluidasClick;
     FrameLayout menuReunioesClick;
+    FrameLayout menuMembrosClick;
     TextView menuTarefas;
-    TextView menuTarefasConcluidas;
     TextView menuReunioes;
+    private ImageView newMembro;
     ColorStateList corPadrao;
     TextView menuMembros;
     String nodeEquipe;
@@ -86,10 +91,15 @@ public class EquipePageFragment extends BaseFragment implements View.OnClickList
         nomeEquipes = getView().findViewById(R.id.nome_equipe);
         menuTarefasClick = getView().findViewById(R.id.menu_tarefas_click);
         menuReunioesClick = getView().findViewById(R.id.menu_reunioes_click);
+        menuMembrosClick = getView().findViewById(R.id.menu_membros_click);
         menuTarefasClick.setOnClickListener(this);
         menuReunioesClick.setOnClickListener(this);
+        menuMembrosClick.setOnClickListener(this);
         menuTarefas = getView().findViewById(R.id.menu_tarefas);
         menuReunioes = getView().findViewById(R.id.menu_reunioes);
+        menuMembros = getView().findViewById(R.id.menu_membros);
+        newMembro = getView().findViewById(R.id.new_membro);
+        newMembro.setVisibility(View.GONE);
         corPadrao = menuReunioes.getTextColors();
         tarefaPath = "PETs/"+nodePET+"/projetos/"+nodeProjeto+"/equipes/"+nodeEquipe;
         nomeEquipes.setText(nomeEquipe);
@@ -105,14 +115,16 @@ public class EquipePageFragment extends BaseFragment implements View.OnClickList
         Log.d("EQUIPEPAGEFRAGMENT", "chamou fragment tarefas");
         transaction.add(R.id.fragment_container_child, fragment);
         transaction.commit();
+        verificaMembros();
     }
 
     @Override
     public void onClick(View view) {
         int id = view.getId();
         if(id == R.id.menu_tarefas_click) {
-            menuTarefas.setTextColor(Color.parseColor("#03A9F4"));
+            menuTarefas.setTextColor(getResources().getColor(R.color.colorSecondary));
             menuReunioes.setTextColor(corPadrao);
+            menuMembros.setTextColor(corPadrao);
             FragmentManager manager = getChildFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             Bundle bundle = new Bundle();
@@ -129,7 +141,8 @@ public class EquipePageFragment extends BaseFragment implements View.OnClickList
         }
         else if (id == R.id.menu_reunioes_click) {
             menuTarefas.setTextColor(corPadrao);
-            menuReunioes.setTextColor(Color.parseColor("#03A9F4"));
+            menuReunioes.setTextColor(getResources().getColor(R.color.colorSecondary));
+            menuMembros.setTextColor(corPadrao);
             FragmentManager manager = getChildFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             Bundle bundle = new Bundle();
@@ -140,6 +153,38 @@ public class EquipePageFragment extends BaseFragment implements View.OnClickList
             transaction.replace(R.id.fragment_container_child, fragment);
             transaction.commit();
         }
+        else if (id == R.id.menu_membros_click) {
+            menuTarefas.setTextColor(corPadrao);
+            menuReunioes.setTextColor(corPadrao);
+            menuMembros.setTextColor(getResources().getColor(R.color.colorSecondary));
+            FragmentManager manager = getChildFragmentManager();
+            FragmentTransaction transaction = manager.beginTransaction();
+            Bundle bundle = new Bundle();
+            bundle.putString("membros_path", tarefaPath);
+            bundle.putString("origem", "equipes");
+            Fragment fragment = MembrosFragment.newInstance();
+            fragment.setArguments(bundle);
+            transaction.replace(R.id.fragment_container_child, fragment);
+            transaction.commit();
+        }
+    }
+
+    public void verificaMembros() {
+        mDatabase.child(tarefaPath).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.child("aguardando").exists()) {
+                    newMembro.setVisibility(View.VISIBLE);
+                } else {
+                    newMembro.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
