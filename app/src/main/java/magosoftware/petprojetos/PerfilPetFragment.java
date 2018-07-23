@@ -1,6 +1,7 @@
 package magosoftware.petprojetos;
 
 import android.app.AlertDialog;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -21,6 +23,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -170,6 +173,21 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
         PerfilPetFragment perfilPetFragment = new PerfilPetFragment();
         return perfilPetFragment;
     }
+
+//    @Override
+//    public void onItemClick(int position, String codigo) {
+////        final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+////        imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+//        Bundle bundle = new Bundle();
+//        bundle.putString("codigo", codigo);
+//        android.support.v4.app.FragmentTransaction ft;
+//        ft = getFragmentManager().beginTransaction();
+//        Fragment fragment = Perfil.newInstance();
+//        fragment.setArguments(bundle);
+//        ft.replace(R.id.fragment_container, fragment);
+//        ft.addToBackStack(null);
+//        ft.commit();
+//    }
 
 //    public void setupEdit() {
 //        dbUsuario.child(user.getUid()).child("pet").addValueEventListener(new ValueEventListener() {
