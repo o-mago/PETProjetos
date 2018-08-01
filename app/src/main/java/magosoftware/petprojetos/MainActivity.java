@@ -235,216 +235,6 @@ public class MainActivity extends BaseActivity implements
         }
     }
 
-//    private void setupLista() {
-//        Log.d("DEV/NOTIFICACAO", "setupLista");
-//        mModelsNotificacao = new ArrayList<>();
-//        valueEventListener = new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                Log.d("DEV/NOTIFICACAO", "PrimeiroOnDataChange");
-//                for(DataSnapshot listSnapshot : dataSnapshot.getChildren()) {
-//                    String nodePET = listSnapshot.getKey();
-//                    if (listSnapshot.hasChild("tarefas")) {
-//                        Log.d("DEV/NOTIFICACAO", "PrimeiroIf");
-//                        contTarefa = 0;
-//                        final int i = (int) listSnapshot.child("tarefas").getChildrenCount();
-//                        for (DataSnapshot subListSnapshot : listSnapshot.child("tarefas").getChildren()) {
-////                            Log.d("DEV/NOTIFICACAO", ""+subListSnapshoot.child("nova").getValue(Boolean.class));
-//                            boolean nova = false;
-//                            if (subListSnapshot.child("nova").getValue(Boolean.class).equals(true)) {
-//                                nova = true;
-//                            }
-//                            Log.d("DEV/NOTIFICACAO", "SegundoIf");
-////                                mDatabase.child("Usuarios").child(user.getUid()).child("pet")
-////                                        .child(nodePET).child("tarefas")
-////                                        .child(subListSnapshoot.getKey())
-////                                        .child("nova")
-////                                        .setValue(false);
-//                            mDatabase.child(subListSnapshot.child("caminho").getValue(String.class))
-//                                    .addListenerForSingleValueEvent(new ValueEventListenerSend(subListSnapshot.child("caminho").getValue(String.class), nodePET, nova) {
-//                                        @Override
-//                                        public void onDataChange(DataSnapshot dataSnapshot) {
-//                                            contTarefa++;
-//                                            Log.d("DEV/NOTIFICACAO", "SegundoOnDataChange"+dataSnapshot.getKey());
-//                                            String data = dataSnapshot.child("prazo").getValue(String.class);
-//                                            long dataLong = dateToMillis(data);
-//                                            long dataAtual = System.currentTimeMillis() - 1000;
-//                                            boolean avisoPrazo = false;
-//                                            if(dataSnapshot.hasChild("avisoPrazo")) {
-//                                                avisoPrazo = dataSnapshot.child("avisoPrazo").getValue(Boolean.class);
-//                                            }
-//                                            if (dataLong - dataAtual < 172800000 && dataLong - dataAtual > 0 && !avisoPrazo) {
-//                                                dbPetUsuario.child((String) variavel2).child("tarefas").child(dataSnapshot.getKey()).child("avisoPrazo").setValue(true);
-//                                                dbUsuario.child("update").setValue(true);
-//                                                avisoPrazo = true;
-//                                            }
-//                                            else if (dataLong - dataAtual < 0 && avisoPrazo) {
-//                                                dbPetUsuario.child((String) variavel2).child("tarefas").child(dataSnapshot.getKey()).child("avisoPrazo").setValue(false);
-//                                                avisoPrazo = false;
-//                                            }
-//                                            if(avisoPrazo) {
-//                                                mModelsNotificacao.add(new Notificacao("tarefa",
-//                                                        dataSnapshot.child("titulo").getValue(String.class),
-//                                                        dataSnapshot.child("prazo").getValue(String.class),
-//                                                        (String) variavel, "Prazo acabando"));
-//                                                showNotification("Tarefa " + dataSnapshot.child("titulo").getValue(String.class),
-//                                                        "Prazo acabando");
-//                                                aviso.setVisibility(View.GONE);
-//                                            }
-//                                            else if ((boolean)variavel3){
-//                                                mModelsNotificacao.add(new Notificacao("tarefa",
-//                                                        dataSnapshot.child("titulo").getValue(String.class),
-//                                                        dataSnapshot.child("prazo").getValue(String.class),
-//                                                        (String) variavel, "Você foi marcado em uma tarefa"));
-//                                                showNotification("Tarefa " + dataSnapshot.child("titulo").getValue(String.class),
-//                                                        "Você foi marcado em uma tarefa");
-//                                                aviso.setVisibility(View.GONE);
-//                                            }
-//                                            if(i == contTarefa) {
-//                                                mAdapterNotificacao.replaceAll(mModelsNotificacao);
-//                                                mAdapterNotificacao.notifyDataSetChanged();
-////                                                    navNotificacoes.bringToFront();
-//                                                if(isNotificacaoOpen) {
-//                                                    closeNotificacao();
-////                                                        navNotificacoes.setX(-width);
-//                                                }
-//                                                mModelsNotificacao.clear();
-//                                            }
-//                                        }
-//
-//                                        @Override
-//                                        public void onCancelled(DatabaseError databaseError) {
-//
-//                                        }
-//                                    });
-//                        }
-////                        if(i == 0) {
-////                            mAdapterNotificacao.replaceAll(mModelsNotificacao);
-////                            mAdapterNotificacao.notifyDataSetChanged();
-////                            mModelsNotificacao.clear();
-////                            semNotificacoes();
-////                        }
-////                        else {
-////                            aviso.setVisibility(View.GONE);
-////                            mModelsNotificacao.clear();
-////                        }
-//                    }
-//                    if (listSnapshot.hasChild("reunioes")) {
-//                        contReuniao = 0;
-//                        final int i = (int)listSnapshot.child("reunioes").getChildrenCount();
-//                        for (DataSnapshot subListSnapshot : listSnapshot.child("reunioes").getChildren()) {
-////                            Log.d("DEV/NOTIFICACAO", ""+subListSnapshoot.child("nova").getValue(Boolean.class));
-//                            String data = subListSnapshot.child("data").getValue(String.class).split(" ")[0];
-//                            int diaSemanaReuniao = 0;
-//                            if (data.equals("DOMINGO")) {
-//                                diaSemanaReuniao = 1;
-//                            } else if (data.equals("SEGUNDA")) {
-//                                diaSemanaReuniao = 2;
-//                            } else if (data.equals("TERÇA")) {
-//                                diaSemanaReuniao = 3;
-//                            } else if (data.equals("QUARTA")) {
-//                                diaSemanaReuniao = 4;
-//                            } else if (data.equals("QUINTA")) {
-//                                diaSemanaReuniao = 5;
-//                            } else if (data.equals("SEXTA")) {
-//                                diaSemanaReuniao = 6;
-//                            } else if (data.equals("SÁBADO")) {
-//                                diaSemanaReuniao = 7;
-//                            }
-//                            Calendar calendar = Calendar.getInstance();
-//                            int dayWeek = calendar.get(Calendar.DAY_OF_WEEK);
-//                            boolean avisoPrazo = true;
-//                            if(subListSnapshot.hasChild("avisoPrazo")) {
-//                                avisoPrazo = subListSnapshot.child("avisoPrazo").getValue(Boolean.class);
-//                            }
-//                            Log.d("DEV/MAINACTIVITY", ""+subListSnapshot.child("avisoPrazo").getValue(Boolean.class));
-//                            if (diaSemanaReuniao - dayWeek == 1 && !avisoPrazo) {
-//                                dbPetUsuario.child(nodePET).child("reunioes").child(subListSnapshot.getKey()).child("avisoPrazo").setValue(true);
-//                                dbUsuario.child("update").setValue(true);
-//                            }
-//                            else if (diaSemanaReuniao - dayWeek != 1 && avisoPrazo) {
-//                                dbPetUsuario.child(nodePET).child("reunioes").child(subListSnapshot.getKey()).child("avisoPrazo").setValue(false);
-//                            }
-//                            boolean nova = false;
-//                            if (subListSnapshot.child("nova").getValue(Boolean.class).equals(true)) {
-//                                nova = true;
-//                            }
-//                            Log.d("DEV/NOTIFICACAO", "SegundoIf");
-////                                mDatabase.child("Usuarios").child(user.getUid()).child("pet")
-////                                        .child(nodePET).child("tarefas")
-////                                        .child(subListSnapshoot.getKey())
-////                                        .child("nova")
-////                                        .setValue(false);
-//                            mDatabase.child(subListSnapshot.child("caminho").getValue(String.class))
-//                                    .addListenerForSingleValueEvent(new ValueEventListenerSend(subListSnapshot.child("caminho").getValue(String.class), avisoPrazo, nova) {
-//                                        @Override
-//                                        public void onDataChange(DataSnapshot dataSnapshot) {
-//                                            contReuniao++;
-//                                            if((boolean)variavel2) {
-//                                                mModelsNotificacao.add(new Notificacao("reuniao",
-//                                                        dataSnapshot.child("nome").getValue(String.class),
-//                                                        dataSnapshot.child("reunioes").child("data").getValue(String.class) + " " +
-//                                                                dataSnapshot.child("reunioes").child("horario").getValue(String.class),
-//                                                        (String) variavel, "Reunião próxima"));
-//                                                showNotification("Reunião " + dataSnapshot.child("nome").getValue(String.class),
-//                                                        "Reunião próxima");
-//                                                Log.d("DEV/NOTIFICACAO", "Adicionou reunião próxima");
-//                                                aviso.setVisibility(View.GONE);
-//                                            }
-//                                            else if((boolean)variavel3){
-//                                                mModelsNotificacao.add(new Notificacao("reuniao",
-//                                                        dataSnapshot.child("nome").getValue(String.class),
-//                                                        dataSnapshot.child("reunioes").child("data").getValue(String.class) + " " +
-//                                                                dataSnapshot.child("reunioes").child("horario").getValue(String.class),
-//                                                        (String) variavel, "Nova reunião"));
-//                                                showNotification("Reunião " + dataSnapshot.child("nome").getValue(String.class),
-//                                                        "Nova reunião");
-//                                                aviso.setVisibility(View.GONE);
-//                                            }
-//                                            Log.d("DEV/NOTIFICACAO", "i="+i);
-//                                            Log.d("DEV/NOTIFICACAO", "j="+contReuniao);
-//                                            if(i == contReuniao) {
-//                                                Log.d("DEV/NOTIFICACAO", "Entrou i == j");
-//                                                mAdapterNotificacao.replaceAll(mModelsNotificacao);
-//                                                mAdapterNotificacao.notifyDataSetChanged();
-////                                                    navNotificacoes.bringToFront();
-//                                                if(isNotificacaoOpen) {
-//                                                    closeNotificacao();
-////                                                    navNotificacoes.setX(-width);
-//                                                }
-//                                                mModelsNotificacao.clear();
-//                                            }
-//                                        }
-//
-//                                        @Override
-//                                        public void onCancelled(DatabaseError databaseError) {
-//
-//                                        }
-//                                    });
-//                        }
-//                    }
-//                }
-//                if(contReuniao == 0 && contTarefa == 0) {
-//                    mAdapterNotificacao.replaceAll(mModelsNotificacao);
-//                    mAdapterNotificacao.notifyDataSetChanged();
-//                    mModelsNotificacao.clear();
-////                    semNotificacoes();
-//                }
-//                else {
-//                    Log.d("DEV/NOTIFICACAO", "Cheio de notificação");
-//                    aviso.setVisibility(View.GONE);
-//                    mModelsNotificacao.clear();
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        };
-//        dbPetUsuario.addValueEventListener(valueEventListener);
-//    }
-
     private void setupLista() {
         Log.d("DEV/NOTIFICACAO", "setupLista");
         mModelsNotificacao = new ArrayList<>();
@@ -862,6 +652,7 @@ public class MainActivity extends BaseActivity implements
         mModels.add(new ItemMenu("SIGPET", getResources().getDrawable(R.drawable.sigpet_icon)));
         mModels.add(new ItemMenu("Pesquisar PET", getResources().getDrawable(R.drawable.search)));
         mModels.add(new ItemMenu("Pesquisar Petiano", getResources().getDrawable(R.drawable.pessoas)));
+        mModels.add(new ItemMenu("Documentos", getResources().getDrawable(R.drawable.documento)));
         mModels.add(new ItemMenu("Sair", getResources().getDrawable(R.drawable.exit_rotate)));
         //mUser = new ImageButton(this, R.id.)
 //        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
@@ -977,8 +768,11 @@ public class MainActivity extends BaseActivity implements
 //            ft.replace(R.id.fragment_container, Sigpet.newInstance());
 //            ft.commit();
 //            getSupportFragmentManager().popBackStackImmediate();
-            Intent intent = new Intent(this, SigpetActivity.class);
-            startActivity(intent);
+//            Intent intent = new Intent(this, SigpetActivity.class);
+//            startActivity(intent);
+            String url = "http://sigpet.mec.gov.br/primeiro-acesso";
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(browserIntent);
         }
         if(position == 5) {
             ft = getSupportFragmentManager().beginTransaction();
@@ -997,6 +791,14 @@ public class MainActivity extends BaseActivity implements
             getSupportFragmentManager().popBackStackImmediate();
         }
         if(position == 7) {
+            ft = getSupportFragmentManager().beginTransaction();
+//            ft.addToBackStack(null);
+            getSupportFragmentManager().popBackStack();
+            ft.replace(R.id.fragment_container, Documentos.newInstance());
+            ft.commit();
+            getSupportFragmentManager().popBackStackImmediate();
+        }
+        if(position == 8) {
             revokeAccess();
         }
 //        progressBar.setVisibility(View.GONE);

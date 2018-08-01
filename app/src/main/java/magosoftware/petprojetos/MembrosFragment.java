@@ -131,9 +131,13 @@ public class MembrosFragment extends BaseFragment implements LineAdapterMembros.
                             String nomeUsuario = listSnapshotsAguardando.getValue(String.class);
                             String uidUsuario = listSnapshotsAguardando.getKey();
                             final StorageReference projetoRef = storageRef.child("imagensPerfil/" + uidUsuario + ".jpg");
+                            String situacao = "membro";
+                            if(uidUsuario.equals(coordenador)) {
+                                situacao = "coordenador";
+                            }
                             Log.d("Imagem", projetoRef.getPath());
                             final long ONE_MEGABYTE = 1024 * 1024;
-                            projetoRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListenerString(nomeUsuario, uidUsuario) {
+                            projetoRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListenerString(nomeUsuario, uidUsuario, situacao) {
                                 @Override
                                 public void onSuccess(byte[] bytes) {
                                     try {
@@ -142,7 +146,7 @@ public class MembrosFragment extends BaseFragment implements LineAdapterMembros.
                                         Bitmap resizedBmp = Bitmap.createScaledBitmap(bitmapPet, toPx(60), toPx(60), false);
                                         bitmapDrawableUsuario = new BitmapDrawable(getResources(), resizedBmp);
                                         Log.d("DEV/MEMBROS_SITUACAO", (String) variavel1);
-                                        mModelsRequisicao.add(new Usuario((String) variavel1, bitmapDrawableUsuario, (String) variavel2));
+                                        mModelsRequisicao.add(new Usuario((String) variavel1, bitmapDrawableUsuario, (String) variavel3, (String) variavel2));
                                         if (i == cont) {
                                             ordenar(mModelsRequisicao);
                                             mAdapterRequisicao.replaceAll(mModelsRequisicao);
@@ -229,7 +233,7 @@ public class MembrosFragment extends BaseFragment implements LineAdapterMembros.
                 i2 = 0;
                 if(origem.equals("projetos") || origem.equals("equipes")) {
                     for(DataSnapshot coordenadorSnap : dataSnapshot.child("coordenador").getChildren()) {
-                        coordenador = coordenadorSnap.getValue(String.class);
+                        coordenador = coordenadorSnap.getKey();
                     }
                     for (DataSnapshot listSnapshots : dataSnapshot.child("time").getChildren()) {
                         cont2++;

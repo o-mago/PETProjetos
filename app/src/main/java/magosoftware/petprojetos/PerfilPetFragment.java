@@ -64,9 +64,13 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
     private DatabaseReference dbBolsistas;
     private DatabaseReference dbOficiais;
     private DatabaseReference dbVoluntarios;
+    private DatabaseReference dbEgressos;
+    private DatabaseReference dbTutor;
     private ValueEventListener velBolsistas;
     private ValueEventListener velOficiais;
     private ValueEventListener velVoluntarios;
+    private ValueEventListener velEgressos;
+    private ValueEventListener velTutor;
     FirebaseUser user;
     FirebaseAuth mAuth;
     public static final int PICK_IMAGE = 1;
@@ -119,6 +123,8 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
         dbBolsistas = mDatabase.child("PETs").child(nodePet).child("time").child("bolsistas");
         dbOficiais = mDatabase.child("PETs").child(nodePet).child("time").child("oficiais");
         dbVoluntarios = mDatabase.child("PETs").child(nodePet).child("time").child("voluntarios");
+        dbEgressos = mDatabase.child("PETs").child(nodePet).child("time").child("egressos");
+        dbTutor = mDatabase.child("PETs").child(nodePet).child("tutor");
 //        File cacheDir = getDiskCacheDir(this, DISK_CACHE_SUBDIR);
 
 
@@ -147,9 +153,13 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
         setupFollow("bolsistas", "AGUARDANDO","#FFFF00", getResources().getDrawable(R.drawable.background_contorno_aguardando), true);
         setupFollow("oficiais", "AGUARDANDO","#FFFF00", getResources().getDrawable(R.drawable.background_contorno_aguardando), true);
         setupFollow("voluntarios", "AGUARDANDO","#FFFF00", getResources().getDrawable(R.drawable.background_contorno_aguardando), true);
+        setupFollow("egressos", "AGUARDANDO","#FFFF00", getResources().getDrawable(R.drawable.background_contorno_aguardando), true);
+        setupFollow("tutor", "AGUARDANDO","#FFFF00", getResources().getDrawable(R.drawable.background_contorno_aguardando), true);
         setupFollow("bolsistas", "PETIANO","#00E676", getResources().getDrawable(R.drawable.background_contorno_ok), false);
         setupFollow("oficiais", "PETIANO","#00E676", getResources().getDrawable(R.drawable.background_contorno_ok), false);
         setupFollow("voluntarios", "PETIANO","#00E676", getResources().getDrawable(R.drawable.background_contorno_ok), false);
+        setupFollow("egressos", "PETIANO","#00E676", getResources().getDrawable(R.drawable.background_contorno_ok), false);
+        setupFollow("tutor", "PETIANO","#00E676", getResources().getDrawable(R.drawable.background_contorno_ok), false);
         getView().findViewById(R.id.edit_button).setOnClickListener(this);
         editButton.setVisibility(View.GONE);
         ano = getView().findViewById(R.id.ano);
@@ -306,87 +316,236 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
     public void temCerteza(final int escolha) {
         Log.d("DEV/PERFILPET", "temCerteza");
         if(temPET) {
-            final AlertDialog.Builder builderCerteza = new AlertDialog.Builder(getActivity());
-            builderCerteza.setTitle("Você tem certeza que deseja sair de "+nomeOldPET+"?");
-            builderCerteza.setItems(getResources().getStringArray(R.array.tem_certeza), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Log.d("WHICH", Integer.toString(which));
-                    if (which == 0) {
-                        tenhoCerteza = true;
-                        Map<String, String> pet = new HashMap<>();
-                        dbUsuario.child(user.getUid()).child("pet").child(nodePet).child("situacao").setValue("aguardando");
-                        dbUsuario.child(user.getUid()).child("pet").child(nodePet).child("nome").setValue(nomePet);
-                        if(temPET) {
-                            Map<String, String> novoPetiano = new HashMap<>();
-                            novoPetiano.put(user.getUid(), "bolsistas");
-                            mDatabase.child("PETs").child(nomeOldPET).child("time").child(situacaoPET).removeValue();
-                        }
+            if(nodePet.equals(nomeOldPET)) {
+                final AlertDialog.Builder builderCerteza = new AlertDialog.Builder(getActivity());
+                builderCerteza.setTitle("Você tem certeza que deseja mudar de condição?");
+                builderCerteza.setItems(getResources().getStringArray(R.array.tem_certeza), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
                         Log.d("WHICH", Integer.toString(which));
-                        if (escolha == 0) {
-                            setupFollow("bolsistas", "AGUARDANDO", "#FFFF00", getResources().getDrawable(R.drawable.background_contorno_aguardando), true);
-                            dbUsuario.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    nomeUsuario = dataSnapshot.child("nome").getValue(String.class);
-                                    mDatabase.child("PETs").child(nodePet).child("time")
-                                            .child("aguardando")
-                                            .child("bolsistas")
-                                            .child(user.getUid())
-                                            .setValue(nomeUsuario);
-                                }
+                        if (which == 0) {
+                            tenhoCerteza = true;
+                            mDatabase.child("PETs").child(nomeOldPET).child("time").child(situacaoPET).child(user.getUid()).removeValue();
+                            Log.d("WHICH", Integer.toString(which));
+                            if (escolha == 0) {
+                                dbUsuario.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        nomeUsuario = dataSnapshot.child("nome").getValue(String.class);
+                                        dbUsuario.child(user.getUid()).child("pet").child(nodePet).child("situacao").setValue("bolsistas");
+                                        mDatabase.child("PETs").child(nodePet).child("time")
+                                                .child("bolsistas")
+                                                .child(user.getUid())
+                                                .setValue(nomeUsuario);
+                                    }
 
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
 
-                                }
-                            });
+                                    }
+                                });
+                            }
+                            if (escolha == 1) {
+                                dbUsuario.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        nomeUsuario = dataSnapshot.child("nome").getValue(String.class);
+                                        dbUsuario.child(user.getUid()).child("pet").child(nodePet).child("situacao").setValue("oficiais");
+                                        mDatabase.child("PETs").child(nodePet).child("time")
+                                                .child("oficiais")
+                                                .child(user.getUid())
+                                                .setValue(nomeUsuario);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
+                            if (escolha == 2) {
+                                dbUsuario.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        nomeUsuario = dataSnapshot.child("nome").getValue(String.class);
+                                        dbUsuario.child(user.getUid()).child("pet").child(nodePet).child("situacao").setValue("voluntarios");
+                                        mDatabase.child("PETs").child(nodePet).child("time")
+                                                .child("voluntarios")
+                                                .child(user.getUid())
+                                                .setValue(nomeUsuario);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
+                            if (escolha == 3) {
+                                dbUsuario.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        nomeUsuario = dataSnapshot.child("nome").getValue(String.class);
+                                        dbUsuario.child(user.getUid()).child("pet").child(nodePet).child("situacao").setValue("egressos");
+                                        mDatabase.child("PETs").child(nodePet).child("time")
+                                                .child("egressos")
+                                                .child(user.getUid())
+                                                .setValue(nomeUsuario);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
+                            if (escolha == 4) {
+                                dbUsuario.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        nomeUsuario = dataSnapshot.child("nome").getValue(String.class);
+                                        dbUsuario.child(user.getUid()).child("pet").child(nodePet).child("situacao").setValue("tutor");
+                                        mDatabase.child("PETs").child(nodePet)
+                                                .child("tutor")
+                                                .child(user.getUid())
+                                                .setValue(nomeUsuario);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
                         }
-                        if (escolha == 1) {
-                            setupFollow("oficiais", "AGUARDANDO", "#FFFF00", getResources().getDrawable(R.drawable.background_contorno_aguardando), true);
-                            dbUsuario.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    nomeUsuario = dataSnapshot.child("nome").getValue(String.class);
-                                    mDatabase.child("PETs").child(nodePet).child("time")
-                                            .child("aguardando")
-                                            .child("oficiais")
-                                            .child(user.getUid())
-                                            .setValue(nomeUsuario);
-                                }
+                        if (which == 1) {
 
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-                        }
-                        if (escolha == 2) {
-                            setupFollow("voluntários", "AGUARDANDO", "#FFFF00", getResources().getDrawable(R.drawable.background_contorno_aguardando), true);
-                            dbUsuario.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    nomeUsuario = dataSnapshot.child("nome").getValue(String.class);
-                                    mDatabase.child("PETs").child(nodePet).child("time")
-                                            .child("aguardando")
-                                            .child("voluntarios")
-                                            .child(user.getUid())
-                                            .setValue(nomeUsuario);
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
                         }
                     }
-                    if (which == 1) {
+                });
+                builderCerteza.show();
+            }
+            else {
+                final AlertDialog.Builder builderCerteza = new AlertDialog.Builder(getActivity());
+                builderCerteza.setTitle("Você tem certeza que deseja sair de " + nomeOldPET + "?");
+                builderCerteza.setItems(getResources().getStringArray(R.array.tem_certeza), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.d("WHICH", Integer.toString(which));
+                        if (which == 0) {
+                            tenhoCerteza = true;
+                            Map<String, String> pet = new HashMap<>();
+                            dbUsuario.child(user.getUid()).child("pet").child(nodePet).child("situacao").setValue("aguardando");
+                            dbUsuario.child(user.getUid()).child("pet").child(nodePet).child("nome").setValue(nomePet);
+                            if (temPET) {
+                                Map<String, String> novoPetiano = new HashMap<>();
+                                novoPetiano.put(user.getUid(), "bolsistas");
+                                mDatabase.child("PETs").child(nomeOldPET).child("time").child(situacaoPET).removeValue();
+                            }
+                            Log.d("WHICH", Integer.toString(which));
+                            if (escolha == 0) {
+                                setupFollow("bolsistas", "AGUARDANDO", "#FFFF00", getResources().getDrawable(R.drawable.background_contorno_aguardando), true);
+                                dbUsuario.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        nomeUsuario = dataSnapshot.child("nome").getValue(String.class);
+                                        mDatabase.child("PETs").child(nodePet).child("time")
+                                                .child("aguardando")
+                                                .child("bolsistas")
+                                                .child(user.getUid())
+                                                .setValue(nomeUsuario);
+                                    }
 
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
+                            if (escolha == 1) {
+                                setupFollow("oficiais", "AGUARDANDO", "#FFFF00", getResources().getDrawable(R.drawable.background_contorno_aguardando), true);
+                                dbUsuario.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        nomeUsuario = dataSnapshot.child("nome").getValue(String.class);
+                                        mDatabase.child("PETs").child(nodePet).child("time")
+                                                .child("aguardando")
+                                                .child("oficiais")
+                                                .child(user.getUid())
+                                                .setValue(nomeUsuario);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
+                            if (escolha == 2) {
+                                setupFollow("voluntários", "AGUARDANDO", "#FFFF00", getResources().getDrawable(R.drawable.background_contorno_aguardando), true);
+                                dbUsuario.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        nomeUsuario = dataSnapshot.child("nome").getValue(String.class);
+                                        mDatabase.child("PETs").child(nodePet).child("time")
+                                                .child("aguardando")
+                                                .child("voluntarios")
+                                                .child(user.getUid())
+                                                .setValue(nomeUsuario);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
+                            if (escolha == 3) {
+                                setupFollow("egressos", "AGUARDANDO", "#FFFF00", getResources().getDrawable(R.drawable.background_contorno_aguardando), true);
+                                dbUsuario.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        nomeUsuario = dataSnapshot.child("nome").getValue(String.class);
+                                        mDatabase.child("PETs").child(nodePet).child("time")
+                                                .child("aguardando")
+                                                .child("egressos")
+                                                .child(user.getUid())
+                                                .setValue(nomeUsuario);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
+                            if (escolha == 4) {
+                                setupFollow("tutor", "AGUARDANDO", "#FFFF00", getResources().getDrawable(R.drawable.background_contorno_aguardando), true);
+                                dbUsuario.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        nomeUsuario = dataSnapshot.child("nome").getValue(String.class);
+                                        mDatabase.child("PETs").child(nodePet).child("time")
+                                                .child("aguardando")
+                                                .child("tutor")
+                                                .child(user.getUid())
+                                                .setValue(nomeUsuario);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
+                        }
+                        if (which == 1) {
+
+                        }
                     }
-                }
-            });
-            builderCerteza.show();
+                });
+                builderCerteza.show();
+            }
         }
         else {
             Log.d("DEV/PERFILPET", "else temCerteza");
@@ -548,35 +707,35 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
             uriPet = null;
         }
 //        if(uriPet == null || update) {
-            StorageReference perfilRef = storageRef.child("imagensPET/" + nodePet + ".jpg");
-            try {
-                perfilRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                    @Override
-                    public void onSuccess(byte[] bytes) {
-                        try {
-                            bitmapPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        StorageReference perfilRef = storageRef.child("imagensPET/" + nodePet + ".jpg");
+        try {
+            perfilRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                @Override
+                public void onSuccess(byte[] bytes) {
+                    try {
+                        bitmapPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 //                            uriPet = getImageUri(getActivity(), bitmapPerfil);
 //                            editor.putString("uri_pet", uriPet.toString());
 //                            editor.commit();
-                            imagemPerfil.setImageBitmap(bitmapPerfil);
-                            editButton.setVisibility(View.VISIBLE);
-                            mainPerfil.setVisibility(View.VISIBLE);
-                            progressBar.setVisibility(View.GONE);
-                        }
-                        catch (Exception e) {
-
-                        }
+                        imagemPerfil.setImageBitmap(bitmapPerfil);
+                        editButton.setVisibility(View.VISIBLE);
+                        mainPerfil.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.GONE);
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle any errors
-                    }
-                });
-            }
-            catch (Exception e) {
+                    catch (Exception e) {
 
-            }
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                }
+            });
+        }
+        catch (Exception e) {
+
+        }
 //        }
 //        else {
 //            Picasso.with(getActivity()).load(uriPet).into(imagemPerfil);
@@ -691,9 +850,15 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
 //                            imagemPerfil.setImageBitmap(bitmapPerfil);
 //                                    mModels.add(new Usuario(usuarios[contPetianos], bitmapDrawablePet));
                                         String[] nomes = ((String) variavel1).split(" ");
-                                        String nomeSobrenome = nomes[0] + " " + nomes[1];
-                                        Log.d("NOME", nomeSobrenome);
-                                        section.children.add(new Usuario(nomeSobrenome, bitmapDrawablePet));
+                                        if (nomes.length > 1) {
+                                            String nomeSobrenome = nomes[0] + " " + nomes[1];
+                                            Log.d("NOME", nomeSobrenome);
+                                            section.children.add(new Usuario(nomeSobrenome, bitmapDrawablePet));
+                                        } else {
+                                            String nomeSobrenome = (String) variavel1;
+                                            Log.d("NOME", nomeSobrenome);
+                                            section.children.add(new Usuario(nomeSobrenome, bitmapDrawablePet));
+                                        }
                                     }
                                     catch (IllegalStateException e) {
 
@@ -728,9 +893,15 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
 //                            imagemPerfil.setImageBitmap(bitmapPerfil);
 //                                            mModels.add(new Usuario(usuarios[contPetianos], bitmapDrawablePet));
                                                 String[] nomes = ((String) variavel1).split(" ");
-                                                String nomeSobrenome = nomes[0] + " " + nomes[1];
-                                                Log.d("NOME", nomeSobrenome);
-                                                section.children.add(new Usuario(nomeSobrenome, bitmapDrawablePet));
+                                                if (nomes.length > 1) {
+                                                    String nomeSobrenome = nomes[0] + " " + nomes[1];
+                                                    Log.d("NOME", nomeSobrenome);
+                                                    section.children.add(new Usuario(nomeSobrenome, bitmapDrawablePet));
+                                                } else {
+                                                    String nomeSobrenome = (String) variavel1;
+                                                    Log.d("NOME", nomeSobrenome);
+                                                    section.children.add(new Usuario(nomeSobrenome, bitmapDrawablePet));
+                                                }
                                             }
                                             catch (IllegalStateException e) {
 
@@ -743,7 +914,109 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
                                         }
                                     });
                                 }
-                                dbBolsistas.removeEventListener(velVoluntarios);
+                                velEgressos = dbEgressos.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        //String[] cursos;
+//                                Map<String,Object> map = (Map<String,Object>)dataSnapshot.getValue();
+                                        //cursos = Arrays.copyOf(map.values().toArray(), map.values().toArray().length, String[].class);
+                                        for (DataSnapshot listSnapshots : dataSnapshot.getChildren()) {
+                                            contPetianos++;
+                                            expandableLayout.notifyParentChanged(0);
+                                            usuarios = listSnapshots.getValue(String.class);
+                                            StorageReference perfilRef = storageRef.child("imagensPerfil/" + listSnapshots.getKey() + ".jpg");
+                                            perfilRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListenerString(usuarios) {
+                                                @Override
+                                                public void onSuccess(byte[] bytes) {
+                                                    try {
+                                                        bitmapPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                                        Bitmap resizedBmp = Bitmap.createScaledBitmap(bitmapPerfil, toPx(70), toPx(70), false);
+                                                        bitmapDrawablePet = new BitmapDrawable(getResources(), resizedBmp);
+//                            uriPerfil = getImageUri(getActivity(), bitmapPerfil);
+//                            imagemPerfil.setImageBitmap(bitmapPerfil);
+//                                            mModels.add(new Usuario(usuarios[contPetianos], bitmapDrawablePet));
+                                                        String[] nomes = ((String) variavel1).split(" ");
+                                                        if (nomes.length > 1) {
+                                                            String nomeSobrenome = nomes[0] + " " + nomes[1];
+                                                            Log.d("NOME", nomeSobrenome);
+                                                            section.children.add(new Usuario(nomeSobrenome, bitmapDrawablePet));
+                                                        } else {
+                                                            String nomeSobrenome = (String) variavel1;
+                                                            Log.d("NOME", nomeSobrenome);
+                                                            section.children.add(new Usuario(nomeSobrenome, bitmapDrawablePet));
+                                                        }
+                                                    }
+                                                    catch (IllegalStateException e) {
+
+                                                    }
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception exception) {
+                                                    // Handle any errors
+                                                }
+                                            });
+                                        }
+                                        velTutor = dbTutor.addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                //String[] cursos;
+//                                Map<String,Object> map = (Map<String,Object>)dataSnapshot.getValue();
+                                                //cursos = Arrays.copyOf(map.values().toArray(), map.values().toArray().length, String[].class);
+                                                for (DataSnapshot listSnapshots : dataSnapshot.getChildren()) {
+                                                    contPetianos++;
+                                                    expandableLayout.notifyParentChanged(0);
+                                                    usuarios = listSnapshots.getValue(String.class);
+                                                    StorageReference perfilRef = storageRef.child("imagensPerfil/" + listSnapshots.getKey() + ".jpg");
+                                                    perfilRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListenerString(usuarios) {
+                                                        @Override
+                                                        public void onSuccess(byte[] bytes) {
+                                                            try {
+                                                                bitmapPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                                                Bitmap resizedBmp = Bitmap.createScaledBitmap(bitmapPerfil, toPx(70), toPx(70), false);
+                                                                bitmapDrawablePet = new BitmapDrawable(getResources(), resizedBmp);
+//                            uriPerfil = getImageUri(getActivity(), bitmapPerfil);
+//                            imagemPerfil.setImageBitmap(bitmapPerfil);
+//                                            mModels.add(new Usuario(usuarios[contPetianos], bitmapDrawablePet));
+                                                                String[] nomes = ((String) variavel1).split(" ");
+                                                                if (nomes.length > 1) {
+                                                                    String nomeSobrenome = nomes[0] + " " + nomes[1];
+                                                                    Log.d("NOME", nomeSobrenome);
+                                                                    section.children.add(new Usuario(nomeSobrenome, bitmapDrawablePet));
+                                                                } else {
+                                                                    String nomeSobrenome = (String) variavel1;
+                                                                    Log.d("NOME", nomeSobrenome);
+                                                                    section.children.add(new Usuario(nomeSobrenome, bitmapDrawablePet));
+                                                                }
+                                                            }
+                                                            catch (IllegalStateException e) {
+
+                                                            }
+                                                        }
+                                                    }).addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception exception) {
+                                                            // Handle any errors
+                                                        }
+                                                    });
+                                                }
+//                                                dbBolsistas.removeEventListener(velVoluntarios);
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+                                                Log.d("UNI", "Deu merda");
+                                            }
+                                        });
+//                                        dbBolsistas.removeEventListener(velVoluntarios);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                        Log.d("UNI", "Deu merda");
+                                    }
+                                });
+//                                dbBolsistas.removeEventListener(velVoluntarios);
                             }
 
                             @Override
@@ -751,7 +1024,7 @@ public class PerfilPetFragment extends BaseFragment implements View.OnClickListe
                                 Log.d("UNI", "Deu merda");
                             }
                         });
-                        dbBolsistas.removeEventListener(velOficiais);
+//                        dbBolsistas.removeEventListener(velOficiais);
                     }
 
                     @Override

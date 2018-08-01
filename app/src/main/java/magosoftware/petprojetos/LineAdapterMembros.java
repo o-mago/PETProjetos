@@ -75,7 +75,16 @@ public class LineAdapterMembros extends RecyclerView.Adapter<LineHolderMembros>{
             holder.opcao.setTextColor(Color.parseColor("#6A1B9A"));
             holder.opcao.setBackgroundDrawable(backgroundVoluntarios);
         }
-
+        else if(mUsuario.get(position).getSituacao().equals("egressos")) {
+            holder.opcao.setText("VOLUNT");
+            holder.opcao.setTextColor(Color.parseColor("#ff7043"));
+            holder.opcao.setBackgroundDrawable(backgroundVoluntarios);
+        }
+        else if(mUsuario.get(position).getSituacao().equals("tutor")) {
+            holder.opcao.setText("VOLUNT");
+            holder.opcao.setTextColor(Color.parseColor("#546e7a"));
+            holder.opcao.setBackgroundDrawable(backgroundVoluntarios);
+        }
         holder.opcao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

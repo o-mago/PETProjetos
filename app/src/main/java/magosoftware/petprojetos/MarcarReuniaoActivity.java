@@ -10,6 +10,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -87,6 +88,7 @@ public class MarcarReuniaoActivity  extends BaseActivity implements View.OnClick
     private String nodePET;
     private SharedPreferences sharedPref;
     private LinearLayout linearLayout;
+    private FloatingActionButton deletarReuniao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +107,7 @@ public class MarcarReuniaoActivity  extends BaseActivity implements View.OnClick
         clickHorariosEquipe = findViewById(R.id.click_horarios_equipe);
         horarioSemanal = findViewById(R.id.horario_text);
         horarioFinalSemanal = findViewById(R.id.horario_final_text);
+        deletarReuniao = findViewById(R.id.deletar_reuniao);
 //        semanalSwitch = findViewById(R.id.semanal_switch);
         sharedPref = this.getSharedPreferences("todoApp", 0);
         nodePET = sharedPref.getString("node_meu_pet", "nada");
@@ -112,6 +115,7 @@ public class MarcarReuniaoActivity  extends BaseActivity implements View.OnClick
         clickHorariosEquipe.setOnClickListener(this);
         okButton.setOnClickListener(this);
         cancelButton.setOnClickListener(this);
+        deletarReuniao.setOnClickListener(this);
 
         dbReuniao.addListenerForSingleValueEvent(new ValueEventListenerSend(this) {
             @Override
@@ -332,7 +336,48 @@ public class MarcarReuniaoActivity  extends BaseActivity implements View.OnClick
         if(id == R.id.cancelar) {
             finish();
         }
+        if(id == R.id.deletar_reuniao) {
+            final String diaDaSemana = dataSemanal.getText().toString();
+            final String horarioDaSemana = horarioSemanal.getText()+"\u2013"+horarioFinalSemanal.getText();
+            final List<String> arrayHorario = setArrayHorario(horarioDaSemana);
+            dbReuniao.child("reunioes").child("data").setValue(diaDaSemana);
+            dbReuniao.child("reunioes").child("horario").setValue(horarioDaSemana);
+            dbReuniao.child("time").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for(DataSnapshot listSnapshot : dataSnapshot.getChildren()) {
+                        mDatabase.child("Usuarios").child(listSnapshot.getKey()).child("pet").child(nodePET).child("reunioes")
+                                .child("Projeto "+nomeProjeto).removeValue();
+                        mDatabase.child("Usuarios").child(listSnapshot.getKey()).child("horarios")
+                                .addListenerForSingleValueEvent(new ValueEventListenerSend(listSnapshot.getKey()) {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        for(DataSnapshot listSnapshot : dataSnapshot.getChildren()) {
+                                            String horarios = listSnapshot.getValue(String.class);
+                                            horarios = horarios.replace("<reuniao>"+nomeProjeto+"</reuniao>", "");
+                                            mDatabase.child("Usuarios")
+                                                    .child((String) variavel)
+                                                    .child("horarios")
+                                                    .child(listSnapshot.getKey())
+                                                    .setValue(horarios);
+                                        }
+                                    }
 
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                        Log.d("DEV/MARCARREUNIAO", "Deu uma merda aqui em baixo");
+                                    }
+                                });
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.d("DEV/MARCARREUNIAO", "Deu uma merda aqui mais em baixo ainda");
+                }
+            });
+            finish();
+        }
         if(id == R.id.click_horarios_equipe) {
             layoutDialog = (RelativeLayout) getLayoutInflater().inflate(R.layout.compara_horario_dialog, null, false);
             new AlertDialog.Builder(this)
